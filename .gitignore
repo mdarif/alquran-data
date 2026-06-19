@@ -1,0 +1,21 @@
+# Downloaded QUL source files (large; not redistributed in the repo)
+sources/*.sqlite
+sources/*.db
+sources/*.json
+
+# Build outputs
+assets/*.db
+build/
+
+# Local config (may contain machine-specific paths)
+config/sources.yaml
+
+# Generated test fixtures
+tests/fixtures/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store

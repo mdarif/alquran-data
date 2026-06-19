@@ -1,0 +1,61 @@
+# AlMarfa360 Quran — data pipeline config (EXAMPLE)
+#
+# Copy this file to config/sources.yaml and edit the paths to point at the
+# QUL files you downloaded into ./sources/.
+#
+# Where to get each resource (download the SQLite export):
+#   Arabic Uthmani script ....... https://qul.tarteel.ai/resources/quran-script
+#   Urdu (Junagarhi) translation  https://qul.tarteel.ai/resources/translation
+#   Hindi (Farooq Khan) transl.   https://qul.tarteel.ai/resources/translation
+#   Surah names / metadata ...... https://qul.tarteel.ai/resources/quran-metadata
+#   Structural metadata ......... https://qul.tarteel.ai/resources/quran-metadata
+#
+# The pipeline auto-detects column names. Only add a `columns:` or `table:`
+# override if auto-detection picks the wrong one (verify_db.py will tell you).
+
+output: assets/quran.db
+db_version: "1.0.0"
+schema_version: "1"
+
+sources:
+  # --- Surah metadata: 114 rows ------------------------------------------
+  surahs:
+    file: sources/surah-names.sqlite
+    # columns:                # optional overrides
+    #   id: chapter_id
+    #   name_arabic: name_arabic
+    #   name_english: name_simple
+    #   revelation_place: revelation_place
+    #   total_ayahs: verses_count
+
+  # --- Arabic text: works either with an ayah-level script export OR a -----
+  # --- word-by-word `words` table (it will aggregate words into ayahs). ----
+  arabic_uthmani:
+    file: sources/quran-uthmani.sqlite
+
+  # --- Structural navigation indices -------------------------------------
+  # Two modes:
+  #   mode: per_ayah  -> source already has one row per ayah with page/juz/...
+  #   mode: markers   -> a JSON file of start-markers per dimension (expanded)
+  metadata:
+    file: sources/quran-metadata.sqlite
+    mode: per_ayah
+    # For marker mode instead:
+    # file: sources/structure.json
+    # mode: markers
+
+  # --- Translations (MVP: Urdu + Hindi) ----------------------------------
+  translations:
+    - file: sources/translation-urdu-junagarhi.sqlite
+      language_code: ur
+      name: "Maulana Muhammad Junagarhi"
+      author: "Muhammad Junagarhi"
+      license: "VERIFY on QUL resource page before release"
+      source_url: "https://qul.tarteel.ai/resources/translation"
+
+    - file: sources/translation-hindi-farooq.sqlite
+      language_code: hi
+      name: "Muhammad Farooq Khan / Muhammad Ahmed"
+      author: "Muhammad Farooq Khan, Muhammad Ahmed"
+      license: "VERIFY on QUL resource page before release"
+      source_url: "https://qul.tarteel.ai/resources/translation"

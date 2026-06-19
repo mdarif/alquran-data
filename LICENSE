@@ -1,0 +1,7 @@
+Copyright (c) 2026 Al Marfa Technologies
+
+Pipeline code: choose a license (MIT recommended) before publishing.
+
+NOTE: Quranic text, translations, and fonts compiled by this pipeline are NOT
+covered by this license. Each QUL resource carries its own license/terms —
+verify and record them per resource (see config/sources.yaml -> license).
