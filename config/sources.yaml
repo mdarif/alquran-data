@@ -1,0 +1,53 @@
+# AlMarfa360 Quran — data pipeline config (REAL SOURCES, QUL)
+#
+# Raw QUL files were downloaded into ./sources/ (git-ignored). Because QUL ships
+# the data in several shapes, run the preprocessing step first, then build:
+#
+#   python pipeline/prepare_sources.py            # -> arabic-ayah.sqlite, structure.sqlite
+#   python pipeline/build_db.py --config config/sources.yaml
+#   python pipeline/verify_db.py --db assets/quran.db
+#
+# Licenses below are PLACEHOLDERS — verify each resource's license on its QUL
+# page before any public release (PRD Risk: translation/font licensing).
+
+output: assets/quran.db
+db_version: "1.0.0"
+schema_version: "1"
+
+sources:
+  # --- Surah metadata: 114 rows (QUL "Surah names", chapters table) -------
+  surahs:
+    file: sources/quran-metadata-surah-name.sqlite
+
+  # --- Arabic Uthmani: derived ayah-level text -----------------------------
+  # Produced by prepare_sources.py from the KFGQPC Hafs word-by-word export.
+  arabic_uthmani:
+    file: sources/arabic-ayah.sqlite
+
+  # --- Structural navigation indices: derived per-ayah ---------------------
+  # Produced by prepare_sources.py: page (QPC V2 604-page layout), juz, hizb,
+  # rub-al-hizb, ruku (QUL marker tables), and sajda (QUL sajdah list).
+  metadata:
+    file: sources/structure.sqlite
+    mode: per_ayah
+
+  # --- Translations (MVP: Urdu + Hindi) ------------------------------------
+  translations:
+    # NOTE on licensing: QUL does not publish a per-resource license. Its FAQ
+    # states copyright "varies" and defers to each resource's author/source
+    # (https://qul.tarteel.ai/faq#faq-3, #faq-9). These fields are therefore
+    # NOT legal clearance — the owner must confirm redistribution rights with
+    # each source before any public/app-store release.
+    - file: sources/ur-junagarri-simple.db
+      language_code: ur
+      name: "Maulana Muhammad Junagarhi"
+      author: "Muhammad Junagarhi"
+      license: "UNVERIFIED — QUL defers to source author (FAQ #3); confirm before release"
+      source_url: "https://qul.tarteel.ai/resources/translation/305"
+
+    - file: sources/maulana-azizul-haque-al-umari-simple.db
+      language_code: hi
+      name: "Maulana Azizul Haque al-Umari"
+      author: "Azizul Haque al-Umari"
+      license: "UNVERIFIED — QUL defers to source author (FAQ #3); confirm before release"
+      source_url: "https://qul.tarteel.ai/resources/translation/166"
