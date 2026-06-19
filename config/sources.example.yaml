@@ -1,4 +1,4 @@
-# AlMarfa360 Quran — data pipeline config (EXAMPLE)
+# Al Quran — data pipeline config (EXAMPLE)
 #
 # Copy this file to config/sources.yaml and edit the paths to point at the
 # QUL files you downloaded into ./sources/.

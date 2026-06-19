@@ -1,4 +1,4 @@
-# AlMarfa360 Quran — data pipeline config (REAL SOURCES, QUL)
+# Al Quran — data pipeline config (REAL SOURCES, QUL)
 #
 # Raw QUL files were downloaded into ./sources/ (git-ignored). Because QUL ships
 # the data in several shapes, run the preprocessing step first, then build:

@@ -5,13 +5,13 @@ this project locally. Read it fully, then continue from **Next Steps**.
 
 ## What this project is
 
-`alquran-data` is the **data-compilation pipeline** for the AlMarfa360 Quran
+`alquran-data` is the **data-compilation pipeline** for the Al Quran
 Flutter app (parent firm: Al Marfa Technologies, almarfa.co). It turns
 [QUL — Quranic Universal Library](https://qul.tarteel.ai) source files into a
 single bundled, offline SQLite database (`assets/quran.db`) that the Flutter app
 ships as an asset.
 
-Full product spec: "AlMarfa360 Quran Mobile App — Master PRD v1.1.1" (in the
+Full product spec: "Al Quran Mobile App — Master PRD v1.1.1" (in the
 owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 (QUL sourcing), and Section 11 (this pipeline).
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Verify a compiled AlMarfa360 Quran seed database.
+Verify a compiled Al Quran seed database.
 
 Checks the invariants that matter for a Quran reader:
   * exactly 114 surahs and 6236 ayahs

@@ -1,6 +1,6 @@
-# AlMarfa360 Quran — Data Pipeline
+# Al Quran — Data Pipeline
 
-Compiles the **bundled SQLite seed database** for the AlMarfa360 Quran Flutter
+Compiles the **bundled SQLite seed database** for the Al Quran Flutter
 app from [QUL (Quranic Universal Library)](https://qul.tarteel.ai) source files.
 
 This is the *data* repo (the Python compilation pipeline). The Flutter app

@@ -1,4 +1,4 @@
--- AlMarfa360 Quran — bundled seed database schema
+-- Al Quran — bundled seed database schema
 -- Matches PRD v1.1.1, Section 5.1 (MVP). Word-by-word / page-layout tables are
 -- intentionally deferred (Section 5.2) and not created here for the MVP build.
 

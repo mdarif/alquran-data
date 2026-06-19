@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AlMarfa360 Quran — data compilation pipeline.
+Al Quran — data compilation pipeline.
 
 Reads QUL (Quranic Universal Library) source files declared in a YAML config,
 introspects each one (so it tolerates minor column-name differences between
@@ -406,7 +406,7 @@ def build(config: dict) -> None:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Compile the AlMarfa360 Quran seed DB from QUL sources.")
+    ap = argparse.ArgumentParser(description="Compile the Al Quran seed DB from QUL sources.")
     ap.add_argument("--config", default="config/sources.yaml", help="path to sources YAML")
     args = ap.parse_args()
 

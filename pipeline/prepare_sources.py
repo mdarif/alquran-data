@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AlMarfa360 Quran — preprocess raw QUL exports into builder-ready inputs.
+Al Quran — preprocess raw QUL exports into builder-ready inputs.
 
 QUL ships the MVP data in shapes that don't map 1:1 onto build_db.py:
 
