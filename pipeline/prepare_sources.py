@@ -25,7 +25,9 @@ Re-run whenever the raw QUL files change, then run build_db.py.
 from __future__ import annotations
 
 import argparse
+import json
 import sqlite3
+from difflib import SequenceMatcher
 from pathlib import Path
 
 
@@ -47,6 +49,67 @@ def _expand_markers(starts: list[tuple[int, int]],
     return out
 
 
+_TATWEEL = 'ـ'  # ARABIC TATWEEL (kashida) — the elongation carrier.
+
+
+def _load_canonical(path: Path) -> dict[tuple[int, int], str]:
+    """Canonical Uthmani text (Tanzil/QPC lineage) keyed by (surah, ayah).
+
+    This edition stores the tatweel (U+0640) kashidas that the QUL word-by-word
+    export omits — before madds (يَـٰٓأَيُّهَا), dagger-alef elongations
+    (ٱلصَّـٰلِحَٰتِ), hamza carriers (بِـَٔايَٰتِ), etc. We don't ship this text; we
+    only read the *positions* of its tatweels and graft them onto our own text.
+
+    Expected file: sources/quran-uthmani-tanzil.json — a {"surah:ayah": text} map.
+    Built from risan/quran-json (github.com/risan/quran-json, data/quran.json,
+    Tanzil Uthmani lineage). If the file is absent, build proceeds with no graft
+    (bare text) and a loud warning. Verified identical letters to our QUL text
+    across all 6236 verses — only the kashidas differ.
+    """
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    out: dict[tuple[int, int], str] = {}
+    for k, v in raw.items():
+        s, a = k.split(":")
+        out[(int(s), int(a))] = v
+    return out
+
+
+def _transfer_tatweel(text: str, canonical: str) -> str:
+    """Insert the canonical text's tatweels into `text`, changing nothing else.
+
+    Our text and the canonical edition are the same Uthmani letters; they differ
+    only by these kashidas (and a little incidental spacing). We diff the two and
+    copy across *only* runs that are pure tatweel — so the shipped text keeps our
+    glyphs/spacing exactly while gaining the correct elongation carriers.
+    """
+    if not canonical:
+        return text
+    out: list[str] = []
+    for tag, i1, i2, j1, j2 in SequenceMatcher(
+        None, text, canonical, autojunk=False
+    ).get_opcodes():
+        if tag == "equal" or tag == "delete":
+            out.append(text[i1:i2])           # our letters always win
+        elif tag in ("insert", "replace"):
+            if tag == "replace":
+                out.append(text[i1:i2])
+            ins = canonical[j1:j2]
+            if ins and set(ins) <= {_TATWEEL}:  # only pure-tatweel runs
+                out.append(ins)
+    return "".join(out)
+
+
+def _normalize_uthmani(text: str, canonical: str = "") -> str:
+    # Strip the baked-in end-of-ayah number marker (QPC appends e.g. ١ or ٢٣٤).
+    text = text.rstrip(' ۝٠١٢٣٤٥٦٧٨٩')
+    # Graft the canonical edition's tatweel kashidas (the QUL source omits them;
+    # without them the KFGQPC font collapses the superscript marks onto the
+    # preceding glyph). Letters/spacing are untouched — only tatweels are added.
+    return _transfer_tatweel(text, canonical)
+
+
 def _starts(db: Path, table: str, order_col: str,
             key_col: str = "first_verse_key") -> list[tuple[int, int]]:
     c = sqlite3.connect(db)
@@ -59,7 +122,10 @@ def _starts(db: Path, table: str, order_col: str,
 
 def build(words_db: Path, layout_db: Path, juz_db: Path, hizb_db: Path,
           rub_db: Path, ruku_db: Path, sajda_db: Path,
-          out_arabic: Path, out_structure: Path) -> None:
+          out_arabic: Path, out_structure: Path,
+          canonical_json: Path | None = None) -> None:
+    # Canonical Uthmani text (for tatweel positions only); empty dict if absent.
+    canonical = _load_canonical(canonical_json) if canonical_json else {}
     # --- Arabic: aggregate words -> ayah text (ordered by word position) ---
     wc = sqlite3.connect(words_db)
     word_rows = wc.execute("SELECT surah, ayah, word, text FROM words").fetchall()
@@ -76,7 +142,8 @@ def build(words_db: Path, layout_db: Path, juz_db: Path, hizb_db: Path,
     arabic: dict[tuple[int, int], str] = {}
     for key, ws in buckets.items():
         ws.sort(key=lambda x: x[0])
-        arabic[key] = " ".join(t for _, t in ws).strip()
+        joined = " ".join(t for _, t in ws).strip()
+        arabic[key] = _normalize_uthmani(joined, canonical.get(key, ""))
     ayah_order = sorted(arabic.keys())
     if len(ayah_order) != 6236:
         print(f"[prepare] WARNING: expected 6236 ayahs, got {len(ayah_order)}")
@@ -131,7 +198,10 @@ def build(words_db: Path, layout_db: Path, juz_db: Path, hizb_db: Path,
 
     # --- Report -----------------------------------------------------------
     pages = {ayah_page(p) for p in ayah_order} - {None}
+    tatweels = sum(arabic[p].count(_TATWEEL) for p in ayah_order)
     print(f"[prepare] ayahs: {len(ayah_order)}")
+    print(f"[prepare] tatweels grafted from canonical: {tatweels}"
+          f" ({'canonical loaded' if canonical else 'NO canonical — bare!'})")
     print(f"[prepare] arabic -> {out_arabic}")
     print(f"[prepare] structure -> {out_structure}")
     if pages:
@@ -157,6 +227,8 @@ def main() -> None:
     ap.add_argument("--rub", default="quran-metadata-rub.sqlite")
     ap.add_argument("--ruku", default="quran-metadata-ruku.sqlite")
     ap.add_argument("--sajda", default="quran-metadata-sajda.sqlite")
+    ap.add_argument("--canonical", default="quran-uthmani-tanzil.json",
+                    help="canonical Uthmani text (Tanzil) — source of tatweel positions")
     ap.add_argument("--out-arabic", default="arabic-ayah.sqlite")
     ap.add_argument("--out-structure", default="structure.sqlite")
     args = ap.parse_args()
@@ -166,6 +238,7 @@ def main() -> None:
         src / args.words, src / args.layout, src / args.juz, src / args.hizb,
         src / args.rub, src / args.ruku, src / args.sajda,
         src / args.out_arabic, src / args.out_structure,
+        canonical_json=src / args.canonical,
     )
 
 
