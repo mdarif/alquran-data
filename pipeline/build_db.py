@@ -107,9 +107,10 @@ def read_surahs(spec: dict) -> dict[int, dict]:
         col_cnt = cols.get("total_ayahs") or first_present(c, ["verses_count", "total_ayahs", "ayahs", "ayah_count", "verses"])
         if not (col_id and col_ar and col_en):
             raise ValueError(f"surah source columns not detected in {path} (have {c})")
+        colnames = [r[0] for r in conn.execute(f"SELECT * FROM '{table}' LIMIT 0").description]
         out: dict[int, dict] = {}
         for row in conn.execute(f"SELECT * FROM '{table}'"):
-            d = dict(zip([d[0] for d in conn.execute(f"SELECT * FROM '{table}' LIMIT 0").description], row))
+            d = dict(zip(colnames, row))
             sid = int(d[col_id])
             out[sid] = {
                 "id": sid,

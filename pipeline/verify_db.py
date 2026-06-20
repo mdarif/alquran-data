@@ -92,6 +92,13 @@ def main() -> None:
         else:
             print(f"{col}: {present} populated, range {mn}-{mx}")
 
+    # sajda count (Quran has exactly 15 sajda ayahs)
+    n_sajda = conn.execute("SELECT COUNT(*) FROM ayahs WHERE sajda = 1").fetchone()[0]
+    if n_sajda != 15:
+        warnings.append(f"expected 15 sajda ayahs, found {n_sajda}")
+    else:
+        print(f"sajda: {n_sajda} ayahs")
+
     # checksums
     row = conn.execute("SELECT value FROM db_meta WHERE key='source_checksums'").fetchone()
     if row:

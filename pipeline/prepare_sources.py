@@ -78,6 +78,8 @@ def build(words_db: Path, layout_db: Path, juz_db: Path, hizb_db: Path,
         ws.sort(key=lambda x: x[0])
         arabic[key] = " ".join(t for _, t in ws).strip()
     ayah_order = sorted(arabic.keys())
+    if len(ayah_order) != 6236:
+        print(f"[prepare] WARNING: expected 6236 ayahs, got {len(ayah_order)}")
 
     # --- Page: word id -> page; ayah page = page of the ayah's first word ---
     lc = sqlite3.connect(layout_db)
@@ -132,7 +134,10 @@ def build(words_db: Path, layout_db: Path, juz_db: Path, hizb_db: Path,
     print(f"[prepare] ayahs: {len(ayah_order)}")
     print(f"[prepare] arabic -> {out_arabic}")
     print(f"[prepare] structure -> {out_structure}")
-    print(f"[prepare] pages: {min(pages)}..{max(pages)} ({len(pages)} distinct)")
+    if pages:
+        print(f"[prepare] pages: {min(pages)}..{max(pages)} ({len(pages)} distinct)")
+    else:
+        print("[prepare] WARNING: no page numbers derived — check layout DB")
     print(f"[prepare] juz max {max(juz.values())} | hizb max {max(hizb.values())} | "
           f"rub max {max(rub.values())} | ruku max {max(ruku.values())} | "
           f"sajda {len(sajda_set)}")

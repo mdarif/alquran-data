@@ -31,23 +31,49 @@ sources:
     file: sources/structure.sqlite
     mode: per_ayah
 
-  # --- Translations (MVP: Urdu + Hindi) ------------------------------------
+  # --- Translations (MVP: Urdu only) ---------------------------------------
+  # Licensing decision (2026-06-20): the app ships as a FREE, NON-COMMERCIAL
+  # / da'wah product. Under that distribution model the Urdu (Junagarhi)
+  # translation is cleared for use with attribution (see ATTRIBUTION.md).
+  # Hindi + other languages are DEFERRED from the MVP and re-enabled later
+  # once their attribution is wired in (the Hindi al-Umari source via
+  # QuranEnc.com is already permissive — see commented block + ATTRIBUTION.md).
   translations:
-    # NOTE on licensing: QUL does not publish a per-resource license. Its FAQ
-    # states copyright "varies" and defers to each resource's author/source
-    # (https://qul.tarteel.ai/faq#faq-3, #faq-9). These fields are therefore
-    # NOT legal clearance — the owner must confirm redistribution rights with
-    # each source before any public/app-store release.
     - file: sources/ur-junagarri-simple.db
       language_code: ur
       name: "Maulana Muhammad Junagarhi"
       author: "Muhammad Junagarhi"
-      license: "UNVERIFIED — QUL defers to source author (FAQ #3); confirm before release"
+      # CLEARED for free / non-commercial (da'wah) distribution with attribution.
+      # Source lineage: Tanzil Project (ur.junagarhi). Tanzil translation terms
+      # permit non-commercial use with attribution (https://tanzil.net/trans/).
+      # Underlying translation likely public domain (translator d. 1941).
+      # OBLIGATION: ship verbatim (no edits); credit translator + Tanzil Project
+      # with a link to tanzil.net (see ATTRIBUTION.md).
+      # CAVEAT: monetizing the app later requires re-clearing (translator/publisher
+      # permission) — Tanzil's translation terms are non-commercial only.
+      license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/305"
 
-    - file: sources/maulana-azizul-haque-al-umari-simple.db
-      language_code: hi
-      name: "Maulana Azizul Haque al-Umari"
-      author: "Azizul Haque al-Umari"
-      license: "UNVERIFIED — QUL defers to source author (FAQ #3); confirm before release"
-      source_url: "https://qul.tarteel.ai/resources/translation/166"
+    # --- English: Dr. Hilali & Dr. Muhsin Khan ("The Noble Quran") ----------
+    # Salafi / Ahle Hadith translation, published by King Fahd Complex.
+    # DOWNLOAD: qul.tarteel.ai/resources/translation/301 (requires QUL login)
+    #   → save as sources/en-hilali-khan-simple.db, then rebuild.
+    # Licensing: freely distributed for Islamic/da'wah purposes by King Fahd
+    # Complex. Verify exact redistribution terms on the QUL resource page before
+    # release. Attribution: "Dr. Muhammad Taqi-ud-Din Al-Hilali and
+    # Dr. Muhammad Muhsin Khan, King Fahd Complex for the Printing of the
+    # Holy Quran, Madinah."
+    - file: sources/en-hilali-khan-simple.db
+      language_code: en
+      name: "The Noble Quran (Hilali & Khan)"
+      author: "Dr. Muhammad Taqi-ud-Din Al-Hilali and Dr. Muhammad Muhsin Khan"
+      license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
+      source_url: "https://qul.tarteel.ai/resources/translation/301"
+
+    # --- DEFERRED: Hindi (Azizul Haque al-Umari) — replaced by English ------
+    # - file: sources/maulana-azizul-haque-al-umari-simple.db
+    #   language_code: hi
+    #   name: "Maulana Azizul Haque al-Umari"
+    #   author: "Azizul Haque al-Umari"
+    #   license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+    #   source_url: "https://qul.tarteel.ai/resources/translation/166"
