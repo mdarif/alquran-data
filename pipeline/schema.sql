@@ -2,6 +2,9 @@
 -- Matches PRD v1.1.1, Section 5.1 (MVP). Word-by-word / page-layout tables are
 -- intentionally deferred (Section 5.2) and not created here for the MVP build.
 
+-- 1024-byte pages: Quran rows are short; smaller pages reduce I/O and compress
+-- better inside the APK. Must be set before any table is created.
+PRAGMA page_size = 1024;
 PRAGMA foreign_keys = ON;
 
 -- Key/value table for build metadata: schema version, build timestamp,
@@ -60,6 +63,9 @@ CREATE INDEX IF NOT EXISTS idx_ayahs_surah  ON ayahs(surah_id);
 CREATE INDEX IF NOT EXISTS idx_ayahs_page   ON ayahs(page_number);
 CREATE INDEX IF NOT EXISTS idx_ayahs_juz    ON ayahs(juz_number);
 CREATE INDEX IF NOT EXISTS idx_ayahs_hizb   ON ayahs(hizb_number);
+CREATE INDEX IF NOT EXISTS idx_ayahs_rub    ON ayahs(rub_el_hizb);
 CREATE INDEX IF NOT EXISTS idx_ayahs_ruku   ON ayahs(ruku_number);
+-- Covers "load all translations for a given page/juz/etc" joins efficiently
+CREATE INDEX IF NOT EXISTS idx_tr_resource_ayah ON translations(resource_id, ayah_id);
 CREATE INDEX IF NOT EXISTS idx_tr_ayah      ON translations(ayah_id);
 CREATE INDEX IF NOT EXISTS idx_tr_resource  ON translations(resource_id);

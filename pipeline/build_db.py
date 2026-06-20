@@ -391,7 +391,7 @@ def build(config: dict) -> None:
 
     # 5) db_meta -------------------------------------------------------------
     db_meta = {
-        "schema_version": str(config.get("schema_version", "1")),
+        "schema_version": str(int(config.get("schema_version", 1))),  # always a bare integer
         "db_version": str(config.get("db_version", "0.0.0")),
         "built_at": datetime.now(timezone.utc).isoformat(),
         "source_checksums": json.dumps(checksums, ensure_ascii=False, sort_keys=True),
