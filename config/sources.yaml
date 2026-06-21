@@ -19,10 +19,20 @@ sources:
   surahs:
     file: sources/quran-metadata-surah-name.sqlite
 
-  # --- Arabic Uthmani: derived ayah-level text -----------------------------
-  # Produced by prepare_sources.py from the KFGQPC Hafs word-by-word export.
+  # --- Arabic Uthmani: github.com/quran's golden text, ingested VERBATIM ----
+  # `quran.ar.uthmani.v2.db` is the exact QPC Hafs Uthmani text the quran.com /
+  # quran-ios apps ship (quran/quran-ios → Domain/QuranResources/Databases).
+  # It is co-designed with the KFGQPC font (UthmanicHafs1B Ver13) and renders
+  # madd/tanween/sukun correctly with NO tatweel-grafting and NO mark-stripping
+  # — so we read it as-is. Bismillah is already a separate header (not bundled
+  # in each surah's ayah 1) and the text carries no trailing ayah-number glyph.
   arabic_uthmani:
-    file: sources/arabic-ayah.sqlite
+    file: sources/quran.ar.uthmani.v2.db
+    table: arabic_text
+    columns:
+      surah: sura
+      ayah: ayah
+      text: text
 
   # --- Structural navigation indices: derived per-ayah ---------------------
   # Produced by prepare_sources.py: page (QPC V2 604-page layout), juz, hizb,

@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -42,6 +43,16 @@ except ImportError:  # pragma: no cover
 
 def log(msg: str) -> None:
     print(f"[build] {msg}", flush=True)
+
+
+def normalize_english_name(name: str) -> str:
+    """Tidy a transliterated surah name from upstream metadata.
+
+    The Persian/Urdu ezafe connector is always lowercase — "Aal-e-Imran", never
+    "Aal-E-Imran". Upstream sources sometimes title-case it; fix that here so the
+    app never shows a capital "E" mid-phrase.
+    """
+    return re.sub(r"(?<=-)E(?=-)", "e", name)
 
 
 def sha256_of(path: Path) -> str:
@@ -115,7 +126,7 @@ def read_surahs(spec: dict) -> dict[int, dict]:
             out[sid] = {
                 "id": sid,
                 "name_arabic": str(d[col_ar]).strip(),
-                "name_english": str(d[col_en]).strip(),
+                "name_english": normalize_english_name(str(d[col_en]).strip()),
                 "revelation_place": (str(d[col_rev]).strip().lower() if col_rev and d[col_rev] is not None else None),
                 "total_ayahs": int(d[col_cnt]) if col_cnt and d[col_cnt] is not None else None,
             }

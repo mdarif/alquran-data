@@ -20,14 +20,21 @@ see the caveat under Urdu.
 ## 1. Arabic Qur'anic text — KFGQPC Hafs
 
 - **Source:** King Fahd Glorious Qur'an Printing Complex (KFGQPC), Al-Madinah,
-  Kingdom of Saudi Arabia — Hafs/Uthmani word-by-word export (via QUL #312).
-- **Page numbers:** KFGQPC V2 (1421H) 604-page Mushaf layout (via QUL #10).
+  Kingdom of Saudi Arabia — QPC Hafs Uthmani text, **ayah-by-ayah**, ingested
+  verbatim from `quran.ar.uthmani.v2.db` as shipped by the quran.com / quran-ios
+  apps (github.com/quran/quran-ios, `Domain/QuranResources/Databases`; repo code is
+  Apache-2.0, the Qur'anic text itself is KFGQPC). This is the text co-designed with
+  the KFGQPC font, so it is ingested with **no modification** (no tatweel-grafting,
+  no mark-stripping).
+- **Page numbers:** KFGQPC V2 (1421H) 604-page Mushaf layout (via QUL #10); other
+  navigation indices (juz/hizb/rub/ruku/sajda) via QUL metadata.
 - **Terms:** Verbatim Qur'anic text. Ship unmodified. Credit KFGQPC.
 - **Required credit:** "Arabic Qur'an text and page layout © King Fahd Glorious
   Qur'an Printing Complex (KFGQPC)."
-- **App-side note (NOT this repo):** rendering the Uthmani script will use the
-  KFGQPC HAFS font, which is free to use and distribute **but must not be
-  modified**. That obligation belongs to the app, not this data repo.
+- **App-side note (NOT this repo):** the app renders this text with the matched
+  KFGQPC **UthmanicHafs1 Ver18 (Regular)** font (the face quran.com's web reader
+  ships, via the Quran Foundation CDN), which is free to use and distribute **but
+  must not be modified**. That obligation belongs to the app, not this data repo.
 
 ## 2. Urdu translation — Maulana Muhammad Junagarhi
 
