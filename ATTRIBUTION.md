@@ -54,18 +54,29 @@ see the caveat under Urdu.
   be re-cleared (written permission from the translator's estate/publisher, or
   switch to a copy whose license permits commercial use).
 
-## 3. Hindi translation — Maulana Azizul Haque al-Umari — DEFERRED
+## 3. Hindi translation — Suhel Farooq Khan & Saifur Rahman Nadwi — BUNDLED
 
-Not bundled in the MVP. When re-enabled, its licensing is already favourable:
+Bundled as of 2026-06 (owner-approved re-introduction of Hindi; the PRD MVP had
+Hindi deferred).
 
-- **Source:** QuranEnc.com — Encyclopedia of the Noble Qur'an (King Fahd
-  Complex), `hindi_omari` (via QUL #166).
-- **Terms (QuranEnc):** redistribution in apps is **explicitly permitted** if:
-  text is **unmodified**, you **attribute "QuranEnc.com" + the version number**,
-  **preserve the embedded transcript metadata**, report translation issues,
-  keep to the latest version, and show no unsuitable advertisements.
-- **Action when re-enabling:** add the "QuranEnc.com" + version credit here and
-  in the app, then uncomment the Hindi block in `config/sources.yaml`.
+- **Source:** Tanzil Project edition `hi.hindi`. NOT available on QUL — fetched
+  via the AlQuran Cloud API (`https://api.alquran.cloud/v1/quran/hi.hindi`),
+  which mirrors the Tanzil text verbatim, and compiled into
+  `sources/hi-suhel-farooq-nadwi-simple.db`.
+- **Terms (Tanzil):** free for **non-commercial** use with **attribution**,
+  **verbatim only** (no edits) — same family of terms as the Urdu (Junagarhi)
+  edition above. Credit the translators + the **Tanzil Project** with a link to
+  https://tanzil.net/trans/.
+- **CAVEAT:** monetizing the app later requires re-clearing — Tanzil's
+  translation terms are non-commercial only.
+
+### (Previously) Hindi — Maulana Azizul Haque al-Umari — SUPERSEDED
+
+Earlier builds used the al-Umari Hindi (QuranEnc `hindi_omari`, QUL #166;
+redistribution permitted if unmodified + "QuranEnc.com" + version credited +
+embedded metadata preserved). Replaced by the Tanzil edition above; the source
+DB (`sources/maulana-azizul-haque-al-umari-simple.db`) and a commented block in
+`config/sources.yaml` remain if a switch back is ever wanted.
 
 ---
 

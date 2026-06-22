@@ -51,13 +51,22 @@ From https://qul.tarteel.ai, download the **SQLite** export of each, into `./sou
 |---|---|---|
 | Arabic Uthmani script | Quran Script | KFGQPC Hafs / Uthmani |
 | Urdu translation | Translations | Maulana Muhammad Junagarhi |
-| Hindi translation | Translations | Muhammad Farooq Khan / Muhammad Ahmed |
 | Surah names | Quran Metadata | Surah names dataset |
 | Structural metadata | Quran Metadata | juz / hizb / rub / page / ruku / sajda |
 
 > **License note:** before release, open each resource's QUL page, confirm its
 > license permits store distribution, and record it in the `license:` field of
 > `config/sources.yaml`. It flows into the `resources.license` column.
+
+### Hindi translation (not on QUL)
+
+The bundled Hindi is **Suhel Farooq Khan & Saifur Rahman Nadwi** (Tanzil edition
+`hi.hindi`), which QUL does not carry. Regenerate its source DB from the AlQuran
+Cloud API (mirrors Tanzil verbatim) — it's git-ignored like the QUL sources:
+
+```bash
+python pipeline/build_hindi_source.py   # -> sources/hi-suhel-farooq-nadwi-simple.db
+```
 
 ## Build
 

@@ -64,6 +64,22 @@ sources:
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/305"
 
+    # --- Hindi: Suhel Farooq Khan & Saifur Rahman Nadwi ---------------------
+    # Tanzil edition `hi.hindi`. NOT available on QUL (which only carries the
+    # al-Umari Hindi, deferred below); sourced via the AlQuran Cloud API, which
+    # mirrors Tanzil verbatim, and compiled into the simple.db below.
+    # Licensing: Tanzil translation terms — free/non-commercial use with
+    # attribution, verbatim only (https://tanzil.net/trans/). Credit the
+    # translators + Tanzil Project (see ATTRIBUTION.md). Re-clear before any
+    # monetization. NOTE: re-introduces Hindi to the build (owner-approved
+    # 2026-06; PRD MVP had it deferred).
+    - file: sources/hi-suhel-farooq-nadwi-simple.db
+      language_code: hi
+      name: "Suhel Farooq Khan and Saifur Rahman Nadwi"
+      author: "Suhel Farooq Khan/Saifur Rahman Nadwi"
+      license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
+      source_url: "https://tanzil.net/trans/hi.hindi"
+
     # --- English: Dr. Hilali & Dr. Muhsin Khan ("The Noble Quran") ----------
     # Salafi / Ahle Hadith translation, published by King Fahd Complex.
     # DOWNLOAD: qul.tarteel.ai/resources/translation/301 (requires QUL login)
@@ -76,7 +92,7 @@ sources:
     - file: sources/en-hilali-khan-simple.db
       language_code: en
       name: "The Noble Quran (Hilali & Khan)"
-      author: "Dr. Muhammad Taqi-ud-Din Al-Hilali and Dr. Muhammad Muhsin Khan"
+      author: "Muhsin Khan/Taqi-ud-Din al-Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
       source_url: "https://qul.tarteel.ai/resources/translation/301"
 
