@@ -23,6 +23,7 @@ https://qul.tarteel.ai yourself and point the config at the local files.
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import json
 import re
@@ -200,6 +201,47 @@ def read_ayah_text(spec: dict) -> dict[tuple[int, int], str]:
         conn.close()
 
 
+TATWEEL = "ـ"  # ARABIC TATWEEL (kashida) — the elongation carrier.
+
+
+def graft_tatweel_carriers(
+    arabic: dict[tuple[int, int], str], reference_path: Path
+) -> tuple[dict[tuple[int, int], str], int]:
+    """Restore the kashida (tatweel) carriers the golden v2 text omits.
+
+    The KFGQPC UthmanicHafs font seats superscript marks — madd (``ٰٓ``),
+    dagger-alef (``ٰ``), hamza (``ٔ``) — on a U+0640 tatweel. The
+    ``quran.ar.uthmani.v2`` text ships WITHOUT those carriers, so the marks
+    collapse onto the previous letter (verified via ``hb-shape``: bare ``يَٰٓ``
+    leaves the yeh isolated and the madd floats high; ``يَـٰٓ`` makes the yeh
+    connect and the madd seat on the stretch). The canonical Tanzil edition has
+    the *same letters* but carries the kashidas — so we diff against it and graft
+    across **only the pure-tatweel runs**, leaving our letters and the v2 mark
+    encoding (e.g. U+06E1 sukun) untouched. We transfer kashida *positions*, not
+    anyone's text.
+    """
+    reference = json.loads(reference_path.read_text(encoding="utf-8"))
+    grafted = 0
+    out: dict[tuple[int, int], str] = {}
+    for pos, text in arabic.items():
+        ref = reference.get(f"{pos[0]}:{pos[1]}")
+        if ref is None:
+            out[pos] = text
+            continue
+        buf: list[str] = []
+        matcher = difflib.SequenceMatcher(None, text, ref, autojunk=False)
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag != "insert":
+                buf.append(text[i1:i2])  # keep our chars verbatim
+            # Only adopt the canonical insertion when it is purely kashida(s).
+            run = ref[j1:j2]
+            if (tag in ("insert", "replace")) and run and all(c == TATWEEL for c in run):
+                buf.append(run)
+                grafted += len(run)
+        out[pos] = "".join(buf)
+    return out, grafted
+
+
 def read_per_ayah_metadata(spec: dict) -> dict[tuple[int, int], dict]:
     """Read structural metadata when the source already has one row per ayah."""
     path = Path(spec["file"])
@@ -325,6 +367,13 @@ def build(config: dict) -> None:
     record_checksum(arabic_spec)
     arabic = read_ayah_text(arabic_spec)
     log(f"arabic ayahs: {len(arabic)}")
+
+    # Restore the kashida carriers the golden v2 text omits but the KFGQPC font
+    # needs to seat madd/dagger-alef/hamza marks (see graft_tatweel_carriers).
+    ref_path = arabic_spec.get("tatweel_reference")
+    if ref_path:
+        arabic, grafted = graft_tatweel_carriers(arabic, Path(ref_path))
+        log(f"tatweel carriers grafted: {grafted}")
 
     # Canonical ayah order: sort by (surah, ayah).
     ayah_order = sorted(arabic.keys())

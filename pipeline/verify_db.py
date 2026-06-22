@@ -23,6 +23,11 @@ from pathlib import Path
 
 EXPECTED_SURAHS = 114
 EXPECTED_AYAHS = 6236
+# Kashida (U+0640) carriers that seat the KFGQPC superscript marks. The canonical
+# Tanzil edition has exactly this many; if a rebuild drops the grafting step the
+# count collapses (the golden v2 text alone has only ~535) and the elongated madd
+# breaks. This is the sentinel that catches that regression.
+EXPECTED_TATWEELS = 1652
 
 # Upper bounds for sanity (None = skip range check)
 RANGES = {
@@ -61,6 +66,24 @@ def main() -> None:
     ).fetchone()[0]
     if empty:
         problems.append(f"{empty} ayahs have empty Arabic text")
+
+    # Kashida carriers (elongated-madd fix): the count must match the canonical
+    # edition, and the canary verse Al-Maidah 5:1 must open with the carried madd.
+    n_tatweel = sum(
+        t.count("ـ")
+        for (t,) in conn.execute("SELECT text_arabic_uthmani FROM ayahs")
+    )
+    print(f"tatweel carriers: {n_tatweel}")
+    if n_tatweel != EXPECTED_TATWEELS:
+        problems.append(
+            f"expected {EXPECTED_TATWEELS} tatweel carriers, found {n_tatweel} "
+            "(kashida grafting missing? elongated madd will break)"
+        )
+    canary = conn.execute(
+        "SELECT text_arabic_uthmani FROM ayahs WHERE surah_id=5 AND ayah_number=1"
+    ).fetchone()[0]
+    if not canary.startswith("يَـٰٓ"):  # يَـٰٓ
+        problems.append("Al-Maidah 5:1 does not open with the carried madd (يَـٰٓ)")
 
     # surah total_ayahs vs actual
     bad_counts = conn.execute(
