@@ -40,6 +40,26 @@ sources:
     # Canonical kashida-carrier source (build-time only; positions, not text).
     tatweel_reference: sources/quran-uthmani-tanzil.json
 
+  # --- Arabic IndoPak: authentic Quran.com text in the Noorehuda font ---------
+  # IndoPak script option. The **authentic Quran.com IndoPak** text (`text_indopak`
+  # field, QPC/PDMS IndoPak lineage) — the one with the correct IndoPak orthography
+  # (bare alef+kasra "iyyaka", dagger-alef "maalik", zer under the alef "ihdina").
+  # It is authored for PDMS_Saleem and carries PUA marks, so build_indopak_source.py
+  # normalises it for **Noorehuda** (CC BY-NC): maps the PUA marks with a Unicode
+  # form, strips the 7 IndoPak-specific waqf symbols that have none (standard-Unicode
+  # waqf marks are kept). Validated headlessly: 0 `.notdef` shaping all 6236 ayahs,
+  # and the (surah,ayah) key set is identical to `arabic_uthmani`. ADDITIVE —
+  # populates the reserved `text_arabic_indopak` column; the Uthmani build is
+  # untouched. Licensing: Quran.com IndoPak text — clear before release (the Quranic
+  # text itself is not copyrightable; the digitisation terms are UNVERIFIED).
+  arabic_indopak:
+    file: sources/arabic-indopak-quran-com.db
+    table: arabic_text
+    columns:
+      surah: sura
+      ayah: ayah
+      text: text
+
   # --- Structural navigation indices: derived per-ayah ---------------------
   # Produced by prepare_sources.py: page (QPC V2 604-page layout), juz, hizb,
   # rub-al-hizb, ruku (QUL marker tables), and sajda (QUL sajdah list).

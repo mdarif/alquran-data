@@ -39,6 +39,84 @@ RANGES = {
 }
 
 
+# IndoPak text is authored for PDMS_Saleem; build_indopak_source.py normalises it
+# for Noorehuda. These guards catch a re-source that forgets to normalise (PUA /
+# format controls leak through) and pin the exact orthography the owner flagged on
+# al-Fatiha. Letters are asserted by codepoint so the fixes can't silently regress.
+PUA_LO, PUA_HI = 0xE000, 0xF8FF
+INDOPAK_FORBIDDEN_CONTROLS = {0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0xFEFF, 0x0604}
+# (surah, ayah, label, predicate(text) -> ok). Encodes the authentic IndoPak spelling.
+INDOPAK_CANARIES = [
+    (1, 2, "al-hamdu has the fatha on the alef (اَ)", lambda t: t.startswith("اَ")),
+    (1, 4, "maalik uses the dagger-alef (مٰ)", lambda t: t.startswith("مٰ")),
+    (1, 5, "iyyaka is bare alef+kasra, no spurious hamza", lambda t: t.startswith("اِ") and "إ" not in t),
+    (1, 6, "ihdina has the kasra under the alef (اِ)", lambda t: t.startswith("اِ")),
+]
+
+
+def verify_indopak(conn: sqlite3.Connection, problems: list[str], warnings: list[str]) -> None:
+    """Check the IndoPak column: normalised (no PUA/controls), correct spelling,
+    and — when the font + shaping libs are available — 0 .notdef in Noorehuda."""
+    rows = conn.execute(
+        "SELECT surah_id, ayah_number, text_arabic_indopak FROM ayahs"
+    ).fetchall()
+    text = {(s, a): t for s, a, t in rows}
+
+    leaked_pua = leaked_ctrl = 0
+    for t in text.values():
+        for ch in t:
+            cp = ord(ch)
+            if PUA_LO <= cp <= PUA_HI:
+                leaked_pua += 1
+            elif cp in INDOPAK_FORBIDDEN_CONTROLS:
+                leaked_ctrl += 1
+    if leaked_pua:
+        problems.append(f"indopak: {leaked_pua} Private-Use-Area glyph(s) not normalised")
+    if leaked_ctrl:
+        problems.append(f"indopak: {leaked_ctrl} zero-width/format control(s) not stripped")
+
+    for s, a, label, ok in INDOPAK_CANARIES:
+        t = text.get((s, a), "")
+        if not ok(t):
+            problems.append(f"indopak {s}:{a} — {label} [got: {t[:12]!r}]")
+
+    _verify_indopak_shaping(text, warnings)
+
+
+def _verify_indopak_shaping(text: dict, warnings: list[str]) -> None:
+    """Best-effort: shape every IndoPak ayah against Noorehuda and assert 0 .notdef.
+    Skipped (with a note) when uharfbuzz / fontTools / the font aren't present, so
+    verify_db.py keeps working stdlib-only in CI."""
+    try:
+        import uharfbuzz as hb  # type: ignore
+    except ImportError:
+        warnings.append("indopak: uharfbuzz not installed — skipped 0-.notdef shape check")
+        return
+    font_path = next(
+        (p for p in (
+            Path("../alquran-app/assets/fonts/Noorehuda.ttf"),
+            Path("assets/fonts/Noorehuda.ttf"),
+        ) if p.exists()),
+        None,
+    )
+    if font_path is None:
+        warnings.append("indopak: Noorehuda.ttf not found — skipped 0-.notdef shape check")
+        return
+    font = hb.Font(hb.Face(hb.Blob.from_file_path(str(font_path))))
+    notdef_ayahs = 0
+    for t in text.values():
+        buf = hb.Buffer()
+        buf.add_str(t)
+        buf.guess_segment_properties()
+        hb.shape(font, buf)
+        if any(g.codepoint == 0 for g in buf.glyph_infos):
+            notdef_ayahs += 1
+    if notdef_ayahs:
+        warnings.append(f"indopak: {notdef_ayahs} ayah(s) shape to .notdef in Noorehuda")
+    else:
+        print(f"indopak: 0 .notdef shaping all {len(text)} ayahs in Noorehuda ({font_path.name})")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default="assets/quran.db")
@@ -66,6 +144,21 @@ def main() -> None:
     ).fetchone()[0]
     if empty:
         problems.append(f"{empty} ayahs have empty Arabic text")
+
+    # IndoPak column (Phase 2): optional, but if present must be COMPLETE — a
+    # partial fill would render blank ayahs in IndoPak mode.
+    indopak_filled = conn.execute(
+        "SELECT COUNT(*) FROM ayahs "
+        "WHERE text_arabic_indopak IS NOT NULL AND TRIM(text_arabic_indopak) != ''"
+    ).fetchone()[0]
+    print(f"indopak ayahs: {indopak_filled}")
+    if indopak_filled and indopak_filled != EXPECTED_AYAHS:
+        problems.append(
+            f"text_arabic_indopak partially filled ({indopak_filled}/{EXPECTED_AYAHS}) "
+            "— must be complete or absent"
+        )
+    if indopak_filled == EXPECTED_AYAHS:
+        verify_indopak(conn, problems, warnings)
 
     # Kashida carriers (elongated-madd fix): the count must match the canonical
     # edition, and the canary verse Al-Maidah 5:1 must open with the carried madd.

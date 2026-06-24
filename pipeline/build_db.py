@@ -375,6 +375,15 @@ def build(config: dict) -> None:
         arabic, grafted = graft_tatweel_carriers(arabic, Path(ref_path))
         log(f"tatweel carriers grafted: {grafted}")
 
+    # IndoPak (Phase 2, optional): standard-Unicode text for the Noorehuda font.
+    # ADDITIVE — read straight through, never touches the Uthmani text/grafting.
+    indopak_spec = sources.get("arabic_indopak")
+    indopak: dict[tuple[int, int], str] = {}
+    if indopak_spec:
+        record_checksum(indopak_spec)
+        indopak = read_ayah_text(indopak_spec)
+        log(f"indopak ayahs: {len(indopak)}")
+
     # Canonical ayah order: sort by (surah, ayah).
     ayah_order = sorted(arabic.keys())
 
@@ -418,10 +427,11 @@ def build(config: dict) -> None:
         md = meta.get(pos, {})
         conn.execute(
             "INSERT INTO ayahs(id,surah_id,ayah_number,text_arabic_uthmani,"
+            "text_arabic_indopak,"
             "page_number,juz_number,hizb_number,rub_el_hizb,ruku_number,sajda)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?)",
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (
-                ayah_id[pos], s, a, arabic[pos],
+                ayah_id[pos], s, a, arabic[pos], indopak.get(pos),
                 md.get("page_number"), md.get("juz_number"), md.get("hizb_number"),
                 md.get("rub_el_hizb"), md.get("ruku_number"), md.get("sajda", 0),
             ),
