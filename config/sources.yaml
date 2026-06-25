@@ -39,6 +39,10 @@ sources:
       text: text
     # Canonical kashida-carrier source (build-time only; positions, not text).
     tatweel_reference: sources/quran-uthmani-tanzil.json
+    # Per-ayah reading-form overrides aligning the few spots where golden v2
+    # encodes a mark differently than quran.com's displayed QPC Hafs (2:72 hamza,
+    # 11:41 imala marker) — golden text with only that one char changed.
+    reading_overrides: sources/qpc_hafs_overrides.json
 
   # --- Arabic IndoPak: authentic Quran.com text in the Noorehuda font ---------
   # IndoPak script option. The **authentic Quran.com IndoPak** text (`text_indopak`

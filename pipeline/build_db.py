@@ -386,6 +386,20 @@ def build(config: dict, graft: bool = True, output: str | None = None,
     arabic = read_ayah_text(arabic_spec)
     log(f"arabic ayahs: {len(arabic)}")
 
+    # Align the handful of spots where the golden v2 text encodes a mark
+    # differently than quran.com's displayed QPC Hafs (hamza form @2:72, imala
+    # marker @11:41) — so we render what the site shows. Targeted, per-ayah.
+    ov_path = arabic_spec.get("reading_overrides")
+    if ov_path and Path(ov_path).exists():
+        overrides = json.loads(Path(ov_path).read_text(encoding="utf-8"))
+        applied = 0
+        for key, text in overrides.items():
+            s, a = (int(x) for x in key.split(":"))
+            if (s, a) in arabic:
+                arabic[(s, a)] = text
+                applied += 1
+        log(f"reading-form overrides applied: {applied}")
+
     # Restore the kashida carriers the golden v2 text omits but the KFGQPC font
     # needs to seat madd/dagger-alef/hamza marks (see graft_tatweel_carriers).
     ref_path = arabic_spec.get("tatweel_reference")
