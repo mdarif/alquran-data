@@ -29,6 +29,7 @@ import json
 import re
 import sqlite3
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -204,8 +205,21 @@ def read_ayah_text(spec: dict) -> dict[tuple[int, int], str]:
 TATWEEL = "ـ"  # ARABIC TATWEEL (kashida) — the elongation carrier.
 
 
+def _carries_madda(text: str, pos: int) -> bool:
+    """True if the combining-mark run at ``pos`` includes a maddah (U+0653) — the
+    elongated madd that Flutter fails to anchor without a tatweel carrier. Plain
+    dagger-alef stacks (no maddah, e.g. ``رَّٰ``) anchor fine on their own, so in
+    surgical mode we DON'T carry them (their carrier is the visible over-stretch)."""
+    j = pos
+    while j < len(text) and unicodedata.combining(text[j]):
+        if text[j] == "ٓ":
+            return True
+        j += 1
+    return False
+
+
 def graft_tatweel_carriers(
-    arabic: dict[tuple[int, int], str], reference_path: Path
+    arabic: dict[tuple[int, int], str], reference_path: Path, surgical: bool = False
 ) -> tuple[dict[tuple[int, int], str], int]:
     """Restore the kashida (tatweel) carriers the golden v2 text omits.
 
@@ -236,8 +250,11 @@ def graft_tatweel_carriers(
             # Only adopt the canonical insertion when it is purely kashida(s).
             run = ref[j1:j2]
             if (tag in ("insert", "replace")) and run and all(c == TATWEEL for c in run):
-                buf.append(run)
-                grafted += len(run)
+                # Surgical: only carry the elongated-madd cases (a maddah follows);
+                # plain dagger-alef stacks render fine without a carrier.
+                if (not surgical) or _carries_madda(text, i1):
+                    buf.append(run)
+                    grafted += len(run)
         out[pos] = "".join(buf)
     return out, grafted
 
@@ -335,8 +352,9 @@ def read_marker_metadata(spec: dict, ayah_order: list[tuple[int, int]]) -> dict[
 # Build
 # --------------------------------------------------------------------------- #
 
-def build(config: dict) -> None:
-    out_path = Path(config["output"])
+def build(config: dict, graft: bool = True, output: str | None = None,
+          surgical: bool = True) -> None:
+    out_path = Path(output or config["output"])
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if out_path.exists():
         out_path.unlink()
@@ -371,9 +389,13 @@ def build(config: dict) -> None:
     # Restore the kashida carriers the golden v2 text omits but the KFGQPC font
     # needs to seat madd/dagger-alef/hamza marks (see graft_tatweel_carriers).
     ref_path = arabic_spec.get("tatweel_reference")
-    if ref_path:
-        arabic, grafted = graft_tatweel_carriers(arabic, Path(ref_path))
-        log(f"tatweel carriers grafted: {grafted}")
+    if ref_path and graft:
+        arabic, grafted = graft_tatweel_carriers(arabic, Path(ref_path), surgical=surgical)
+        log(f"tatweel carriers grafted: {grafted}"
+            + (" (surgical: madd-only)" if surgical else ""))
+    elif ref_path:
+        log("tatweel grafting DISABLED (--no-tatweel-graft): clean text, "
+            "verify madd rendering on device with the patched font")
 
     # IndoPak (Phase 2, optional): standard-Unicode text for the Noorehuda font.
     # ADDITIVE — read straight through, never touches the Uthmani text/grafting.
@@ -479,13 +501,21 @@ def build(config: dict) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description="Compile the Al Quran seed DB from QUL sources.")
     ap.add_argument("--config", default="config/sources.yaml", help="path to sources YAML")
+    ap.add_argument("--no-tatweel-graft", action="store_true",
+                    help="skip the kashida graft — build the clean text quran.com "
+                         "renders (verify madd rendering on device first)")
+    ap.add_argument("--full-graft", action="store_true",
+                    help="restore the legacy over-graft (carry plain dagger-alef "
+                         "too); the default is the surgical madd-only graft")
+    ap.add_argument("--output", help="override the output path from the config")
     args = ap.parse_args()
 
     cfg_path = Path(args.config)
     if not cfg_path.exists():
         sys.exit(f"config not found: {cfg_path}\nCopy config/sources.example.yaml to {cfg_path} and edit it.")
     config = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
-    build(config)
+    build(config, graft=not args.no_tatweel_graft, output=args.output,
+          surgical=not args.full_graft)
 
 
 if __name__ == "__main__":

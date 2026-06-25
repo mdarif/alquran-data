@@ -23,11 +23,13 @@ from pathlib import Path
 
 EXPECTED_SURAHS = 114
 EXPECTED_AYAHS = 6236
-# Kashida (U+0640) carriers that seat the KFGQPC superscript marks. The canonical
-# Tanzil edition has exactly this many; if a rebuild drops the grafting step the
-# count collapses (the golden v2 text alone has only ~535) and the elongated madd
-# breaks. This is the sentinel that catches that regression.
-EXPECTED_TATWEELS = 1652
+# Kashida (U+0640) carriers that seat the KFGQPC superscript marks. We carry ONLY
+# the elongated-madd cases (a maddah follows) — those detach in Flutter without a
+# carrier; plain dagger-alef stacks anchor fine on their own and a carrier there
+# is just an ugly over-stretch (see build_db.py `--full-graft` for the legacy
+# 1652). The golden v2 text alone has ~535; the surgical madd graft yields this.
+# If a rebuild drops the grafting the count collapses and the madd breaks.
+EXPECTED_TATWEELS = 1163
 
 # Upper bounds for sanity (None = skip range check)
 RANGES = {
