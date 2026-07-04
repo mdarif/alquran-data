@@ -56,6 +56,40 @@ WAQF_STRIP = {0xE01A, 0xE01B, 0xE01C, 0xE01E, 0xE01F, 0xE021, 0xE022}
 # Zero-width / directional / format controls that must not live in stored text.
 FORMAT_STRIP = {0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0xFEFF, 0x0604}
 
+# --- un-stackable waqf signs (Noorehuda mkmk gap) ---------------------------
+# Noorehuda positions a madd-class above-mark fine, but a *small-high waqf sign*
+# stacked ON TOP of one collapses to the glyph origin (it has no mark-to-mark
+# anchor), colliding with the letter. Seen on the muqattaʿāt 2:1 (الٓمّٓۚ) and
+# 80:24 (…هٖۤۙ). We drop only the offending waqf SIGN in that exact stack —
+# letters + ḥarakāt/madd are untouched. Standalone/2nd-mark waqf signs (the
+# common case, ~1400 verses) are kept. verify_db asserts no collapse remains.
+MADD_MARKS = {0x0653, 0x06E4}                 # maddah above / small-high madda
+STACKING_WAQF = set(range(0x06D6, 0x06DD))    # small-high waqf 06D6..06DC (incl 06D9/06DA)
+
+
+def _drop_stacking_waqf(s: str) -> str:
+    """Remove a small-high waqf sign that would stack on a madd-class mark."""
+    out: list[str] = []
+    had_madd = False  # a madd-class above-mark seen on the current base cluster
+    for ch in s:
+        cp = ord(ch)
+        if ch == " ":
+            had_madd = False
+            out.append(ch)
+        elif 0x0600 <= cp <= 0x06FF and not (0x0621 <= cp <= 0x064A) and cp not in (0x0640, 0x0670, 0x0671):
+            # a combining mark (not a base letter / tatweel / dagger-alef / wasla)
+            if cp in MADD_MARKS:
+                had_madd = True
+                out.append(ch)
+            elif cp in STACKING_WAQF and had_madd:
+                continue  # would collapse onto the madd — drop it
+            else:
+                out.append(ch)
+        else:
+            had_madd = False  # base letter resets the cluster
+            out.append(ch)
+    return "".join(out)
+
 
 def normalise(s: str) -> str:
     out: list[str] = []
@@ -72,7 +106,7 @@ def normalise(s: str) -> str:
         else:
             out.append(ch)
     # collapse any doubled / edge spaces left by stripped marks
-    return " ".join("".join(out).split())
+    return _drop_stacking_waqf(" ".join("".join(out).split()))
 
 
 def main() -> None:

@@ -82,17 +82,38 @@ def verify_indopak(conn: sqlite3.Connection, problems: list[str], warnings: list
         if not ok(t):
             problems.append(f"indopak {s}:{a} — {label} [got: {t[:12]!r}]")
 
-    _verify_indopak_shaping(text, warnings)
+    _verify_indopak_shaping(text, problems, warnings)
 
 
-def _verify_indopak_shaping(text: dict, warnings: list[str]) -> None:
-    """Best-effort: shape every IndoPak ayah against Noorehuda and assert 0 .notdef.
-    Skipped (with a note) when uharfbuzz / fontTools / the font aren't present, so
-    verify_db.py keeps working stdlib-only in CI."""
+def _has_collapsed_stack(infos, positions) -> bool:
+    """A combining mark landed at the glyph origin (0,0) while a sibling
+    above-mark on the SAME base sits high (>=600 font units) — i.e. it failed to
+    stack and collides with the letter (Noorehuda has no mkmk anchor for some
+    waqf signs). This is the muqattaʿāt 2:1 (الٓمّٓۚ) / 80:24 class of bug that a
+    plain .notdef check misses (the mark HAS a glyph, it's just misplaced)."""
+    high = origin = False
+    for gi, gp in zip(infos, positions):
+        if gp.x_advance != 0:            # base boundary
+            if high and origin:
+                return True
+            high = origin = False
+        else:                            # combining mark
+            if gp.y_offset >= 600:
+                high = True
+            elif gp.x_offset == 0 and gp.y_offset == 0:
+                origin = True
+    return high and origin
+
+
+def _verify_indopak_shaping(text: dict, problems: list[str], warnings: list[str]) -> None:
+    """Shape every IndoPak ayah against Noorehuda and check BOTH coverage
+    (0 .notdef) AND positioning (no collapsed stacked marks). Skipped (with a
+    note) when uharfbuzz / the font aren't present, so verify_db.py keeps working
+    stdlib-only in CI; when the tooling IS present, a collapse is a hard failure."""
     try:
         import uharfbuzz as hb  # type: ignore
     except ImportError:
-        warnings.append("indopak: uharfbuzz not installed — skipped 0-.notdef shape check")
+        warnings.append("indopak: uharfbuzz not installed — skipped shape check")
         return
     font_path = next(
         (p for p in (
@@ -102,21 +123,31 @@ def _verify_indopak_shaping(text: dict, warnings: list[str]) -> None:
         None,
     )
     if font_path is None:
-        warnings.append("indopak: Noorehuda.ttf not found — skipped 0-.notdef shape check")
+        warnings.append("indopak: Noorehuda.ttf not found — skipped shape check")
         return
     font = hb.Font(hb.Face(hb.Blob.from_file_path(str(font_path))))
+    feats = {"calt": True, "ccmp": True}  # match the app's IndoPak font features
     notdef_ayahs = 0
-    for t in text.values():
+    collapsed = []
+    for key, t in text.items():
         buf = hb.Buffer()
         buf.add_str(t)
         buf.guess_segment_properties()
-        hb.shape(font, buf)
+        hb.shape(font, buf, feats)
         if any(g.codepoint == 0 for g in buf.glyph_infos):
             notdef_ayahs += 1
+        if _has_collapsed_stack(buf.glyph_infos, buf.glyph_positions):
+            collapsed.append(f"{key[0]}:{key[1]}")
     if notdef_ayahs:
         warnings.append(f"indopak: {notdef_ayahs} ayah(s) shape to .notdef in Noorehuda")
-    else:
-        print(f"indopak: 0 .notdef shaping all {len(text)} ayahs in Noorehuda ({font_path.name})")
+    if collapsed:
+        problems.append(
+            f"indopak: {len(collapsed)} ayah(s) have a collapsed stacked mark in "
+            f"Noorehuda (waqf-on-madd collision): {', '.join(collapsed[:10])}"
+        )
+    if not notdef_ayahs and not collapsed:
+        print(f"indopak: 0 .notdef + 0 collapsed marks across all {len(text)} "
+              f"ayahs in Noorehuda ({font_path.name})")
 
 
 def main() -> None:
