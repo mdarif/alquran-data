@@ -56,6 +56,17 @@ WAQF_STRIP = {0xE01A, 0xE01B, 0xE01C, 0xE01E, 0xE01F, 0xE021, 0xE022}
 # Zero-width / directional / format controls that must not live in stored text.
 FORMAT_STRIP = {0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0xFEFF, 0x0604}
 
+# --- bare Allah (Noorehuda draws no built-in marks on its Allah ligature) ----
+# The Quran.com text writes 2551 of its Allah-words with an explicit shadda +
+# dagger-alef on the second lam (لِلّٰهِ …) but leaves 4 occurrences bare
+# (1:1 بِسۡمِ اللهِ and three in 5:7). PDMS_Saleem draws the marks inside its
+# Allah ligature so the bare form looks fine on Quran.com; Noorehuda does not,
+# so the bare form renders without shadda/dagger-alef. Normalise the stragglers
+# to the majority spelling. Bare lam+lam+heh only ever occurs in Allah-words,
+# and the marked spelling never contains it as a consecutive substring.
+BARE_ALLAH = "لله"                     # لله
+MARKED_ALLAH = "للّٰه"       # للّٰه
+
 # --- un-stackable waqf signs (Noorehuda mkmk gap) ---------------------------
 # Noorehuda positions a madd-class above-mark fine, but a *small-high waqf sign*
 # stacked ON TOP of one collapses to the glyph origin (it has no mark-to-mark
@@ -106,7 +117,8 @@ def normalise(s: str) -> str:
         else:
             out.append(ch)
     # collapse any doubled / edge spaces left by stripped marks
-    return _drop_stacking_waqf(" ".join("".join(out).split()))
+    folded = " ".join("".join(out).split()).replace(BARE_ALLAH, MARKED_ALLAH)
+    return _drop_stacking_waqf(folded)
 
 
 def main() -> None:
