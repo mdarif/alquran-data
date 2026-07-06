@@ -125,6 +125,15 @@ sources:
       author: "Muhsin Khan/Taqi-ud-Din al-Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
       source_url: "https://qul.tarteel.ai/resources/translation/301"
+      # Owner decision (2026-07-06): flatten the circumflex transliteration
+      # letters (â î û → a i u) to plain ASCII for cleaner reading — e.g.
+      # Allâh → Allah, Muhâjirûn → Muhajirun. Applies to Latin vowels only;
+      # embedded Arabic script (ﷺ, صلى الله عليه وسلم) and quotes are untouched.
+      strip_translit_diacritics: true
+      # Also (2026-07-06): this edition glues transliterated terms with no-break
+      # spaces (U+00A0), which forbid wrapping and leave ragged gaps in a narrow
+      # reader column. Convert them to regular spaces so the text flows normally.
+      collapse_nbsp: true
 
     # --- DEFERRED: Hindi (Azizul Haque al-Umari) — replaced by English ------
     # - file: sources/maulana-azizul-haque-al-umari-simple.db

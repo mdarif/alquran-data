@@ -159,6 +159,29 @@ def _detect_ayah_text_source(conn: sqlite3.Connection, table: str, cols: dict):
     raise ValueError(f"could not detect text columns in table '{table}' (have {c})")
 
 
+# Circumflex transliteration letters used by the Hilali-Khan English edition for
+# long Arabic vowels. The owner wants them flattened to plain ASCII (Allâh →
+# Allah) for cleaner reading. Deliberately a fixed 5-char map, NOT a Unicode
+# diacritic-strip: embedded Arabic script and curly quotes must survive intact.
+_TRANSLIT_DIACRITICS = str.maketrans({"â": "a", "î": "i", "û": "u", "Â": "A", "Î": "I"})
+
+
+def normalize_translit(text: str) -> str:
+    """Flatten â/î/û (and capitals) to a/i/u; leave all other characters as-is."""
+    return text.translate(_TRANSLIT_DIACRITICS)
+
+
+def collapse_nbsp(text: str) -> str:
+    """Turn no-break spaces (U+00A0) into regular spaces, then squeeze any runs.
+
+    The Hilali-Khan edition glues transliterated terms with NBSP (e.g.
+    ``Al-Ansar and Al-Muhajirun``). NBSP forbids line-wrapping, so chained
+    ones become long unbreakable runs that get shoved to the next line and leave
+    ragged gaps in a narrow reader column. Regular spaces wrap normally.
+    """
+    return re.sub(r"[ ]{2,}", " ", text.replace(" ", " "))
+
+
 def read_ayah_text(spec: dict) -> dict[tuple[int, int], str]:
     """Read ayah-level Arabic (or any per-ayah text) keyed by (surah, ayah)."""
     path = Path(spec["file"])
@@ -483,11 +506,17 @@ def build(config: dict, graft: bool = True, output: str | None = None,
         )
         resource_id = cur.lastrowid
         rows = read_ayah_text(tr)  # translation simple.sqlite is also ayah-keyed text
+        strip_diacritics = bool(tr.get("strip_translit_diacritics"))
+        fix_nbsp = bool(tr.get("collapse_nbsp"))
         inserted = 0
         for pos, text in rows.items():
             aid = ayah_id.get(pos)
             if aid is None:
                 continue
+            if strip_diacritics:
+                text = normalize_translit(text)
+            if fix_nbsp:
+                text = collapse_nbsp(text)
             conn.execute(
                 "INSERT OR IGNORE INTO translations(ayah_id,resource_id,text_content) VALUES (?,?,?)",
                 (aid, resource_id, text),

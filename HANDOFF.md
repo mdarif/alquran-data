@@ -61,6 +61,22 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
   (`/resources/mushaf-layout/10`), mapping its line word-id ranges to ayahs.
 - The structural OPEN ITEM below is therefore **resolved as `per_ayah`** (the
   derived `structure.sqlite`), built from QUL's marker tables + the layout.
+- **English text cleaned for display (2026-07-06, owner decision).** Two
+  presentational normalizations applied to the Hilali-Khan **English** source
+  only, via per-source flags in `config/sources.yaml` + helpers in `build_db.py`
+  (run on insert; Urdu/Hindi untouched):
+  1. `strip_translit_diacritics: true` → `normalize_translit()` flattens the
+     circumflex long-vowel letters `â î û Â Î → a i u A I` (`Allâh→Allah`,
+     `Muhâjirûn→Muhajirun`). A fixed 5-char map, **not** a Unicode strip —
+     embedded Arabic (`ﷺ`, `صلى الله عليه وسلم`) and curly quotes survive.
+  2. `collapse_nbsp: true` → `collapse_nbsp()` turns the edition's ~4300 no-break
+     spaces (U+00A0, which it uses to glue transliterated terms like
+     `Al-Ansar and Al-Muhajirun`) into regular spaces + squeezes runs. NBSP
+     forbids line-wrapping, so it left ragged gaps in the narrow reader column.
+  Both intentionally diverge from the edition's exact orthography (meaning
+  unchanged); note beside the licensing item before release. The app and web both
+  consume this rebuilt DB verbatim. Verify each rebuild changed **only** English
+  (diff Arabic/ur/hi = 0 rows).
 
 ### Raw files in `sources/` (the real QUL pull)
 
