@@ -122,7 +122,8 @@ sources:
     - file: sources/en-hilali-khan-simple.db
       language_code: en
       name: "The Noble Quran (Hilali & Khan)"
-      author: "Muhsin Khan/Taqi-ud-Din al-Hilali"
+      # Reader attribution label (owner-preferred short form, 2026-07-06).
+      author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
       source_url: "https://qul.tarteel.ai/resources/translation/301"
       # Owner decision (2026-07-06): flatten the circumflex transliteration
