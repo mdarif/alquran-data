@@ -42,17 +42,20 @@ page/juz/hizb/rub/ruku/sajda (`per_ayah` mode).
 ## State & open items
 
 - **Done:** real data downloaded, `quran.db` builds + verifies clean, pushed to GitHub.
-- **Licensing — RESOLVED for the MVP** (2026-06-20; see `ATTRIBUTION.md`). App
-  ships **free / non-commercial (da'wah)**, MVP is **Urdu (Junagarhi) only**.
-  Junagarhi cleared under Tanzil's non-commercial-with-attribution terms (ship
-  verbatim; credit translator + Tanzil w/ link). Arabic = KFGQPC (credit; font
-  is an app-side obligation). Hindi (al-Umari) **deferred** — already permissive
-  via QuranEnc.com, commented out in `config/sources.yaml`.
+- **Licensing** (see `ATTRIBUTION.md` — canonical). Shipping: Urdu (Junagarhi),
+  Hindi (Suhel Farooq Khan/Nadwi), English (Hilali & Khan).
+  - **Urdu (Junagarhi) = PUBLIC DOMAIN** (owner determination 2026-07-27).
+    Translator d. 1941; life+60 clears it ~2001. Tanzil is a *redistributor*,
+    not a rights holder — we credit them by courtesy, not obligation. **No
+    verbatim-only clause and no non-commercial restriction apply.** Derivative
+    works (Roman Urdu, Devanagari) need no permission.
+  - Hindi (Tanzil `hi.hindi`) — non-commercial + attribution, **verbatim**;
+    the Khuda→Allah adaptation was reverted 2026-07-27, so it ships verbatim.
+  - Arabic = KFGQPC (credit; font is an app-side obligation).
+  - Hindi (al-Umari) — **REJECTED on register**, not deferred. Sanskritic; the
+    product needs the Perso-Arabic register. See `TRANSLATIONS-ROADMAP.md`.
   - **Still open:** confirm KFGQPC V2 604-page *layout* redistribution terms;
-    pick a pipeline-code license. **Re-clear Junagarhi if the app is ever
-    monetized** (Tanzil terms are non-commercial only).
-  - **Action:** the bundled DB still contains Hindi — rebuild from the updated
-    config to ship Urdu-only.
+    pick a pipeline-code license.
 - **Decision pending — ayah-number glyph:** Arabic text keeps QPC's end-of-ayah
   number (e.g. `١`). Strip it in `prepare_sources.py` if unwanted.
 - **Note:** downloading QUL files requires being signed in at qul.tarteel.ai.

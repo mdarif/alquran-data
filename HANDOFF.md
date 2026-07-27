@@ -152,11 +152,14 @@ Decision: **Al Quran ships free / non-commercial (da'wah)**, and the **MVP is
 Urdu (Junagarhi) only** — Hindi + other languages are deferred. Full notice and
 required app credits: **`ATTRIBUTION.md`**.
 
-- **Urdu (Junagarhi)** → CLEARED. Tanzil's translation terms permit
-  non-commercial use with attribution (<https://tanzil.net/trans/>); the free/
-  da'wah model satisfies this. Underlying translation also likely public domain
-  (translator d. 1941). Obligations: ship verbatim; credit translator + Tanzil
-  with a link to tanzil.net.
+- **Urdu (Junagarhi)** → **PUBLIC DOMAIN** (owner determination, 2026-07-27;
+  supersedes the Tanzil-terms framing this section previously carried).
+  Translator d. 1941; India/Pakistan life+60 clears it ~2001. Tanzil is a
+  *redistributor*, not a rights holder — their non-commercial-with-attribution
+  request cannot bind a public-domain work, so we credit them by courtesy.
+  **No verbatim-only clause, no non-commercial restriction**, and derivative
+  works (Roman Urdu, Devanagari — see `TRANSLATIONS-ROADMAP.md`) need no
+  permission.
 - **Arabic script (KFGQPC)** → verbatim Qur'an text, credit KFGQPC. The KFGQPC
   HAFS **font** is an app-side obligation (free to use/distribute, no modify).
 - **Hindi (al-Umari)** → DEFERRED (commented out in `config/sources.yaml`).
@@ -165,8 +168,11 @@ required app credits: **`ATTRIBUTION.md`**.
 
 Still open: confirm KFGQPC **V2 604-page layout** redistribution terms (we store
 only page numbers, low risk); pick a pipeline-code license (`LICENSE` TODO).
-**Re-clear Junagarhi if the app is ever monetized** — Tanzil terms are
-non-commercial only. (Research, not legal advice; final sign-off is the owner's.)
+Junagarhi no longer needs re-clearing on monetization — that caveat was tied to
+Tanzil's terms and is withdrawn. **Hindi (`hi.hindi`) still does**: it is Tanzil
+non-commercial + attribution + verbatim, and unlike the Urdu its translators are
+recent enough that no public-domain argument is available.
+(Research, not legal advice; final sign-off is the owner's.)
 
 Build note: the currently-bundled `quran.db` still includes Hindi — rebuild from
 the updated config to ship the Urdu-only MVP.

@@ -38,21 +38,44 @@ see the caveat under Urdu.
 
 ## 2. Urdu translation — Maulana Muhammad Junagarhi
 
-- **Source lineage:** Tanzil Project, `ur.junagarhi` (via QUL #305).
-- **Basis:** Tanzil translation terms permit **non-commercial use with
-  attribution** (<https://tanzil.net/trans/>). The app's free/da'wah model
-  satisfies this. The underlying translation is also very likely public domain
-  (translator d. 1941; life+50 ≈ 1991, life+60 ≈ 2001).
-- **Obligations:**
-  - Ship the text **verbatim** — no edits, additions, or deletions.
-  - Credit the translator **and** the Tanzil Project, with a link to
-    <https://tanzil.net>.
+**Status: PUBLIC DOMAIN — cleared (owner determination, 2026-07-27).**
+
+- **Source lineage:** Tanzil Project, `ur.junagarhi` (via QUL #305). *Not* King
+  Fahd Complex — that is the English (Hilali & Khan) in §1. The distinction
+  matters: Tanzil is a redistributor here, not a rights holder.
+- **Basis — public domain.** Maulana Muhammad Junagarhi died in **1941**. India
+  and Pakistan both apply life-plus-sixty, so the translation entered the public
+  domain around **2001**; life-plus-seventy jurisdictions clear it by **2011**.
+  The work is also distributed openly and at scale as an Islamic educational
+  text — Quran.com, Tanzil, Islam360 and others carry it with no licensing
+  step.
+- **On Tanzil's terms.** Tanzil asks for non-commercial use with attribution.
+  That request attaches to *their distribution*; it is not a copyright claim
+  over Junagarhi's translation, which Tanzil does not own and cannot license.
+  With the underlying text in the public domain, those terms are a **courtesy we
+  choose to honour, not an obligation that binds us**.
+- **What we do anyway, because it is right:**
+  - Credit the translator by name, always.
+  - Credit the Tanzil Project as the source of our digital copy, with a link.
 - **Required credit:** "Urdu translation by Maulana Muhammad Junagarhi. Source:
   Tanzil Project — https://tanzil.net"
-- **⚠ CAVEAT — commercial use:** Tanzil's translation terms are
-  **non-commercial only**. If Al Quran is ever monetized, this translation must
-  be re-cleared (written permission from the translator's estate/publisher, or
-  switch to a copy whose license permits commercial use).
+- **No commercial-use caveat.** Previously flagged as non-commercial-only on the
+  strength of Tanzil's terms. That caveat is **withdrawn**: a public-domain text
+  carries no such restriction, so monetization needs no re-clearance here.
+  (§1 Arabic/KFGQPC and §3 Hindi have their own terms — this paragraph is about
+  the Urdu only.)
+- **Residual, recorded not resolved:** the text carries parenthetical glosses in
+  **1,479 verses** (e.g. 1:4 `بدلے کے دن (یعنی قیامت) کا مالک ہے۔`). These are a
+  hallmark of Junagarhi's own translation and are public domain with the rest.
+  A publisher (Darussalam) could in principle assert rights over a specific
+  *edition's* apparatus — typesetting, orthographic normalisation — separate
+  from the translation. Assessed as a thin claim against a text mirrored this
+  widely, and not a blocker. Revisit only if a publisher raises it.
+- **Derivative works are unblocked.** Because the text is public domain, the
+  Devanagari transliteration (`../alquran-roman-urdu`, ADR 0003) and Roman Urdu
+  need no permission from Tanzil or anyone else. Verbatim-only no longer binds
+  either. The remaining gate on those is **editorial review quality**, not
+  licensing.
 
 ## 3. Hindi translation — Suhel Farooq Khan & Saifur Rahman Nadwi — BUNDLED
 
