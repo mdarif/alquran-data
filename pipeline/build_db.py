@@ -171,6 +171,46 @@ def normalize_translit(text: str) -> str:
     return text.translate(_TRANSLIT_DIACRITICS)
 
 
+# Precomposed Devanagari nukta letters, U+0958..U+095F — क़ ख़ ग़ ज़ ड़ ढ़ फ़ as a
+# SINGLE codepoint each. Unicode lists all eight as composition exclusions, so
+# they are neither produced by NFC nor consumed by NFD: `क़` written precomposed
+# and `क` + U+093C written decomposed render identically and never compare equal.
+# Map: precomposed -> base letter + U+093C NUKTA.
+_PRECOMPOSED_NUKTA = {
+    chr(c): unicodedata.normalize("NFD", chr(c)) for c in range(0x958, 0x960)
+}
+
+
+def normalize_devanagari_nukta(text: str) -> str:
+    """Rewrite precomposed Devanagari nukta letters to base + U+093C.
+
+    The Hindi translation arrives with the precomposed forms (20,476 codepoints
+    across 5,363 verses); the Devanagari transliteration produced by
+    ``alquran-roman-urdu`` emits the decomposed form. Both are valid Unicode and
+    look identical on screen, but they are different byte sequences, so:
+
+      * search never matches across the two — a reader searching ``क़यामत``
+        typed with one form silently gets no results from text stored in the
+        other, and gets NO error either;
+      * any vocabulary keyed on the text splits into two entries.
+
+    Decomposed is the standards-recommended form (the precomposed block is a
+    composition exclusion and is discouraged), so we normalise everything to it
+    rather than to the majority spelling.
+
+    Owner decision 2026-07-27. Rendering is character-for-character identical —
+    this changes bytes, not the text. Verified below by rebuilding and confirming
+    every verse is unchanged after folding both sides.
+
+    A no-op for Arabic, Urdu and Latin text: the range is Devanagari-only.
+    """
+    if not any(0x958 <= ord(c) <= 0x95F for c in text):
+        return text
+    for pre, dec in _PRECOMPOSED_NUKTA.items():
+        text = text.replace(pre, dec)
+    return text
+
+
 def normalize_presentation_forms(text: str) -> str:
     """Fold Arabic Presentation Forms A/B back to their canonical base letters.
 
@@ -560,6 +600,10 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             # translation path; the Arabic Quran text is read separately by
             # read_ayah_text() and never passes through here.
             text = normalize_presentation_forms(text)
+            # Same class of fix, other script: precomposed vs decomposed nukta
+            # is a silent byte-level mismatch that breaks search. Unconditional
+            # for the same reason — never a deliberate authorial choice.
+            text = normalize_devanagari_nukta(text)
             if strip_diacritics:
                 text = normalize_translit(text)
             if fix_nbsp:
