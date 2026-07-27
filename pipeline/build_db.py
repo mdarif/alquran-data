@@ -171,6 +171,35 @@ def normalize_translit(text: str) -> str:
     return text.translate(_TRANSLIT_DIACRITICS)
 
 
+def normalize_presentation_forms(text: str) -> str:
+    """Fold Arabic Presentation Forms A/B back to their canonical base letters.
+
+    The Junagarhi Urdu source carries 304 stray presentation-form codepoints
+    across 238 verses — e.g. ``تبلیﻎ`` ends in U+FECE GHAIN FINAL FORM instead of
+    U+063A GHAIN. These are shaping artifacts of the original typesetting, not
+    distinct letters: the text renderer already picks the right glyph from
+    context, so they are invisible on screen but corrupt the underlying string.
+    A reader searching ``غ`` never matches ``ﻎ``, and copy-paste carries the
+    artifact out of the app.
+
+    Applied per character and ONLY inside the two presentation-form blocks, so
+    the rest of the string is bit-identical — a blanket NFKC over the whole text
+    would also rewrite characters we deliberately keep. Ornate parentheses
+    ``﴾﴿`` (U+FD3E/FD3F) live in this range but have no decomposition, so they
+    survive untouched, which is what we want: they are intentional typography
+    marking quoted Quranic text, not an artifact.
+
+    Verified over the corpus: 203 verses change, every substitution 1:1 with no
+    ligature expansions, and do-chashmi he ``ھ`` / gol he ``ہ`` are unaffected.
+    """
+    return "".join(
+        unicodedata.normalize("NFKC", c)
+        if (0xFB50 <= ord(c) <= 0xFDFF or 0xFE70 <= ord(c) <= 0xFEFF)
+        else c
+        for c in text
+    )
+
+
 def collapse_nbsp(text: str) -> str:
     """Turn no-break spaces (U+00A0) into regular spaces, then squeeze any runs.
 
@@ -544,6 +573,13 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             aid = ayah_id.get(pos)
             if aid is None:
                 continue
+            # Unconditional: presentation forms are always a typesetting
+            # artifact, never a deliberate choice, so there is no edition this
+            # should be opt-in for. A no-op for Latin/Devanagari editions — the
+            # affected blocks are Arabic-script only. NOTE: this is the
+            # translation path; the Arabic Quran text is read separately by
+            # read_ayah_text() and never passes through here.
+            text = normalize_presentation_forms(text)
             if strip_diacritics:
                 text = normalize_translit(text)
             if fix_nbsp:
