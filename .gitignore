@@ -7,6 +7,11 @@ sources/*.json
 assets/*.db
 build/
 
+# Stray DBs at the repo root — a pipeline step run from the wrong cwd drops
+# empty SQLite files here. They never belong in the repo.
+/*.db
+/*.sqlite
+
 # Local config (may contain machine-specific paths)
 config/sources.yaml
 

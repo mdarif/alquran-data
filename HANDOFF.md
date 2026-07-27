@@ -25,8 +25,11 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 
 - Arabic script: **Uthmani/Madani only** (KFGQPC Hafs primary, Kitab alternate).
   IndoPak/Asian script is a deferred Phase-2 beta.
-- Translations: **Urdu (Junagarhi) + Hindi (Farooq Khan/Ahmed) only.**
-  English (Sahih International) and Roman Urdu are deferred.
+- Translations: **Urdu (Junagarhi) + Hindi (Farooq Khan/Ahmed) only** at MVP;
+  English (Hilali & Khan) shipped later (see ATTRIBUTION.md §1). Further
+  translation candidates (e.g. a second English edition, Roman Urdu) are
+  tracked in **`TRANSLATIONS-ROADMAP.md`**, not here — that file is the shared
+  backlog both `alquran-app` and `al-quran-web` read from.
 - Navigation views: **Surah, Page, Juz, Hizb, Ruku** (Rub-al-Hizb + Sajda stored too).
 - **Pinch-to-zoom is a hard accessibility requirement** (low-vision users).
 - Deferred to backlog: audio recitation, bookmarks, last-read, dark mode, tajweed,
