@@ -182,6 +182,36 @@ def collapse_nbsp(text: str) -> str:
     return re.sub(r"[ ]{2,}", " ", text.replace(" ", " "))
 
 
+# Devanagari letters + combining vowel-signs/marks — anything that, following
+# खुदा, would make it the *start* of a longer word rather than the standalone
+# noun. Deliberately EXCLUDES the danda (।॥ U+0964-65), digits and punctuation,
+# which are word boundaries. (The Suhel Farooq Khan source only ever follows
+# खुदा with a space, ')', or one of these letters, so the guard is belt-and-braces.)
+_DEVA_LETTER = r"ऀ-ःअ-ह़ा-ॏ॑-ॣॲ-ॿ"
+# Standalone खुदा / ख़ुदा (plain and nukta spellings), guarded on both sides so
+# inflected/compound forms survive untouched.
+_KHUDA_RE = re.compile(rf"(?<![{_DEVA_LETTER}])ख़?ुदा(?![{_DEVA_LETTER}])")
+
+
+def normalize_khuda(text: str) -> str:
+    """Render the standalone Persian word खुदा / ख़ुदा ('Khuda') as अल्लाह ('Allah').
+
+    Owner decision (2026-07-12): the Suhel Farooq Khan & Saifur Rahman Nadwi Hindi
+    edition leans on the Persian *Khuda* for God; render it as Allah's proper name.
+    This makes the edition NON-verbatim — the attribution/licensing note in
+    ATTRIBUTION.md is updated accordingly.
+
+    Word-boundary-guarded (both spellings — plain ख and nukta ख़) so inflected or
+    compound forms that do NOT mean "Allah" survive intact:
+      खुदाई / खुदायी   divine dominion / creation   (e.g. सारी खुदाई)
+      खुदाओं / ख़ुदाओं  false gods (plural — shirk context, e.g. झूठे खुदाओं)
+      खुदाए रहमान      Persian izafat construction
+      ख़ुदाया           "O God" (vocative)
+      खुदावन्दी         lordship
+    """
+    return _KHUDA_RE.sub("अल्लाह", text)
+
+
 def read_ayah_text(spec: dict) -> dict[tuple[int, int], str]:
     """Read ayah-level Arabic (or any per-ayah text) keyed by (surah, ayah)."""
     path = Path(spec["file"])
@@ -508,6 +538,7 @@ def build(config: dict, graft: bool = True, output: str | None = None,
         rows = read_ayah_text(tr)  # translation simple.sqlite is also ayah-keyed text
         strip_diacritics = bool(tr.get("strip_translit_diacritics"))
         fix_nbsp = bool(tr.get("collapse_nbsp"))
+        khuda_to_allah = bool(tr.get("khuda_to_allah"))
         inserted = 0
         for pos, text in rows.items():
             aid = ayah_id.get(pos)
@@ -517,6 +548,8 @@ def build(config: dict, graft: bool = True, output: str | None = None,
                 text = normalize_translit(text)
             if fix_nbsp:
                 text = collapse_nbsp(text)
+            if khuda_to_allah:
+                text = normalize_khuda(text)
             conn.execute(
                 "INSERT OR IGNORE INTO translations(ayah_id,resource_id,text_content) VALUES (?,?,?)",
                 (aid, resource_id, text),
