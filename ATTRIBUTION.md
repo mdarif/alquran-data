@@ -69,21 +69,6 @@ Hindi deferred).
   https://tanzil.net/trans/.
 - **CAVEAT:** monetizing the app later requires re-clearing — Tanzil's
   translation terms are non-commercial only.
-- **⚠ ADAPTATION — NOT shipped verbatim (owner decision 2026-07-12):** this
-  edition renders God as the Persian **"Khuda"**; the build now rewrites the
-  standalone word **खुदा / ख़ुदा** (both the plain and nukta spellings,
-  word-boundary-guarded) to **अल्लाह** — Allah's proper name — via the
-  `khuda_to_allah` flag in `config/sources.yaml` (helper `normalize_khuda` in
-  `pipeline/build_db.py`). ~1000 occurrences across ~765 ayahs. Inflected and
-  compound forms that do **not** mean Allah are deliberately left intact:
-  *खुदाई/खुदायी* (divine dominion / creation), *खुदाओं/ख़ुदाओं* (false gods,
-  plural — shirk context), *खुदाए* (Persian izafat), *ख़ुदाया* ("O God",
-  vocative), *खुदावन्दी* (lordship).
-  - **Consequence:** Tanzil's **verbatim-only** clause no longer holds for the
-    text as shipped. The per-verse credit still names the translators (they did
-    the translation), but the licensing record here and the resource `license`
-    string mark it as **adapted**. Re-clear this modification (not just the
-    base terms) before any monetization.
 
 ### (Previously) Hindi — Maulana Azizul Haque al-Umari — SUPERSEDED
 
