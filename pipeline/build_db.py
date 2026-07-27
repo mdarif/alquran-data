@@ -189,12 +189,23 @@ def normalize_presentation_forms(text: str) -> str:
     survive untouched, which is what we want: they are intentional typography
     marking quoted Quranic text, not an artifact.
 
-    Verified over the corpus: 203 verses change, every substitution 1:1 with no
-    ligature expansions, and do-chashmi he ``ھ`` / gol he ``ہ`` are unaffected.
+    U+FDF0..U+FDFD is excluded outright. Those are the "Arabic ligature word"
+    characters — ``ﷺ`` (sallallahou alayhe wasallam), ``ﷻ``, ``ﷲ``, ``﷽`` — which
+    are *semantic*, single-glyph honorifics an author typed on purpose, not
+    shaping artifacts. NFKC expands ``ﷺ`` into the 18-character phrase
+    ``صلى الله عليه وسلم``, which drops a wall of Arabic into the middle of an
+    English sentence (Hilali-Khan 13:1). Shaping ligatures OUTSIDE this block —
+    lam-alef ``ﻻ`` and friends — are still folded, and must be: they are the
+    artifact ``gotchas.md`` §1 in alquran-roman-urdu warns about.
+
+    Verified over the corpus: 203 Urdu verses change, every substitution 1:1,
+    do-chashmi he ``ھ`` / gol he ``ہ`` unaffected, and the one ``ﷺ`` in the
+    English edition survives.
     """
     return "".join(
         unicodedata.normalize("NFKC", c)
         if (0xFB50 <= ord(c) <= 0xFDFF or 0xFE70 <= ord(c) <= 0xFEFF)
+        and not (0xFDF0 <= ord(c) <= 0xFDFD)
         else c
         for c in text
     )
