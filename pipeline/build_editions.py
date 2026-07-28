@@ -77,8 +77,12 @@ CREATE TABLE edition (
     sort_order    INTEGER NOT NULL DEFAULT 0,
     license       TEXT,
     source_url    TEXT,
-    db_version    TEXT,
-    built_at      TEXT
+    -- NO build timestamp here, deliberately. Anything that varies per build run
+    -- inside the artifact makes its sha256 churn on every rebuild, so the app is
+    -- told to re-download editions whose text never changed. `built_at` lived
+    -- here until 2026-07-28 and did exactly that. The catalogue's top-level
+    -- `generatedAt` carries the build time instead — it isn't hashed content.
+    db_version    TEXT
 );
 
 CREATE TABLE texts (
@@ -103,7 +107,7 @@ def sha256_of(path: Path) -> str:
 
 
 def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
-                  db_version: str, built_at: str) -> dict:
+                  db_version: str) -> dict:
     """Write one <slug>.db and return its catalogue entry."""
     slug = res["slug"]
     if not slug:
@@ -136,13 +140,13 @@ def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
         ed.executescript(EDITION_SCHEMA)
         ed.execute(
             "INSERT INTO edition(slug,type,language_code,name,native_name,author,"
-            "direction,sort_order,license,source_url,db_version,built_at)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            "direction,sort_order,license,source_url,db_version)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (
                 slug, res["type"], res["language_code"], res["name"],
                 res["native_name"], res["author"], res["direction"],
                 res["sort_order"], res["license"], res["source_url"],
-                db_version, built_at,
+                db_version,
             ),
         )
         ed.executemany("INSERT INTO texts(surah,ayah,text) VALUES (?,?,?)", rows)
@@ -230,7 +234,6 @@ def main() -> None:
             "current config/sources.yaml first."
         )
     db_version = meta.get("db_version", "0.0.0")
-    built_at = meta.get("built_at", datetime.now(timezone.utc).isoformat())
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -242,7 +245,7 @@ def main() -> None:
     if not resources:
         sys.exit("no translation resources in the DB")
 
-    entries = [build_edition(conn, r, out_dir, db_version, built_at) for r in resources]
+    entries = [build_edition(conn, r, out_dir, db_version) for r in resources]
 
     slugs = [e["slug"] for e in entries]
     if len(set(slugs)) != len(slugs):

@@ -30,13 +30,29 @@ list.
 - **Selector metadata lives in the DB**, not in consumer code: `native_name`,
   `direction`, `sort_order`, `default_on`. Adding a language no longer means
   editing a hardcoded list in the web toolbar or the Flutter picker.
-- **`build_editions.py`** emits `<slug>.db.gz` + `catalogue.json` (with sha256
-  and byte sizes) for hosting on **Cloudflare R2**, so new editions download
-  on demand instead of growing the app. Artifacts are deterministic — an
+- **`build_editions.py`** emits `<slug>-<sha12>.db.gz` + `catalogue.json` (with
+  sha256 and byte sizes) for hosting on **Cloudflare R2**, so new editions
+  download on demand instead of growing the app. Artifacts are deterministic — an
   unchanged edition rebuilds byte-identical, so its hash doesn't churn and
-  readers aren't told to re-download text that never changed.
+  readers aren't told to re-download text that never changed. **Nothing that
+  varies per build run may go inside an artifact** — the embedded `built_at`
+  timestamp broke this until 2026-07-28, churning all three digests on every
+  rebuild; the build time lives in the catalogue's `generatedAt` instead. Same
+  reason gzip is written with `mtime=0`. Artifact names are
+  **content-addressed** so a corrected edition gets a new URL; a stable filename
+  behind the CDN would serve stale bytes and surface as a bogus checksum error.
+  Live at **https://editions.alquranreader.com** (bucket `al-quran-editions`);
+  publish with `pipeline/publish_editions.sh`, then `verify_editions.py`. See
+  `CLAUDE.md` for the three traps that all fail quietly (`--remote`,
+  `Content-Encoding`, cache TTLs).
 - **Bundled vs downloadable:** today's three editions stay bundled in
   `quran.db`; everything new is a download. No first-run network requirement.
+  **Expected consequence:** the live catalogue currently lists exactly the three
+  bundled editions, so the app's Translations screen shows all three as
+  "Included" and offers nothing to download. That is correct, not a regression —
+  it stays that way until a non-bundled edition (Ahsanul Kalam) lands. To exercise
+  the download path before then, publish a throwaway edition under a staging
+  prefix and point a debug build at it with `--dart-define`.
 - **App constraint:** downloaded editions must live in a separate `editions.db`.
   The app re-seeds `quran.db` from its asset whenever the version marker changes
   (`db_seeder.dart`), so anything written into it is destroyed on app update.

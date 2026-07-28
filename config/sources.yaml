@@ -78,9 +78,10 @@ sources:
   # Licensing decision (2026-06-20): the app ships as a FREE, NON-COMMERCIAL
   # / da'wah product. Under that distribution model the Urdu (Junagarhi)
   # translation is cleared for use with attribution (see ATTRIBUTION.md).
-  # Hindi + other languages are DEFERRED from the MVP and re-enabled later
-  # once their attribution is wired in (the Hindi al-Umari source via
-  # QuranEnc.com is already permissive — see commented block + ATTRIBUTION.md).
+  # Three editions ship: Urdu (Junagarhi, public domain), Hindi (Suhel Farooq
+  # Khan/Nadwi, Tanzil terms, verbatim) and English (Hilali & Khan). The
+  # al-Umari Hindi at the bottom of this file is REJECTED on register, not
+  # deferred — see TRANSLATIONS-ROADMAP.md.
   translations:
     - file: sources/ur-junagarri-simple.db
       # STABLE identity — consumers persist this, never the row id (which is
@@ -102,15 +103,16 @@ sources:
       # web toolbar.
       default_on: true
       author: "Muhammad Junagarhi"
-      # CLEARED for free / non-commercial (da'wah) distribution with attribution.
-      # Source lineage: Tanzil Project (ur.junagarhi). Tanzil translation terms
-      # permit non-commercial use with attribution (https://tanzil.net/trans/).
-      # Underlying translation likely public domain (translator d. 1941).
-      # OBLIGATION: ship verbatim (no edits); credit translator + Tanzil Project
-      # with a link to tanzil.net (see ATTRIBUTION.md).
-      # CAVEAT: monetizing the app later requires re-clearing (translator/publisher
-      # permission) — Tanzil's translation terms are non-commercial only.
-      license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
+      # PUBLIC DOMAIN (owner determination 2026-07-27; supersedes the Tanzil-terms
+      # framing this block previously carried). Translator d. 1941; India/Pakistan
+      # life+60 clears it ~2001. Source lineage is Tanzil (ur.junagarhi), but
+      # Tanzil is a *redistributor*, not a rights holder — their
+      # non-commercial-with-attribution request cannot bind a public-domain work,
+      # so we credit them by courtesy, not obligation.
+      # NO verbatim-only clause and NO non-commercial restriction: derivatives
+      # (Roman Urdu, Devanagari) need no permission, and monetization needs no
+      # re-clearing. Credit the translator; see ATTRIBUTION.md.
+      license: "Public domain (translator d. 1941). Credit: Muhammad Junagarhi; Tanzil Project by courtesy. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/305"
 
     # --- Hindi: Suhel Farooq Khan & Saifur Rahman Nadwi ---------------------

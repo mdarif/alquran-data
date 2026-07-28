@@ -39,8 +39,8 @@ Smoke test (no downloads): `python tests/make_fixtures.py && python pipeline/bui
 ## Sources (real QUL pull, in `sources/`, git-ignored)
 
 Arabic KFGQPC Hafs word-by-word (#312) · QPC V2 604-page layout (#10, for page
-numbers) · Urdu Junagarhi (#305) · Hindi al-Umari (#166, substituted for the
-PRD's unavailable Farooq Khan/Ahmed) · surah names + juz/hizb/rub/ruku/sajda
+numbers) · Urdu Junagarhi (#305) · Hindi Suhel Farooq Khan/Nadwi
+(Tanzil `hi.hindi`, not on QUL — mirrored via the AlQuran Cloud API) · surah names + juz/hizb/rub/ruku/sajda
 metadata. `prepare_sources.py` aggregates words→ayahs and derives per-ayah
 page/juz/hizb/rub/ruku/sajda (`per_ayah` mode).
 
@@ -51,7 +51,7 @@ APAC, custom domain on the `alquranreader.com` zone — same arrangement as
 `al-quran-audio` → `audio.alquranreader.com`; the r2.dev URL stays disabled).
 
 Publish with `pipeline/publish_editions.sh`, then `pipeline/verify_editions.py`.
-Three traps, all of which fail quietly:
+Four traps, all of which fail quietly:
 
 - **`--remote` is mandatory** on every `wrangler r2 object` command. Without it
   wrangler writes to a LOCAL simulated bucket and still prints "Upload
@@ -66,6 +66,11 @@ Three traps, all of which fail quietly:
   immutably; only `catalogue.json` gets a short TTL (300s). A stable filename
   behind a CDN would serve stale bytes after an edition is corrected, and the
   reader would see a checksum error that is really a cache.
+- **Nothing per-build-run may go inside an artifact.** An embedded `built_at`
+  timestamp churned all three digests on every rebuild (fixed 2026-07-28), so the
+  app was told to re-download editions whose text never changed. Build time lives
+  in the catalogue's `generatedAt`; gzip is written with `mtime=0`. Two builds of
+  an unchanged DB must be byte-identical.
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
 
@@ -80,17 +85,22 @@ Upload artifacts first, catalogue last — the catalogue is what points at them.
   candidate: **`TRANSLATIONS-ROADMAP.md`**.
 
 - **Done:** real data downloaded, `quran.db` builds + verifies clean, pushed to GitHub.
-- **Licensing — RESOLVED for the MVP** (2026-06-20; see `ATTRIBUTION.md`). App
-  ships **free / non-commercial (da'wah)**, MVP is **Urdu (Junagarhi) only**.
-  Junagarhi cleared under Tanzil's non-commercial-with-attribution terms (ship
-  verbatim; credit translator + Tanzil w/ link). Arabic = KFGQPC (credit; font
-  is an app-side obligation). Hindi (al-Umari) **deferred** — already permissive
-  via QuranEnc.com, commented out in `config/sources.yaml`.
+- **Licensing** (see `ATTRIBUTION.md` — canonical). App ships **free /
+  non-commercial (da'wah)**. Shipping: Urdu (Junagarhi), Hindi (Suhel Farooq
+  Khan/Nadwi), English (Hilali & Khan).
+  - **Urdu (Junagarhi) = PUBLIC DOMAIN** (owner determination 2026-07-27).
+    Translator d. 1941; life+60 clears it ~2001. Tanzil is a *redistributor*, not
+    a rights holder — credited by courtesy. **No verbatim-only clause and no
+    non-commercial restriction**, so derivatives (Roman Urdu, Devanagari) need no
+    permission, and monetization needs no re-clearing.
+  - Hindi (Tanzil `hi.hindi`) — non-commercial + attribution, **verbatim**; the
+    Khuda→Allah adaptation was reverted 2026-07-27. Still needs re-clearing if
+    monetized; no public-domain argument is available for it.
+  - Arabic = KFGQPC (credit; font is an app-side obligation).
+  - Hindi (al-Umari) — **REJECTED on register**, not deferred (Sanskritic; the
+    product needs Perso-Arabic). See `TRANSLATIONS-ROADMAP.md`.
   - **Still open:** confirm KFGQPC V2 604-page *layout* redistribution terms;
-    pick a pipeline-code license. **Re-clear Junagarhi if the app is ever
-    monetized** (Tanzil terms are non-commercial only).
-  - **Action:** the bundled DB still contains Hindi — rebuild from the updated
-    config to ship Urdu-only.
+    pick a pipeline-code license.
 - **Decision pending — ayah-number glyph:** Arabic text keeps QPC's end-of-ayah
   number (e.g. `١`). Strip it in `prepare_sources.py` if unwanted.
 - **Note:** downloading QUL files requires being signed in at qul.tarteel.ai.

@@ -25,8 +25,9 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 
 - Arabic script: **Uthmani/Madani only** (KFGQPC Hafs primary, Kitab alternate).
   IndoPak/Asian script is a deferred Phase-2 beta.
-- Translations: **Urdu (Junagarhi) + Hindi (Farooq Khan/Ahmed) only** at MVP;
-  English (Hilali & Khan) shipped later (see ATTRIBUTION.md §1). Further
+- Translations: **three editions ship bundled** — Urdu (Junagarhi), Hindi (Suhel
+  Farooq Khan/Nadwi), English (Hilali & Khan). (The earlier "Urdu-only MVP, Hindi
+  deferred" scope is superseded; see ATTRIBUTION.md §1.) Further
   translation candidates (e.g. a second English edition, Roman Urdu) are
   tracked in **`TRANSLATIONS-ROADMAP.md`**, not here — that file is the shared
   backlog both `alquran-app` and `al-quran-web` read from.
@@ -44,13 +45,31 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
   populated (page 1–604, juz 1–30, hizb 1–60, rub 1–240, ruku 1–558, 15 sajdas).
   Spot-checked: Ayatul Kursi (2:255) → page 42, Juz 2 → 2:142, 2:1 = الٓمٓ.
 - SHA-256 of every input is recorded in the DB `db_meta` table (PRD Risk #1).
+- **Edition model landed (2026-07-28, schema_version 2).** Every translation
+  carries a stable `resources.slug` plus selector metadata (`native_name`,
+  `direction`, `sort_order`, `default_on`). Consumers select and persist on
+  **slug** — never on `resources.id`, which comes from `cur.lastrowid` and shifts
+  whenever `config/sources.yaml` is reordered. `language_code` groups only:
+  several editions per language is supported. Rationale: `TRANSLATIONS-ROADMAP.md`.
+- **Downloadable editions are live on R2** at
+  https://editions.alquranreader.com (bucket `al-quran-editions`, APAC, custom
+  domain on the `alquranreader.com` zone; r2.dev disabled). Built by
+  `build_editions.py` as content-addressed `<slug>-<sha12>.db.gz` + a
+  short-TTL `catalogue.json`, published by `publish_editions.sh` (artifacts
+  first, catalogue last), checked live by `verify_editions.py`. The publish
+  traps — `--remote` is mandatory, never set `Content-Encoding: gzip` — are
+  documented in `CLAUDE.md`; both fail silently.
+- The catalogue lists exactly the three bundled editions today, so the app offers
+  nothing to download. Expected, not a bug — see `TRANSLATIONS-ROADMAP.md`.
 
 ### What changed during the real build (read this)
 
 - **Hindi translation substituted.** The PRD's named Hindi (Farooq Khan / Ahmed)
   is **not in QUL's current catalog**. Used **Maulana Azizul Haque al-Umari**
-  (`/resources/translation/166`, simple.sqlite) instead — the ayah-by-ayah Hindi
-  option on QUL. Revisit if the owner wants a specific Hindi edition.
+  (`/resources/translation/166`, simple.sqlite) at first — the ayah-by-ayah Hindi
+  option on QUL. **Superseded:** al-Umari was later rejected on register
+  (Sanskritic, wrong for this product) and the shipping Hindi is Tanzil's
+  `hi.hindi` (Suhel Farooq Khan / Nadwi), `slug: hi-suhel-farooq-nadwi`.
 - **QUL requires sign-in to download.** All resource downloads 302 to a login
   modal until you are authenticated on qul.tarteel.ai.
 - **The raw QUL shapes don't map 1:1 onto build_db.py**, so a preprocessing step
@@ -148,9 +167,10 @@ mode. `verify_db.py` confirms all indices populated and in range.
 
 ## Licensing — RESOLVED for the MVP (2026-06-20)
 
-Decision: **Al Quran ships free / non-commercial (da'wah)**, and the **MVP is
-Urdu (Junagarhi) only** — Hindi + other languages are deferred. Full notice and
-required app credits: **`ATTRIBUTION.md`**.
+Decision: **Al Quran ships free / non-commercial (da'wah)**. Three editions ship:
+Urdu (Junagarhi), Hindi (Suhel Farooq Khan/Nadwi), English (Hilali & Khan). Full
+notice and required app credits: **`ATTRIBUTION.md`** (canonical — this section is
+the summary).
 
 - **Urdu (Junagarhi)** → **PUBLIC DOMAIN** (owner determination, 2026-07-27;
   supersedes the Tanzil-terms framing this section previously carried).
@@ -162,9 +182,12 @@ required app credits: **`ATTRIBUTION.md`**.
   permission.
 - **Arabic script (KFGQPC)** → verbatim Qur'an text, credit KFGQPC. The KFGQPC
   HAFS **font** is an app-side obligation (free to use/distribute, no modify).
-- **Hindi (al-Umari)** → DEFERRED (commented out in `config/sources.yaml`).
-  Already permissive when re-enabled: QuranEnc.com permits app redistribution if
-  unmodified + attribute "QuranEnc.com" + version number (+ keep metadata/current).
+- **Hindi (Tanzil `hi.hindi`, Suhel Farooq Khan/Nadwi)** → ships, and ships
+  **verbatim**: non-commercial + attribution + no modification. The Khuda→Allah
+  adaptation was reverted 2026-07-27 for exactly this reason.
+- **Hindi (al-Umari)** → **REJECTED on register**, not deferred. Its Sanskritic
+  register is wrong for this product, which needs Perso-Arabic. Licensing was
+  never the blocker. See `TRANSLATIONS-ROADMAP.md`.
 
 Still open: confirm KFGQPC **V2 604-page layout** redistribution terms (we store
 only page numbers, low risk); pick a pipeline-code license (`LICENSE` TODO).
@@ -173,9 +196,6 @@ Tanzil's terms and is withdrawn. **Hindi (`hi.hindi`) still does**: it is Tanzil
 non-commercial + attribution + verbatim, and unlike the Urdu its translators are
 recent enough that no public-domain argument is available.
 (Research, not legal advice; final sign-off is the owner's.)
-
-Build note: the currently-bundled `quran.db` still includes Hindi — rebuild from
-the updated config to ship the Urdu-only MVP.
 
 ## Next Steps (in order)
 
@@ -186,16 +206,22 @@ the updated config to ship the Urdu-only MVP.
 4. ~~Build `assets/quran.db`.~~ ✅ done.
 5. ~~Verify.~~ ✅ done — clean.
 6. ~~Clear licensing.~~ ✅ RESOLVED for the MVP (2026-06-20) — see the Licensing
-   section + `ATTRIBUTION.md`. Remaining sub-items: confirm KFGQPC 604-page
-   layout terms; pick a pipeline-code license; re-clear Junagarhi if monetized.
+   section + `ATTRIBUTION.md`. Remaining sub-items listed under "Owner-only"
+   below. (Junagarhi no longer needs re-clearing on monetization — it is public
+   domain; that caveat was tied to the withdrawn Tanzil framing.)
 7. ~~Push to GitHub.~~ ✅ done.
-8. **Rebuild `quran.db` Urdu-only** to match the MVP scope (Hindi now commented
-   out in `config/sources.yaml`): `prepare_sources.py` → `build_db.py` →
-   `verify_db.py`. (Needs the git-ignored `sources/` files on a local disk.)
+8. ~~Edition model + downloadable editions on R2.~~ ✅ done 2026-07-28 (`cb4a23e`,
+   branch `feat/edition-model`) — slugs, content-addressed artifacts, live
+   catalogue, verified end to end.
 9. **Decide on the QPC end-of-ayah number glyph** in the Arabic text (kept as-is
    now, e.g. the `١` after 1:1). Strip it in `prepare_sources.py` if unwanted.
-10. **Hindi (deferred):** when ready, uncomment the Hindi block in
-    `config/sources.yaml`, add its QuranEnc.com + version credit to
-    `ATTRIBUTION.md`, and rebuild.
-11. Hand back to the owner; next project is the Flutter app (`alquran-app`).
+
+Owner-only, still open:
+- **Pick the pipeline-code license** (`LICENSE` is a placeholder; MIT is the
+  recommendation). Data licensing is separate and already resolved.
+- **Confirm KFGQPC V2 604-page layout redistribution terms** (we store page
+  numbers only — low risk).
+- **Alkhair Indore permission** for Ahsanul Kalam (see `TRANSLATIONS-ROADMAP.md`).
+- App-side: `TranslationsPage` needs its entry in `home_overflow_menu.dart`
+  (`../alquran-app`, left alone — uncommitted WIP there).
 ```

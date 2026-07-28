@@ -51,7 +51,7 @@ APAC, custom domain on the `alquranreader.com` zone — same arrangement as
 `al-quran-audio` → `audio.alquranreader.com`; the r2.dev URL stays disabled).
 
 Publish with `pipeline/publish_editions.sh`, then `pipeline/verify_editions.py`.
-Three traps, all of which fail quietly:
+Four traps, all of which fail quietly:
 
 - **`--remote` is mandatory** on every `wrangler r2 object` command. Without it
   wrangler writes to a LOCAL simulated bucket and still prints "Upload
@@ -66,6 +66,11 @@ Three traps, all of which fail quietly:
   immutably; only `catalogue.json` gets a short TTL (300s). A stable filename
   behind a CDN would serve stale bytes after an edition is corrected, and the
   reader would see a checksum error that is really a cache.
+- **Nothing per-build-run may go inside an artifact.** An embedded `built_at`
+  timestamp churned all three digests on every rebuild (fixed 2026-07-28), so the
+  app was told to re-download editions whose text never changed. Build time lives
+  in the catalogue's `generatedAt`; gzip is written with `mtime=0`. Two builds of
+  an unchanged DB must be byte-identical.
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
 
