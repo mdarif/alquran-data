@@ -108,8 +108,15 @@ DB (`sources/maulana-azizul-haque-al-umari-simple.db`) and a commented block in
 - **KFGQPC redistribution of the V2 604-page layout** as page-number data —
   low risk (we store an "ayah → page number" mapping, not the layout/glyphs),
   but confirm with KFGQPC's developer terms before a wide public release.
-- ~~**Pipeline code license**~~ — **RESOLVED 2026-07-28: MIT** (owner). Covers
-  `pipeline/`, `tests/` and the config format only; it grants no rights over the
-  text, translations or fonts, which stay governed by this file. `LICENSE` states
-  that scope explicitly so a permissive code licence is not mistaken for
-  permission to redistribute the data.
+- ~~**Pipeline code license**~~ — **RESOLVED 2026-07-28: proprietary, all rights
+  reserved** (owner). Reuse of any part of this repository requires the owner's
+  prior written permission. MIT was recorded earlier the same day and
+  **withdrawn** — the effort in the pipeline and in this licensing research is
+  the owner's, and reuse requires asking. `LICENSE` also states the limit of that
+  reservation: it covers our own work only and grants nobody rights over the
+  source texts, which stay governed by this file. Note the Junagarhi translation
+  is public domain and **cannot** be claimed by us either.
+  - **Consequence to act on:** the GitHub repo is currently **public**, and
+    publishing without an open licence does not prevent copying — GitHub's terms
+    let anyone view and fork a public repo. If the intent is to actually restrict
+    reuse, make the repo private. See `HANDOFF.md`.

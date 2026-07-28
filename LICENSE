@@ -1,37 +1,37 @@
-MIT License
+Copyright (c) 2026 Al Marfa Technologies. All rights reserved.
 
-Copyright (c) 2026 Al Marfa Technologies
+PROPRIETARY — NOT OPEN SOURCE.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+No licence is granted to any person or organisation to use, copy, modify, merge,
+publish, distribute, sublicense, sell, or create derivative works from any part
+of this repository, in whole or in part, without the **prior express written
+permission** of Al Marfa Technologies (owner: Mohammad Arif,
+arif.mohammed@gmail.com).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This applies to the pipeline code, the configuration, the derived databases, the
+edition artifacts published from them, and the documentation — including the
+research recorded in ATTRIBUTION.md and TRANSLATIONS-ROADMAP.md, which is
+original work.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Permission requests: contact the owner. Absent a written grant, no rights are
+conveyed by the availability of this repository, by its being public, or by any
+lack of enforcement.
+
+Owner decision, 2026-07-28: a permissive licence (MIT) was briefly recorded here
+and is withdrawn. The pipeline, the licensing research and the ingestion work
+behind it represent substantial effort, and reuse requires asking.
 
 -------------------------------------------------------------------------------
 
-SCOPE. The MIT license above covers the *pipeline code* in this repository only
-— everything under pipeline/, tests/, and the configuration format.
+SCOPE — THIS NOTICE DOES NOT GRANT RIGHTS OVER THE SOURCE TEXTS.
 
-It does NOT cover the Qur'anic text, the translations, or the fonts this
-pipeline compiles, and it grants no rights over them. Those carry their own,
-mostly narrower terms: several are non-commercial, attribution-required and
-verbatim-only. ATTRIBUTION.md is canonical for what may be redistributed and
-under what obligations, and config/sources.yaml records the terms per resource
-(the `license` field, which is compiled into the database and its published
-edition artifacts).
+The reservation above covers Al Marfa Technologies' own work. It confers no
+rights over, and does not extend to, the Qur'anic text, the translations, or the
+fonts this pipeline compiles. Those belong to their respective rights holders and
+carry their own, mostly narrower terms — several are non-commercial,
+attribution-required and verbatim-only, and one (Junagarhi) is public domain and
+therefore cannot be claimed by anyone, including us.
 
-Permissively licensing the code therefore does not make the data it produces
-redistributable. Check ATTRIBUTION.md before shipping any compiled database.
+ATTRIBUTION.md is canonical for what may be redistributed and under what
+obligations; config/sources.yaml records the terms per resource (the `license`
+field, which is compiled into the database and its published edition artifacts).
