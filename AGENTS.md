@@ -19,6 +19,7 @@ sole contributor).
 pipeline/prepare_sources.py   raw QUL files  -> arabic-ayah.sqlite + structure.sqlite
 pipeline/build_db.py          --config config/sources.yaml -> assets/quran.db
 pipeline/verify_db.py         --db assets/quran.db  (114 surahs / 6236 ayahs / index coverage)
+pipeline/build_editions.py    --db assets/quran.db --out dist/editions  (per-edition .db.gz + catalogue.json for R2)
 ```
 
 Build (use a normal local disk — SQLite writes fail on network/synced mounts):
@@ -27,6 +28,7 @@ pip install -r requirements.txt
 python pipeline/prepare_sources.py
 python pipeline/build_db.py --config config/sources.yaml
 python pipeline/verify_db.py --db assets/quran.db
+python pipeline/build_editions.py --db assets/quran.db --out dist/editions   # only when publishing downloads
 ```
 
 Smoke test (no downloads): `python tests/make_fixtures.py && python pipeline/build_db.py --config tests/fixtures/sources.yaml`.
@@ -40,6 +42,14 @@ metadata. `prepare_sources.py` aggregates words→ayahs and derives per-ayah
 page/juz/hizb/rub/ruku/sajda (`per_ayah` mode).
 
 ## State & open items
+
+- **Editions carry a stable `slug`** (schema_version 2). Consumers select and
+  persist on slug — **never** on `resources.id`, which comes from `cur.lastrowid`
+  and shifts whenever `config/sources.yaml` is reordered. `language_code` groups
+  only: several editions per language is now a supported state. Selector metadata
+  (`native_name`, `direction`, `sort_order`, `default_on`) lives in the DB so no
+  consumer needs a hardcoded language list. Full rationale + the Ahsanul Kalam
+  candidate: **`TRANSLATIONS-ROADMAP.md`**.
 
 - **Done:** real data downloaded, `quran.db` builds + verifies clean, pushed to GitHub.
 - **Licensing — RESOLVED for the MVP** (2026-06-20; see `ATTRIBUTION.md`). App

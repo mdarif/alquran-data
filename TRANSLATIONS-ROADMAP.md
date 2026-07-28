@@ -10,6 +10,93 @@ consumer repo; link back to this file instead.
 Current lineup (shipped): Urdu (Junagarhi), Hindi (Farooq Khan/Nadwi), English
 (Hilali & Khan). Licensing basis for each: `ATTRIBUTION.md`.
 
+## The edition model (landed 2026-07-28) — read before adding any translation
+
+Adding a translation used to mean touching three repos. It is now a
+`config/sources.yaml` entry plus an R2 upload, because editions carry a **stable
+identity** and every consumer is driven by data rather than a hardcoded language
+list.
+
+- **`resources.slug` is the identity** (`ur-junagarhi`, `hi-suhel-farooq-nadwi`,
+  `en-hilali-khan`). Consumers persist the slug; artifacts are named by it.
+  **Never rename a shipped slug** — it is the key in saved reader preferences and
+  in the download catalogue.
+- **`resources.id` is NOT stable.** `build_db.py` takes it from `cur.lastrowid`,
+  so it follows position in `sources.yaml` and every id shifts when an edition is
+  inserted or reordered. Anything that persists an id silently points at the
+  wrong edition after the next build.
+- **`language_code` groups only.** Several editions may share a language. Two
+  Hindi rows is now a supported, expected state.
+- **Selector metadata lives in the DB**, not in consumer code: `native_name`,
+  `direction`, `sort_order`, `default_on`. Adding a language no longer means
+  editing a hardcoded list in the web toolbar or the Flutter picker.
+- **`build_editions.py`** emits `<slug>.db.gz` + `catalogue.json` (with sha256
+  and byte sizes) for hosting on **Cloudflare R2**, so new editions download
+  on demand instead of growing the app. Artifacts are deterministic — an
+  unchanged edition rebuilds byte-identical, so its hash doesn't churn and
+  readers aren't told to re-download text that never changed.
+- **Bundled vs downloadable:** today's three editions stay bundled in
+  `quran.db`; everything new is a download. No first-run network requirement.
+- **App constraint:** downloaded editions must live in a separate `editions.db`.
+  The app re-seeds `quran.db` from its asset whenever the version marker changes
+  (`db_seeder.dart`), so anything written into it is destroyed on app update.
+
+Guards, because both failure modes here are silent rather than loud:
+`build_db.py` refuses a missing or duplicate slug **before** deleting the
+previous DB, and `verify_db.py` treats either as a hard FAIL.
+
+## Candidate: Hindi (Ahsanul Kalam) — Rais Qureshi, print-only → OCR
+
+- **Requested 2026-07-28 (owner).** Resolves the "Rais Qureshi does not exist as
+  a digital source" dead end below — not through any ingestion channel, but by
+  the owner obtaining the PDF from the translator directly, having spoken to him.
+
+- **What it is.** *अहसनुल कलाम*, publisher **अलख़ैर (Alkhair), Indore**; 1st ed.
+  Oct 2019, 2nd Dec 2023. Hindi tarjuma **Shaikh Muhammad Rais Qureshi** (Ujjain);
+  Urdu base credited on the title page to **Hafiz Salahuddin Yusuf** — who is the
+  *commentator* of Ahsan-ul-Bayan, whose Urdu translation is Junagarhi's, so the
+  attribution is loose. Compiled (माख़ूज़) from six works: Ahsanul Kalam, Ahsanul
+  Bayan, Al-Quran Al-Kareem, Taysirul Quran, Sirajul Bayan, Fahmul Quran.
+
+- **It is a compilation, not a rendering of Junagarhi.** Checked verse by verse
+  against our Junagarhi source on al-Fatiha: 1:5 and 1:7 track it very closely
+  (1:7 differs only राह→रास्ता and the resulting की→का agreement), 1:4's spine
+  matches — but 1:2 replaces पालने वाला with **रब**, and 1:1 drops
+  शुरू करता हूँ entirely. Junagarhi is one thread of several. Under
+  `alquran-roman-urdu`'s STYLE_GUIDE §0 it is therefore **evidence, never
+  authority**.
+
+- **Why the owner wants it:** Salafi creed, Perso-Arabic register, *and* it
+  serves pure-Hindi readers — every Perso-Arabic term carries a tatsama gloss in
+  brackets: तारीफें (प्रशंसायें), बदले (प्रतिकार), रास्ता (सुपथ), इनाम (पुरस्कार).
+  That is an affordance the Junagarhi→Devanagari route does not have.
+
+- **Nukta discipline is inconsistent** — फ़ातिहा and ग़ज़ब carry nuktas, तारीफें
+  does not. Good corroboration for *vocabulary*, unreliable for *orthography*. If
+  it is ever wired into `alquran-roman-urdu/scripts/validate.py` as a second
+  witness, a missing nukta there must **not** count as evidence against our
+  faithful-nukta rule (that repo's STYLE_GUIDE §5).
+
+- **Ingestion cost: OCR.** 633-page scan, **no text layer** (`pdftotext` returns
+  0–3 chars/page), sliced into 48,686 image fragments, one two-page spread per PDF
+  page (Hindi left, Arabic right). Verse numbers are inline — `(49)`, `(50)` — so
+  segmentation is tractable. **Three streams must not be conflated:** the
+  translation, the bracketed glosses, and the numbered footnotes (the मुख़्तसर
+  तफ़्सीर). Note the two corpora's parentheses do different jobs — Junagarhi's are
+  explanatory *(यानी क़ियामत)*, Ahsanul Kalam's are register glosses *(प्रतिकार)*.
+  **Nukta fidelity under OCR is unmeasured** and is the main risk: क़→क is the
+  silent-plausible-wrong-word failure, not an error.
+
+- **Licensing.** The copyright page reserves rights over the *हाशिया / mukhtasar
+  tafsir* to **Alkhair, Indore** — the publisher, not the translator — and states
+  the PDF is *तुलबा के लिए* (for students). Owner has the translator's permission
+  and is obtaining Alkhair's. Until both are recorded in `ATTRIBUTION.md`, the
+  licence is `UNVERIFIED — clear before release`.
+
+- **Status:** blocked on OCR fidelity measurement + licence. Ships as a normal
+  `translation` row (`slug: hi-ahsanul-kalam`), **alongside** Suhel Farooq Khan,
+  not replacing it — the owner's decision is to offer readers the choice.
+
 ## Candidate: Hindi in the Perso-Arabic register — via Junagarhi → Devanagari
 
 - **Requested:** 2026-07-27 (owner). The ask started as "add a Salafi/Ahle
@@ -53,10 +140,19 @@ Current lineup (shipped): Urdu (Junagarhi), Hindi (Farooq Khan/Nadwi), English
   register", not "cheap win waiting to be enabled". This is the single most
   likely thing for a future session to get wrong.
 
-- **Therefore:** the only Salafi Hindi translation that exists is the one whose
-  register is rejected; the only text in the wanted register with the wanted
-  creed is **Junagarhi**, which is in Urdu script. Rendering Junagarhi into
-  Devanagari is not an alternative route — it is the **only** route.
+- **~~Therefore: Devanagari is the only route.~~ SUPERSEDED 2026-07-28.** This
+  item used to conclude that the only Salafi Hindi translation in existence had
+  the rejected register, so rendering Junagarhi into Devanagari was *"not an
+  alternative route — it is the **only** route."* That is **no longer true**:
+  the owner obtained **Ahsanul Kalam** directly from its translator (see the
+  candidate below), and it is Salafi, in Hindi script, in the Perso-Arabic
+  register. The dead-end note above resolved exactly as it predicted it would —
+  by identifying detail from the owner, not by another channel sweep.
+
+  The Devanagari route keeps its **project** rationale regardless: it is a second
+  renderer off the same phonemic store as the Roman Urdu lexicon, which is the
+  real deliverable of `../alquran-roman-urdu`. What it has lost is its claim to
+  being the *only* way to serve a Perso-Arabic-register Hindi reader.
 
 - **Shape of the work:** it lives in `../alquran-roman-urdu`, not here. That
   project already routes Urdu script → phonemes → Roman; Devanagari is a second
@@ -72,8 +168,9 @@ Current lineup (shipped): Urdu (Junagarhi), Hindi (Farooq Khan/Nadwi), English
   3. Ingest here as `resources.type = "transliteration"`, `language_code: hi`
      — **never** a second Hindi `translation` row. Credit the translator; never
      present it as "the Quran says".
-  4. Consumers: two `hi` rows breaks the one-row-per-language assumption in
-     `al-quran-web`, same blocker as Saheeh International below.
+  4. ~~Consumers: two `hi` rows breaks the one-row-per-language assumption.~~
+     **Fixed 2026-07-28** by the edition model below — several editions per
+     language are now first-class.
 
 - **Status:** blocked on lexicon review + licence. Not scheduled.
 

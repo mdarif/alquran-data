@@ -107,11 +107,18 @@ sources:
     mode: per_ayah
   translations:
     - file: {FX}/translation-urdu.sqlite
+      slug: test-ur
       language_code: ur
       name: "Test Urdu"
+      native_name: "اردو"
+      direction: rtl
+      default_on: true
     - file: {FX}/translation-hindi.sqlite
+      slug: test-hi
       language_code: hi
       name: "Test Hindi"
+      native_name: "हिन्दी"
+      direction: ltr
 """, encoding="utf-8")
 
 

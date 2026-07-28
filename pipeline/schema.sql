@@ -40,12 +40,28 @@ CREATE TABLE IF NOT EXISTS ayahs (
 );
 
 -- A registry of every text resource (translation now; tafsir/transliteration later).
+--
+-- `slug` is the STABLE identity of an edition and the only safe thing for a
+-- consumer to persist. `id` is NOT stable: build_db.py assigns it from
+-- cur.lastrowid, so it follows insertion order in config/sources.yaml and every
+-- id shifts when an edition is added or reordered. A saved preference or a
+-- download filename keyed on id silently points at the wrong edition after the
+-- next build; keyed on slug it survives.
+--
+-- `language_code` is a GROUPING field only. Several editions may share one
+-- language (two Hindi translations, say) — consumers must never assume one row
+-- per language.
 CREATE TABLE IF NOT EXISTS resources (
     id            INTEGER PRIMARY KEY,
+    slug          TEXT NOT NULL UNIQUE,           -- stable id, e.g. "ur-junagarhi"
     type          TEXT NOT NULL,                  -- "translation" | "tafsir" | "transliteration"
     language_code TEXT NOT NULL,                  -- ISO-639, e.g. "ur", "hi"
-    name          TEXT NOT NULL,
+    name          TEXT NOT NULL,                  -- edition name, e.g. "Ahsanul Kalam"
+    native_name   TEXT,                           -- selector label in its own script: हिन्दी, اردو
     author        TEXT,
+    direction     TEXT,                           -- "rtl" | "ltr"; drives layout without a hardcoded lang list
+    sort_order    INTEGER NOT NULL DEFAULT 0,     -- display order within a language group
+    default_on    INTEGER NOT NULL DEFAULT 0,     -- 1 = shown by default to a new reader
     license       TEXT,                           -- record the QUL/source license here
     source_url    TEXT
 );

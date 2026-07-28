@@ -219,13 +219,28 @@ def main() -> None:
     for sid, declared, actual in bad_counts:
         warnings.append(f"surah {sid}: total_ayahs={declared} but {actual} ayahs present")
 
-    # translation coverage
-    for rid, name, lang in conn.execute("SELECT id, name, language_code FROM resources").fetchall():
+    # translation coverage, plus the edition-identity contract. A missing or
+    # duplicated slug is a hard FAIL, not a warning: consumers persist the slug
+    # and download artifacts are named by it, so a collision means two editions
+    # silently resolve to one another — the exact failure this column exists to
+    # prevent. Row ids can't stand in; they shift with sources.yaml ordering.
+    resources = conn.execute(
+        "SELECT id, slug, name, language_code FROM resources ORDER BY language_code, sort_order, id"
+    ).fetchall()
+    slug_seen: dict[str, str] = {}
+    for rid, slug, name, lang in resources:
+        if not slug:
+            problems.append(f"resource {rid} ('{name}') has no slug")
+        elif slug in slug_seen:
+            problems.append(f"duplicate slug '{slug}': '{slug_seen[slug]}' and '{name}'")
+        else:
+            slug_seen[slug] = name
         cnt = conn.execute("SELECT COUNT(*) FROM translations WHERE resource_id=?", (rid,)).fetchone()[0]
         status = "ok" if cnt == EXPECTED_AYAHS else f"GAP ({EXPECTED_AYAHS - cnt} missing)"
-        print(f"translation [{lang}] {name}: {cnt} ayahs -> {status}")
+        print(f"translation [{lang}] {slug or 'NO-SLUG'} ({name}): {cnt} ayahs -> {status}")
         if cnt != EXPECTED_AYAHS:
             warnings.append(f"translation '{name}' covers {cnt}/{EXPECTED_AYAHS} ayahs")
+    print(f"editions: {len(resources)} across {len({r[3] for r in resources})} language(s)")
 
     # navigation index ranges
     for col, (lo, hi) in RANGES.items():

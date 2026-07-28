@@ -6,6 +6,9 @@ sources/*.json
 # Build outputs
 assets/*.db
 build/
+# Per-edition download artifacts (build_editions.py) — uploaded to R2, never
+# committed: ~1.5 MB per build and regenerated deterministically from quran.db.
+dist/
 
 # Stray DBs at the repo root — a pipeline step run from the wrong cwd drops
 # empty SQLite files here. They never belong in the repo.

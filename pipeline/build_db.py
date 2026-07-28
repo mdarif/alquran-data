@@ -455,8 +455,38 @@ def read_marker_metadata(spec: dict, ayah_order: list[tuple[int, int]]) -> dict[
 # Build
 # --------------------------------------------------------------------------- #
 
+def validate_editions(config: dict) -> None:
+    """Check every edition has a unique, non-empty slug.
+
+    Runs before the build deletes the previous DB, so a bad config leaves the
+    existing artifact intact rather than a half-written one. A slug collision is
+    the failure this whole column exists to prevent: consumers persist the slug
+    and download artifacts are named by it, so two editions sharing one would
+    silently resolve to each other. Row ids can't substitute — they come from
+    cur.lastrowid and shift whenever this list is reordered.
+    """
+    seen: dict[str, str] = {}
+    for tr in config["sources"].get("translations", []):
+        slug = (tr.get("slug") or "").strip()
+        name = tr.get("name", "?")
+        if not slug:
+            raise SystemExit(
+                f"config: translation '{name}' has no `slug`. Every edition needs a "
+                "stable slug — consumers persist it, and row ids shift whenever "
+                "this list is reordered."
+            )
+        if slug in seen:
+            raise SystemExit(
+                f"config: duplicate slug '{slug}' ({seen[slug]} and {name}). "
+                "Slugs must be unique."
+            )
+        seen[slug] = name
+
+
 def build(config: dict, graft: bool = True, output: str | None = None,
           surgical: bool = True) -> None:
+    validate_editions(config)
+
     out_path = Path(output or config["output"])
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if out_path.exists():
@@ -576,13 +606,19 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             ),
         )
 
-    # 4) Translations --------------------------------------------------------
+    # 4) Translations (slugs already validated by validate_editions) ----------
     for tr in config["sources"].get("translations", []):
         record_checksum(tr)
         cur = conn.execute(
-            "INSERT INTO resources(type,language_code,name,author,license,source_url)"
-            " VALUES ('translation',?,?,?,?,?)",
-            (tr["language_code"], tr["name"], tr.get("author"), tr.get("license"), tr.get("source_url")),
+            "INSERT INTO resources(slug,type,language_code,name,native_name,author,"
+            "direction,sort_order,default_on,license,source_url)"
+            " VALUES (?,'translation',?,?,?,?,?,?,?,?,?)",
+            (
+                tr["slug"], tr["language_code"], tr["name"], tr.get("native_name"),
+                tr.get("author"), tr.get("direction"), int(tr.get("sort_order", 0)),
+                1 if tr.get("default_on") else 0,
+                tr.get("license"), tr.get("source_url"),
+            ),
         )
         resource_id = cur.lastrowid
         rows = read_ayah_text(tr)  # translation simple.sqlite is also ayah-keyed text
@@ -613,7 +649,7 @@ def build(config: dict, graft: bool = True, output: str | None = None,
                 (aid, resource_id, text),
             )
             inserted += 1
-        log(f"translation [{tr['language_code']}] {tr['name']}: {inserted} ayahs")
+        log(f"translation [{tr['slug']}] {tr['name']}: {inserted} ayahs")
 
     # 5) db_meta -------------------------------------------------------------
     db_meta = {
