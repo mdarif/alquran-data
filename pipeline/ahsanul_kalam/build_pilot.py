@@ -1,0 +1,272 @@
+#!/usr/bin/env python3
+"""Build a few Ahsanul Kalam surahs as a web pilot — not a full ingestion.
+
+Owner decision 2026-07-28: see a handful of Hindi chapters on `al-quran-web`
+before committing to the whole 661-page corpus, quran.db, or R2. So this emits
+per-surah JSON in the shape the site's existing Roman Urdu pilot already
+consumes (`al-quran-web/docs/roman-urdu-pilot.md`): drop a file in, run the
+site's export, no code changes.
+
+Reads the line manifest produced by `extract_lines.py` and OCRs only the pages
+the requested surahs occupy.
+
+Two OCR passes, because tesseract's failure modes here are complementary:
+  * `-l hin`      — Devanagari is near-exact, digits are wrong (1 -> । or |)
+  * `-l eng+hin`  — digits are right, Devanagari degrades badly (रहम -> TA)
+Text comes from the first, verse numbers from the second. Measured on AQ2 pages
+1-9: al-Fatiha 1-7 exact and al-Baqarah 1-61 with one error, which the sequence
+check below catches by itself.
+
+Guards, since every failure mode here is silent — bad output reads as plausible
+Hindi rather than crashing:
+  * only 83px strips (the translation body) are read. The 72px footnote text and
+    48px superscript markers are excluded, so footnote numbers can never be
+    mistaken for verse numbers.
+  * the verse sequence must be exactly 1..N with no gaps, and N must match the
+    ayah count in quran.db. A surah that fails is refused, not published — the
+    site's pilot is all-or-nothing per surah for the same reason.
+
+NOT DONE HERE — nukta restoration. The owner's decision is to store the
+fully-nuktaed form (lexical restoration via `alquran-roman-urdu`), but OCR drops
+nuktas on क/ख/ग/ज/फ and the print itself is inconsistent, so the pilot text is
+marked `beta-unverified` and carries `nuktas: unrestored`. Do not present it as
+the final text, and do not use it as a lexicon witness.
+
+Usage:
+    python pipeline/ahsanul_kalam/build_pilot.py --surahs 1,112,113,114
+"""
+from __future__ import annotations
+
+import argparse
+import itertools
+import json
+import re
+import shutil
+import sqlite3
+import subprocess
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+BODY_PX = 83    # translation body
+TITLE_PX = 103  # centred surah title, e.g. "सूरह इख्लास-112" — the boundary marker
+VERSE_RE = re.compile(r"\((\d{1,3})\)")
+
+
+def log(msg: str) -> None:
+    print(f"[ak-pilot] {msg}", flush=True)
+
+
+def tess(img: Path, lang: str, psm: str = "7") -> str:
+    out = subprocess.run(
+        ["tesseract", str(img), "-", "-l", lang, "--psm", psm],
+        capture_output=True, text=True,
+    )
+    return out.stdout.strip()
+
+
+def load_manifest(src: Path) -> list[dict]:
+    path = src / "lines.jsonl"
+    if not path.exists():
+        sys.exit(f"no manifest at {path} — run extract_lines.py first")
+    return [json.loads(l) for l in path.open(encoding="utf-8")]
+
+
+def in_reading_order(rows: list[dict]) -> list[dict]:
+    """Every line of the corpus in reading order.
+
+    Files sort AQ1..AQ6, then page, then down the page, then left to right. Paint
+    order is useless across a page (it groups by text frame), so ordering is done
+    from geometry.
+    """
+    return sorted(rows, key=lambda r: (r["file"], r["pdf_page"], -r["top"], r["x"]))
+
+
+def title_index(rows: list[dict], src: Path, cache: Path) -> dict[int, int]:
+    """Map surah number -> its index in the reading-order stream.
+
+    Boundaries come from the centred title strips ("सूरह इख्लास-112"), not from
+    the page header. Two reasons the header cannot do this job:
+      * a page carries the surah at the left margin AND the juz at the right
+        ("पारा - 2"), so reading the page's headers together yields the juz;
+      * a single page routinely holds the end of one surah and the start of the
+        next, so page granularity cannot separate them — surah 112 and 113 share
+        a page, and 113 would be lost entirely.
+    Only ~114 strips corpus-wide, so this is cheap; cached because it never changes.
+    """
+    if cache.exists():
+        return {int(k): v for k, v in json.loads(cache.read_text()).items()}
+
+    log("indexing surah titles (cached after this)")
+    stream = in_reading_order(rows)
+    index: dict[int, int] = {}
+    for i, r in enumerate(stream):
+        if r["px_height"] != TITLE_PX:
+            continue
+        text = tess(src / "img" / r["img"], "eng+hin")
+        m = re.search(r"(\d{1,3})\s*$", text.replace("-", " ").strip())
+        if m:
+            n = int(m.group(1))
+            if 1 <= n <= 114 and n not in index:
+                index[n] = i
+
+    cache.write_text(json.dumps(index, indent=0))
+    log(f"indexed {len(index)}/114 surah titles")
+    return index
+
+
+def read_surah(stream: list[dict], src: Path, start: int, end: int) -> dict[int, str]:
+    """OCR the body lines in stream[start:end] and split them into verses."""
+    body = [r for r in stream[start:end] if r["px_height"] == BODY_PX]
+    chunks: list[str] = []
+    # One printed line is often several strips (the verse number is set as its
+    # own strip), so regroup on the baseline within a page.
+    for _, grp in itertools.groupby(
+            body, key=lambda r: (r["file"], r["pdf_page"], r["top"])):
+        grp = list(grp)
+        hin = " ".join(tess(src / "img" / r["img"], "hin") for r in grp)
+        num = " ".join(tess(src / "img" / r["img"], "eng+hin") for r in grp)
+
+        # Splice the reliable digits into the reliable Devanagari. Both passes see
+        # the same marker slots in the same order; the hin pass just renders some
+        # of them badly — "(1)" comes back as "()" or "(।)". So collect the slots
+        # POSITIONALLY and refill them left to right.
+        #
+        # Filling the well-formed markers first and the empty ones afterwards
+        # (the obvious way) silently swaps verses: on al-Fatiha's opening line
+        # `() अल्लाह… (2) तमाम`, the only intact marker is (2), which would take
+        # the first digit — putting verse 1's text under 2 and vice versa. That
+        # reads perfectly, which is exactly why it has to be done positionally.
+        good = VERSE_RE.findall(num)
+        slots = list(re.finditer(r"\((?:\d{0,3}|[।|॥])\)", hin))
+        if good and len(slots) == len(good):
+            out, last = [], 0
+            for slot, digit in zip(slots, good):
+                out.append(hin[last:slot.start()])
+                out.append(f"({digit})")
+                last = slot.end()
+            out.append(hin[last:])
+            hin = "".join(out)
+        elif good:
+            # Slot count disagrees between passes — leave the hin text alone and
+            # let the verse-sequence guard reject the surah rather than guess.
+            pass
+        chunks.append(hin)
+
+    text = " ".join(chunks)
+    # Tesseract reads the danda as a pipe often enough to matter, and it is a
+    # sentence terminator here — the trailing-material trim below depends on it.
+    text = text.replace("|", "।").replace("॥", "।")
+
+    verses: dict[int, str] = {}
+    parts = VERSE_RE.split(text)
+    # parts = [pre, num, body, num, body, ...]
+    for num, body in zip(parts[1::2], parts[2::2]):
+        n = int(num)
+        verses[n] = (verses.get(n, "") + " " + body).strip() if n in verses else body.strip()
+
+    def tidy(s: str) -> str:
+        s = s.replace("‍", "")   # OCR sprinkles ZWJ inside conjuncts (मक्‍की)
+        s = re.sub(r"\s+([।,])", r"\1", s)  # strips join with a space before the danda
+        return re.sub(r"\s+", " ", s).strip()
+
+    out = {k: tidy(v) for k, v in verses.items()}
+    if out:
+        # The last verse of a surah absorbs whatever the page puts after it — for
+        # al-Nas that was the index heading "फेहरिस्त मजामिने कुरआन", appended to
+        # verse 6 where nothing would flag it. Verses end in a danda, so anything
+        # trailing the final one is not part of the verse.
+        last = max(out)
+        if "।" in out[last]:
+            out[last] = out[last][:out[last].rfind("।") + 1].strip()
+    return out
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--src", default="sources/ahsanul-kalam")
+    ap.add_argument("--db", default="assets/quran.db", help="for expected ayah counts")
+    ap.add_argument("--out", default="dist/pilot/ahsanul-kalam")
+    ap.add_argument("--surahs", default="1,112,113,114")
+    args = ap.parse_args()
+
+    if not shutil.which("tesseract"):
+        sys.exit("tesseract not found — brew install tesseract tesseract-lang")
+
+    src = Path(args.src)
+    rows = load_manifest(src)
+    wanted = [int(s) for s in args.surahs.split(",")]
+
+    conn = sqlite3.connect(args.db)
+    expected = dict(conn.execute(
+        "SELECT surah_id, COUNT(*) FROM ayahs GROUP BY surah_id").fetchall())
+    conn.close()
+
+    stream = in_reading_order(rows)
+    titles = title_index(rows, src, src / "surah-titles.json")
+    # A surah runs from its own title to whichever title comes next in the
+    # stream — not to the end of the page, and not to the next *numbered* surah,
+    # since a title may have been misread.
+    starts = sorted(titles.values())
+
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ok, refused = [], []
+
+    for surah in wanted:
+        start = titles.get(surah)
+        if start is None:
+            refused.append((surah, "no title strip found for this surah"))
+            continue
+        later = [i for i in starts if i > start]
+        end = later[0] if later else len(stream)
+        log(f"surah {surah}: lines {start}-{end} "
+            f"({stream[start]['file']} p{stream[start]['pdf_page']})")
+        verses = read_surah(stream, src, start, end)
+        want = expected.get(surah)
+
+        # Refuse anything that isn't exactly 1..N. A partial or misnumbered surah
+        # would render as plausible Hindi with a verse quietly missing.
+        problems = []
+        if want is None:
+            problems.append("surah not in quran.db")
+        else:
+            missing = [n for n in range(1, want + 1) if n not in verses]
+            extra = [n for n in verses if n < 1 or n > want]
+            if missing:
+                problems.append(f"missing verses {missing}")
+            if extra:
+                problems.append(f"out-of-range verses {extra}")
+        if problems:
+            refused.append((surah, "; ".join(problems)))
+            log(f"  REFUSED: {'; '.join(problems)}")
+            continue
+
+        payload = {
+            "surah": surah,
+            "status": "beta-unverified",
+            "nuktas": "unrestored",
+            "source": ("Ahsanul Kalam — Hindi translation by Shaikh Muhammad Rais "
+                       "Qureshi, publisher Alkhair, Indore. OCR of the publisher's "
+                       "master PDF."),
+            "note": ("PILOT / ILLUSTRATIVE. Machine OCR, not reviewed. Nuktas are "
+                     "unrestored (क़/ज़/फ़ may appear without the dot). Known OCR "
+                     "class that CHANGES MEANING: मैं ('I') read as में ('in') — "
+                     "check every first-person verse. Licence from Alkhair, Indore "
+                     "is NOT yet granted — do not publish beyond an internal "
+                     "preview."),
+            "ayahs": {str(n): verses[n] for n in range(1, want + 1)},
+        }
+        path = out_dir / f"surah-{surah:03d}.json"
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8")
+        ok.append(surah)
+        log(f"  ok: {want} verses -> {path}")
+
+    log(f"done: {len(ok)} surah(s) written {ok}")
+    for surah, why in refused:
+        log(f"refused surah {surah}: {why}")
+
+
+if __name__ == "__main__":
+    main()
