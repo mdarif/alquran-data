@@ -116,7 +116,25 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   by text frame (footnotes are painted before the body they annotate, header
   last). Verified on al-Fatiha: assembles cleanly, verse numbers in place.
 
-- **Nukta fidelity under OCR: measured, and it is the blocker.** Tesseract `hin`
+- **Scored against the print page (owner supplied a screenshot of folio 2,
+  al-Fatiha).** Body reconstruction is **96% word-accurate, 100/100 words
+  aligned** — 4 errors, and 3 of them are digits, not Devanagari:
+  `फ़ातिहा-1`→`फातिहा-।`, `1 रूकू`→`| रूकू`, `(1)`→`()`. Every Hindi word on the
+  page came back exact, including `ग़ज़ब` with both nuktas. The 48px strips are
+  confirmed to be the superscript footnote markers ⁽¹⁾–⁽⁶⁾, as the print page
+  shows, and the height-based stream split holds.
+
+- **Two OCR passes, because the failure modes are complementary.** `-l hin` gets
+  Devanagari right and digits wrong; `-l eng+hin` gets digits right and mangles
+  Devanagari (`रहम`→`TA`, `रूकू`→`BHE`). So take **text from the `hin` pass and
+  verse numbers from the `eng+hin` pass**. Measured over AQ2 pages 1–9:
+  `eng+hin` recovered al-Fatiha 1–7 exactly and al-Baqarah 1–61 with a **single**
+  error (32 read as 82), which the monotonic-sequence check flags on its own and
+  interpolation repairs. The same span under `hin` alone gave 18 sequence breaks
+  and a spurious verse 283. **Verse segmentation is therefore solved**; assert the
+  sequence per surah and let it fail loudly.
+
+- **Nukta fidelity under OCR: measured, and it is the remaining blocker.** Tesseract `hin`
   (`--psm 7`, per strip) is near-perfect on word shapes — al-Fatiha's
   `तारीफें (प्रशंसायें) अल्लाह ही के लिए हैं…` came back character-exact — but it
   **systematically drops nuktas on क/ख/ग/ज/फ**: ज़ादे→जादे, ज़रूरत→जरूरत,
@@ -128,7 +146,10 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   worse. So OCR alone cannot be trusted for the one feature the edition is wanted
   for; nuktas need lexicon-driven restoration (Perso-Arabic nukta placement is
   lexically determined — क़बूल is always क़) plus review, and
-  `alquran-roman-urdu`'s lexicon is the obvious source.
+  `alquran-roman-urdu`'s lexicon is the obvious source. Note the print itself is
+  inconsistent (`फ़ातिहा` and `ग़ज़ब` carry nuktas, `तारीफें` and `फरमाया` do not),
+  so restoration cannot be validated against the page alone — which is another
+  argument for getting the DTP source rather than perfecting the OCR.
   - **Do not retry macOS Vision.** It has no Devanagari at all —
     `supportedRecognitionLanguages()` on macOS 26 lists 30 languages, none Indic.
     A Vision pass returns empty strings for every strip, which looks like a bug in
