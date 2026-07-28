@@ -93,15 +93,56 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   witness, a missing nukta there must **not** count as evidence against our
   faithful-nukta rule (that repo's STYLE_GUIDE §5).
 
-- **Ingestion cost: OCR.** 633-page scan, **no text layer** (`pdftotext` returns
-  0–3 chars/page), sliced into 48,686 image fragments, one two-page spread per PDF
-  page (Hindi left, Arabic right). Verse numbers are inline — `(49)`, `(50)` — so
-  segmentation is tractable. **Three streams must not be conflated:** the
-  translation, the bracketed glosses, and the numbered footnotes (the मुख़्तसर
-  तफ़्सीर). Note the two corpora's parentheses do different jobs — Junagarhi's are
-  explanatory *(यानी क़ियामत)*, Ahsanul Kalam's are register glosses *(प्रतिकार)*.
-  **Nukta fidelity under OCR is unmeasured** and is the main risk: क़→क is the
-  silent-plausible-wrong-word failure, not an error.
+- **Master files received 2026-07-28** (owner, from the translator), superseding
+  the earlier scan: `AQ1`–`AQ6`, **661 letter-portrait pages**, one print page per
+  PDF page, **Hindi only — no facing Arabic**, at
+  `~/Dropbox/Private/Islam/Quran/Hindi/Source Files/`.
+
+- **The format is not what it looks like.** `pdftotext` returns only folio
+  numbers and `pdfimages` reports *zero* images, which reads as "empty PDF". It
+  isn't: Win2PDF wrapped **every line of type in its own PDF tiling Pattern**, and
+  neither tool traverses pattern resources. Each line is a separate FlateDecode
+  RGB image at a uniform **297 DPI** — lossless, so no JPEG ringing around the
+  nuktas. AQ2 alone yields 4,993 line strips; ~33k across the set.
+  `pipeline/ahsanul_kalam/extract_lines.py` extracts them all with page geometry
+  into `sources/ahsanul-kalam/` (git-ignored) + a `lines.jsonl` manifest.
+
+- **This is better than a page scan.** Lines arrive pre-segmented with
+  coordinates, so no layout analysis or line-finding is needed, and the **three
+  streams separate by strip height**: **83px = translation body** (verse numbers
+  inline, `(2)`, `(3)`), **72px = footnote text** (the मुख़्तसर तफ़्सीर),
+  **48px = superscript footnote reference markers**. Reconstruct a line by
+  grouping strips on `top` and sorting by `x` — *not* by paint order, which groups
+  by text frame (footnotes are painted before the body they annotate, header
+  last). Verified on al-Fatiha: assembles cleanly, verse numbers in place.
+
+- **Nukta fidelity under OCR: measured, and it is the blocker.** Tesseract `hin`
+  (`--psm 7`, per strip) is near-perfect on word shapes — al-Fatiha's
+  `तारीफें (प्रशंसायें) अल्लाह ही के लिए हैं…` came back character-exact — but it
+  **systematically drops nuktas on क/ख/ग/ज/फ**: ज़ादे→जादे, ज़रूरत→जरूरत,
+  चीज़ें→चीजें, फ़ज़ीलत→फजीलत, and worse, तक़वा→तक्वा and क़बूल→कूबूल, where the
+  nukta becomes a different mark and the result is a plausible wrong word rather
+  than a visible error. `ड़`/`ढ़` survive (ordinary Hindi, well modelled). Across
+  150 body lines / 2,077 words the output carried only ~51 nuktas — far below this
+  edition's Perso-Arabic register. `script/Devanagari` and `hin+san` are slightly
+  worse. So OCR alone cannot be trusted for the one feature the edition is wanted
+  for; nuktas need lexicon-driven restoration (Perso-Arabic nukta placement is
+  lexically determined — क़बूल is always क़) plus review, and
+  `alquran-roman-urdu`'s lexicon is the obvious source.
+  - **Do not retry macOS Vision.** It has no Devanagari at all —
+    `supportedRecognitionLanguages()` on macOS 26 lists 30 languages, none Indic.
+    A Vision pass returns empty strings for every strip, which looks like a bug in
+    the caller rather than an unsupported script.
+  - **Highest-leverage alternative: ask the translator for the DTP source file**
+    (the Win2PDF output implies InPage/PageMaker/Word upstream). Real text would
+    remove the OCR stage and its nukta risk entirely. The owner already has a
+    direct line to him, so this is worth asking before investing in OCR
+    correction.
+
+- **Three streams must not be conflated** once text exists: the translation, the
+  bracketed glosses, and the numbered footnotes. The two corpora's parentheses do
+  different jobs — Junagarhi's are explanatory *(यानी क़ियामत)*, Ahsanul Kalam's
+  are register glosses *(प्रतिकार)*.
 
 - **Licensing.** The copyright page reserves rights over the *हाशिया / mukhtasar
   tafsir* to **Alkhair, Indore** — the publisher, not the translator — and states

@@ -1,1 +1,6 @@
 PyYAML>=6.0
+
+# Only for pipeline/ahsanul_kalam/extract_lines.py (pulling the Ahsanul Kalam
+# master PDFs apart into line images). Not needed to build quran.db.
+pikepdf>=9.0
+Pillow>=10.0
