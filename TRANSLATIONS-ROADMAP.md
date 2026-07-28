@@ -179,13 +179,31 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   be checked against Alkhair's permission**, which may arrive with a
   no-modification clause that forbids exactly this.
 
-- **Web pilot landed 2026-07-28 (owner request): surahs 1, 112, 113, 114.**
+- **Web pilot landed 2026-07-28 (owner request): 81 of 114 surahs, 3,600 verses.**
   `pipeline/ahsanul_kalam/build_pilot.py` emits per-surah JSON; it lives on
   `al-quran-web` as the `hi-ahsanul-kalam-pilot` file-edition, gated behind
   `PUBLIC_SHOW_AK=1` so it cannot auto-deploy — **two** independent blockers, no
   permission and no review. Details + the go-live checklist:
   `al-quran-web/docs/ahsanul-kalam-pilot.md`. The generator refuses any surah
   whose verses are not exactly 1..N against `quran.db`.
+
+- **What the remaining 33 surahs need.** 11 have no usable title strip (12, 22,
+  25, 26, 33, 34, 36, 45, 47, 95, 102) — titles are the only surah boundary
+  marker, and a missing one also makes the preceding surah over-run, so 24, 32, 35
+  and 46 fail as collateral. The other 22 lose one or two verse numbers to OCR
+  (surah 7 misses only verse 62; al-Baqarah is in this group). Interpolating a
+  missing number between intact neighbours would recover most of them, but that is
+  **renumbering scripture from a guess** — an owner decision, not a default.
+
+- **OCR runs in one parallel pass** (`--jobs`, default 8): 27,332 tesseract
+  invocations corpus-wide in ~15 minutes. Serial, coverage expansion is impractical.
+
+- **Two silent bugs worth not reintroducing.** The `hin` pass renders `(1)` as
+  `(])`, so a digits-only slot pattern under-counted markers and dropped whole
+  lines unspliced. And title digits cannot be trusted at all — **3 reads as 5**
+  with total consistency (13, 23, 43, 63, 73, 83, 93) — so titles are assigned by
+  monotone DP alignment, not by their printed number; greedy variants stranded
+  every surah after a single high misread.
 
 - **Status: full ingestion ON HOLD 2026-07-28 (owner).** No further ingestion work until the
   owner has asked Rais Qureshi whether a **DTP source file** exists (the Win2PDF

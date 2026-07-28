@@ -42,6 +42,7 @@ import itertools
 import json
 import re
 import shutil
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import sqlite3
 import subprocess
 import sys
@@ -51,6 +52,18 @@ from pathlib import Path
 BODY_PX = 83    # translation body
 TITLE_PX = 103  # centred surah title, e.g. "सूरह इख्लास-112" — the boundary marker
 VERSE_RE = re.compile(r"\((\d{1,3})\)")
+
+# A verse-marker SLOT in the `hin` pass, whose digits are unreliable by design:
+# "(1)" comes back as "(])", "(।)", "(|)" or bare "()". Matching only digits meant
+# a line containing "(])" had one slot fewer than the digit pass reported, so the
+# whole line was left unspliced and its verse vanished — this is what cost verse 1
+# in a dozen surahs.
+#
+# So: any short parenthesised run that contains no Devanagari LETTER. The
+# lookahead is what keeps the edition's bracketed glosses — (प्रशंसायें), (खुद),
+# and the "(यह मक्की सूरत है…)" subtitle — from being mistaken for verse numbers
+# and overwritten with digits.
+SLOT_RE = re.compile(r"\((?![^)]*[ऄ-हा-्])[^()]{0,3}\)")
 
 
 def log(msg: str) -> None:
@@ -82,6 +95,58 @@ def in_reading_order(rows: list[dict]) -> list[dict]:
     return sorted(rows, key=lambda r: (r["file"], r["pdf_page"], -r["top"], r["x"]))
 
 
+def align_titles(readings: list[int | None],
+                 titles: list[tuple[int, str]]) -> dict[int, int]:
+    """Assign title strips to surah numbers by monotone alignment.
+
+    Titles appear in book order, so the mapping must be strictly increasing. What
+    it must NOT be is greedy: a single title misread high — "GE अहजाब-85" for
+    surah 33 — is a legal forward jump, and accepting it strands every surah
+    between. Both greedy variants tried before this failed that way, one taking
+    the raw reading and one preferring the successor.
+
+    So score every (title, surah) pairing and take the best increasing assignment
+    by DP: an exact digit match scores 2, a match after the systematic 5→3 repair
+    scores 1, anything else 0. Titles may be skipped, since ~4 surahs have no
+    103px title strip at all. One bad reading then costs only itself — the
+    surrounding agreements outvote it.
+    """
+    n, m = len(readings), 114
+    repaired = [None if r is None else int(str(r).replace("5", "3"))
+                for r in readings]
+
+    def score(i: int, surah: int) -> int:
+        if readings[i] == surah:
+            return 2
+        if repaired[i] == surah:
+            return 1
+        return 0
+
+    # dp[i][j] = best total score using titles i.. against surahs j..
+    dp = [[0] * (m + 2) for _ in range(n + 1)]
+    for i in range(n - 1, -1, -1):
+        for j in range(m, 0, -1):
+            skip_surah = dp[i][j + 1]
+            take = score(i, j) + dp[i + 1][j + 1]
+            skip_title = dp[i + 1][j]
+            dp[i][j] = max(take, skip_surah, skip_title)
+
+    index: dict[int, int] = {}
+    i, j = 0, 1
+    while i < n and j <= m:
+        if dp[i][j] == score(i, j) + dp[i + 1][j + 1] and score(i, j) > 0:
+            index[j] = titles[i][0]
+            i += 1
+            j += 1
+        elif dp[i][j] == dp[i][j + 1]:
+            j += 1
+        else:
+            log(f"  unaligned title at stream {titles[i][0]}: {titles[i][1]!r} "
+                f"— its surah will be refused")
+            i += 1
+    return index
+
+
 def title_index(rows: list[dict], src: Path, cache: Path) -> dict[int, int]:
     """Map surah number -> its index in the reading-order stream.
 
@@ -92,31 +157,75 @@ def title_index(rows: list[dict], src: Path, cache: Path) -> dict[int, int]:
       * a single page routinely holds the end of one surah and the start of the
         next, so page granularity cannot separate them — surah 112 and 113 share
         a page, and 113 would be lost entirely.
-    Only ~114 strips corpus-wide, so this is cheap; cached because it never changes.
+    Only ~110 strips corpus-wide, so this is cheap; cached because it never changes.
+
+    The number printed in the title is NOT trusted on its own. Tesseract misreads
+    3 as 5 with total consistency here — 13→15, 23→25, 43→45, 63→65, 73→75, 83→85,
+    93→95 — and a handful of titles garble entirely (सूरह सबा-$4). Trusting the
+    digits mapped eleven surahs onto numbers already taken, which silently dropped
+    them AND let the surah before each one swallow the following text.
+
+    Titles are strictly ordered in the book, so ORDER is the reliable signal and
+    the digits are only corroboration: walk them in stream order and accept a
+    number only where it is greater than the last accepted one, trying the 5→3
+    repair before giving up. A title that still doesn't fit is left unassigned, so
+    its surah is refused rather than guessed at.
     """
     if cache.exists():
         return {int(k): v for k, v in json.loads(cache.read_text()).items()}
 
     log("indexing surah titles (cached after this)")
     stream = in_reading_order(rows)
-    index: dict[int, int] = {}
-    for i, r in enumerate(stream):
-        if r["px_height"] != TITLE_PX:
-            continue
-        text = tess(src / "img" / r["img"], "eng+hin")
+
+    # AQ1 is front matter (the publisher's title page), not surah titles. And a
+    # title is sometimes set as two strips on one baseline — 'सूरह तौबा' + '-9' —
+    # so group by baseline first or they count as two surahs.
+    strips = [(i, r) for i, r in enumerate(stream)
+              if r["px_height"] == TITLE_PX and r["file"] != "AQ1"]
+    titles = [(grp[0][0], " ".join(tess(src / "img" / r["img"], "eng+hin")
+                                   for _, r in grp))
+              for grp in (list(g) for _, g in itertools.groupby(
+                  strips, key=lambda ir: (ir[1]["file"], ir[1]["pdf_page"],
+                                          ir[1]["top"])))]
+
+    readings: list[int | None] = []
+    for _, text in titles:
         m = re.search(r"(\d{1,3})\s*$", text.replace("-", " ").strip())
-        if m:
-            n = int(m.group(1))
-            if 1 <= n <= 114 and n not in index:
-                index[n] = i
+        n = int(m.group(1)) if m else None
+        readings.append(n if n and 1 <= n <= 114 else None)
+
+    index = align_titles(readings, titles)
 
     cache.write_text(json.dumps(index, indent=0))
-    log(f"indexed {len(index)}/114 surah titles")
+    log(f"indexed {len(index)}/114 surah titles from {len(titles)} title strips")
     return index
 
 
-def read_surah(stream: list[dict], src: Path, start: int, end: int) -> dict[int, str]:
-    """OCR the body lines in stream[start:end] and split them into verses."""
+def ocr_all(images: list[str], src: Path, jobs: int) -> dict[tuple[str, str], str]:
+    """OCR every (image, lang) pair up front, in parallel.
+
+    tesseract is a subprocess and each strip is independent, so this is pure
+    wall-clock win: a juz-sized span is thousands of invocations and serial
+    execution makes coverage expansion impractical rather than merely slow.
+    Threads, not processes — the work happens in the child process anyway.
+    """
+    pairs = [(img, lang) for img in images for lang in ("hin", "eng+hin")]
+    results: dict[tuple[str, str], str] = {}
+    done = 0
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        futures = {pool.submit(tess, src / "img" / img, lang): (img, lang)
+                   for img, lang in pairs}
+        for fut in as_completed(futures):
+            results[futures[fut]] = fut.result()
+            done += 1
+            if done % 500 == 0:
+                log(f"  ocr {done}/{len(pairs)}")
+    return results
+
+
+def read_surah(stream: list[dict], src: Path, start: int, end: int,
+               ocr: dict[tuple[str, str], str]) -> dict[int, str]:
+    """Split the pre-OCR'd body lines in stream[start:end] into verses."""
     body = [r for r in stream[start:end] if r["px_height"] == BODY_PX]
     chunks: list[str] = []
     # One printed line is often several strips (the verse number is set as its
@@ -124,8 +233,8 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int) -> dict[int,
     for _, grp in itertools.groupby(
             body, key=lambda r: (r["file"], r["pdf_page"], r["top"])):
         grp = list(grp)
-        hin = " ".join(tess(src / "img" / r["img"], "hin") for r in grp)
-        num = " ".join(tess(src / "img" / r["img"], "eng+hin") for r in grp)
+        hin = " ".join(ocr[(r["img"], "hin")] for r in grp)
+        num = " ".join(ocr[(r["img"], "eng+hin")] for r in grp)
 
         # Splice the reliable digits into the reliable Devanagari. Both passes see
         # the same marker slots in the same order; the hin pass just renders some
@@ -138,7 +247,7 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int) -> dict[int,
         # the first digit — putting verse 1's text under 2 and vice versa. That
         # reads perfectly, which is exactly why it has to be done positionally.
         good = VERSE_RE.findall(num)
-        slots = list(re.finditer(r"\((?:\d{0,3}|[।|॥])\)", hin))
+        slots = list(SLOT_RE.finditer(hin))
         if good and len(slots) == len(good):
             out, last = [], 0
             for slot, digit in zip(slots, good):
@@ -187,7 +296,9 @@ def main() -> None:
     ap.add_argument("--src", default="sources/ahsanul-kalam")
     ap.add_argument("--db", default="assets/quran.db", help="for expected ayah counts")
     ap.add_argument("--out", default="dist/pilot/ahsanul-kalam")
-    ap.add_argument("--surahs", default="1,112,113,114")
+    ap.add_argument("--surahs", default="1,112,113,114",
+                    help="comma list, or a range like 78-114")
+    ap.add_argument("--jobs", type=int, default=8)
     args = ap.parse_args()
 
     if not shutil.which("tesseract"):
@@ -195,7 +306,14 @@ def main() -> None:
 
     src = Path(args.src)
     rows = load_manifest(src)
-    wanted = [int(s) for s in args.surahs.split(",")]
+    wanted: list[int] = []
+    for part in args.surahs.split(","):
+        part = part.strip()
+        if "-" in part:
+            lo, hi = (int(x) for x in part.split("-", 1))
+            wanted.extend(range(lo, hi + 1))
+        else:
+            wanted.append(int(part))
 
     conn = sqlite3.connect(args.db)
     expected = dict(conn.execute(
@@ -213,16 +331,26 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     ok, refused = [], []
 
+    # Work out every span first, then OCR the whole set in one parallel pass.
+    spans: dict[int, tuple[int, int]] = {}
     for surah in wanted:
         start = titles.get(surah)
         if start is None:
             refused.append((surah, "no title strip found for this surah"))
             continue
         later = [i for i in starts if i > start]
-        end = later[0] if later else len(stream)
+        spans[surah] = (start, later[0] if later else len(stream))
+
+    images = [r["img"] for s, e in spans.values()
+              for r in stream[s:e] if r["px_height"] == BODY_PX]
+    log(f"{len(spans)} surah(s), {len(images)} body lines, "
+        f"{len(images) * 2} OCR calls on {args.jobs} threads")
+    ocr = ocr_all(images, src, args.jobs)
+
+    for surah, (start, end) in spans.items():
         log(f"surah {surah}: lines {start}-{end} "
             f"({stream[start]['file']} p{stream[start]['pdf_page']})")
-        verses = read_surah(stream, src, start, end)
+        verses = read_surah(stream, src, start, end, ocr)
         want = expected.get(surah)
 
         # Refuse anything that isn't exactly 1..N. A partial or misnumbered surah
