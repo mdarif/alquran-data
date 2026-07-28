@@ -65,6 +65,17 @@ VERSE_RE = re.compile(r"\((\d{1,3})\)")
 # and overwritten with digits.
 SLOT_RE = re.compile(r"\((?![^)]*[ऄ-हा-्])[^()]{0,3}\)")
 
+# Every surah opens with a parenthesised descriptor — "(यह मदनी सूरत है इसमें 73
+# आयतें और 9 रूकू हैं)". It carries no verse marker, so when it belongs to the NEXT
+# surah it lands after the current run's last marker and is absorbed into the final
+# verse, dragging the following bismillah with it. Cutting at the last danda does
+# not help: the bismillah ends in one, so the trim keeps the lot.
+#
+# The descriptor is unambiguous — anything from it onward belongs to the next
+# surah, never to this verse. It also states the verse count, which is worth
+# harvesting as the book's own check on quran.db some day.
+SUBTITLE_RE = re.compile(r"\(\s*यह\s[^)]{0,80}?(?:सूरत|सूरह)\s[^)]{0,80}?\)")
+
 
 def log(msg: str) -> None:
     print(f"[ak-pilot] {msg}", flush=True)
@@ -281,8 +292,25 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
     current: dict[int, str] = {}
     highest = 0
     i = 0
+    repaired = 0
     while i < len(marks):
         n, body = marks[i]
+
+        # NEIGHBOUR-PINNED REPAIR. A marker that is neither the expected successor
+        # nor a boundary, but whose FOLLOWING marker is the successor's successor,
+        # is a misread — both neighbours pin it to exactly one value, so this is
+        # arithmetic, not a guess.
+        #
+        # as-Sajdah showed why this matters: its sequence read 20, 21, 29, 23, 24…30.
+        # Verse 22 came back as 29; the jump was accepted, and the perfectly good
+        # 23 then looked like a new surah starting — so the surah was split there
+        # and verses 22-30 were lost. Nine verses discarded for one wrong digit.
+        expect = highest + 1
+        nxt = marks[i + 1][0] if i + 1 < len(marks) else None
+        if n != expect and nxt == expect + 1:
+            n = expect
+            repaired += 1
+
         if n <= highest:
             # A number that fails to advance is either a new surah the book gave
             # no title, or a single misread digit. Distinguish them by LOOK-AHEAD:
@@ -310,6 +338,8 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
         highest = max(highest, n)
         i += 1
     runs.append(current)
+    if repaired:
+        log(f"  {repaired} verse number(s) repaired from neighbours")
 
     def tidy(s: str) -> str:
         s = s.replace("‍", "")   # OCR sprinkles ZWJ inside conjuncts (मक्‍की)
@@ -325,6 +355,12 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
             # appended to verse 6 where nothing would flag it. Verses end in a
             # danda, so anything trailing the final one is not part of the verse.
             last = max(out)
+            # Cut the next surah's opening matter first, then trim to the final
+            # danda. Order matters: the danda trim alone keeps everything, because
+            # the trailing bismillah ends in a danda of its own.
+            m = SUBTITLE_RE.search(out[last])
+            if m:
+                out[last] = out[last][:m.start()].strip()
             if "।" in out[last]:
                 out[last] = out[last][:out[last].rfind("।") + 1].strip()
             cleaned.append(out)
