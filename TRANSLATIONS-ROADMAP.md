@@ -171,9 +171,22 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   and is obtaining Alkhair's. Until both are recorded in `ATTRIBUTION.md`, the
   licence is `UNVERIFIED — clear before release`.
 
-- **Status:** blocked on OCR fidelity measurement + licence. Ships as a normal
-  `translation` row (`slug: hi-ahsanul-kalam`), **alongside** Suhel Farooq Khan,
-  not replacing it — the owner's decision is to offer readers the choice.
+- **Nukta policy — DECIDED 2026-07-28 (owner): restore nuktas lexically.** Store
+  the fully-nuktaed form throughout, matching `alquran-roman-urdu`'s faithful-nukta
+  rule (STYLE_GUIDE §5), rather than reproducing the print's inconsistency. This
+  is a deliberate divergence from the page, so it needs its own note in
+  `ATTRIBUTION.md` alongside the English display normalizations — **and it has to
+  be checked against Alkhair's permission**, which may arrive with a
+  no-modification clause that forbids exactly this.
+
+- **Status: ON HOLD 2026-07-28 (owner).** No further ingestion work until the
+  owner has asked Rais Qureshi whether a **DTP source file** exists (the Win2PDF
+  output implies InPage/PageMaker/Word upstream). Real text removes the OCR stage
+  and the nukta problem outright, so OCR repair is not worth building until that
+  question is answered. Only AQ2 has been extracted so far.
+  Also still blocked on the Alkhair licence. Ships as a normal `translation` row
+  (`slug: hi-ahsanul-kalam`), **alongside** Suhel Farooq Khan, not replacing it —
+  the owner's decision is to offer readers the choice.
 
 ## Candidate: Hindi in the Perso-Arabic register — via Junagarhi → Devanagari
 

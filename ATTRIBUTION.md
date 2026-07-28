@@ -108,5 +108,8 @@ DB (`sources/maulana-azizul-haque-al-umari-simple.db`) and a commented block in
 - **KFGQPC redistribution of the V2 604-page layout** as page-number data —
   low risk (we store an "ayah → page number" mapping, not the layout/glyphs),
   but confirm with KFGQPC's developer terms before a wide public release.
-- **Pipeline code license** — `LICENSE` says "choose a license (MIT
-  recommended)"; pick one before publishing the repo publicly.
+- ~~**Pipeline code license**~~ — **RESOLVED 2026-07-28: MIT** (owner). Covers
+  `pipeline/`, `tests/` and the config format only; it grants no rights over the
+  text, translations or fonts, which stay governed by this file. `LICENSE` states
+  that scope explicitly so a permissive code licence is not mistaken for
+  permission to redistribute the data.
