@@ -267,28 +267,68 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
     # sentence terminator here — the trailing-material trim below depends on it.
     text = text.replace("|", "।").replace("॥", "।")
 
-    verses: dict[int, str] = {}
+    # Split into RUNS on a numbering restart. ~11 surahs have no title strip, so
+    # the previous surah's span runs straight through them; with duplicate numbers
+    # merged into one dict, Surah Yusuf's verses were appended onto Hud's — 11:96
+    # carried Yusuf's shirt-on-the-face verse — and the 1..123 check passed
+    # because every number was present. A number that fails to advance is a surah
+    # boundary the book simply didn't print a title for.
     parts = VERSE_RE.split(text)
     # parts = [pre, num, body, num, body, ...]
-    for num, body in zip(parts[1::2], parts[2::2]):
-        n = int(num)
-        verses[n] = (verses.get(n, "") + " " + body).strip() if n in verses else body.strip()
+    marks = [(int(n), b) for n, b in zip(parts[1::2], parts[2::2])]
+
+    runs: list[dict[int, str]] = []
+    current: dict[int, str] = {}
+    highest = 0
+    i = 0
+    while i < len(marks):
+        n, body = marks[i]
+        if n <= highest:
+            # A number that fails to advance is either a new surah the book gave
+            # no title, or a single misread digit. Distinguish them by LOOK-AHEAD:
+            # a real boundary begins a sustained ascending run.
+            #
+            # Splitting only on a restart at 1 was not enough. Where the next
+            # surah's verse 1 is itself misread — ad-Dukhan into al-Jathiyah — the
+            # numbers merely repeat, so no restart is ever seen and the second
+            # surah is appended verse-by-verse onto the first. 44:5 carried 45:5.
+            ahead = [m[0] for m in marks[i:i + 4]]
+            boundary = len(ahead) >= 3 and all(b == a + 1 for a, b
+                                               in zip(ahead, ahead[1:]))
+            if boundary:
+                runs.append(current)
+                current, highest = {}, 0
+            else:
+                # Misread digit mid-surah: keep the text with the verse in
+                # progress rather than inventing one out of sequence.
+                if highest:
+                    current[highest] = (current[highest] + " " + body).strip()
+                i += 1
+                continue
+        current[n] = ((current.get(n, "") + " " + body).strip()
+                      if n in current else body.strip())
+        highest = max(highest, n)
+        i += 1
+    runs.append(current)
 
     def tidy(s: str) -> str:
         s = s.replace("‍", "")   # OCR sprinkles ZWJ inside conjuncts (मक्‍की)
         s = re.sub(r"\s+([।,])", r"\1", s)  # strips join with a space before the danda
         return re.sub(r"\s+", " ", s).strip()
 
-    out = {k: tidy(v) for k, v in verses.items()}
-    if out:
-        # The last verse of a surah absorbs whatever the page puts after it — for
-        # al-Nas that was the index heading "फेहरिस्त मजामिने कुरआन", appended to
-        # verse 6 where nothing would flag it. Verses end in a danda, so anything
-        # trailing the final one is not part of the verse.
-        last = max(out)
-        if "।" in out[last]:
-            out[last] = out[last][:out[last].rfind("।") + 1].strip()
-    return out
+    cleaned = []
+    for run in runs:
+        out = {k: tidy(v) for k, v in run.items()}
+        if out:
+            # The last verse of a run absorbs whatever the page puts after it —
+            # for al-Nas that was the index heading "फेहरिस्त मजामिने कुरआन",
+            # appended to verse 6 where nothing would flag it. Verses end in a
+            # danda, so anything trailing the final one is not part of the verse.
+            last = max(out)
+            if "।" in out[last]:
+                out[last] = out[last][:out[last].rfind("।") + 1].strip()
+            cleaned.append(out)
+    return cleaned
 
 
 def main() -> None:
@@ -347,10 +387,38 @@ def main() -> None:
         f"{len(images) * 2} OCR calls on {args.jobs} threads")
     ocr = ocr_all(images, src, args.jobs)
 
+    # A span may hold SEVERAL surahs, because ~11 have no title strip. Each run of
+    # verse numbering in the span is one surah, taken in order from the anchor —
+    # so a title-less surah is recovered from the numbering rather than lost, and
+    # its text stops being appended onto its predecessor's.
+    # offset 0 is the run that starts at the surah's OWN title; later offsets are
+    # surahs recovered from this span's overrun because the book printed no title
+    # for them.
+    candidates: dict[int, tuple[int, dict[int, str]]] = {}
     for surah, (start, end) in spans.items():
         log(f"surah {surah}: lines {start}-{end} "
             f"({stream[start]['file']} p{stream[start]['pdf_page']})")
-        verses = read_surah(stream, src, start, end, ocr)
+        runs = read_surah(stream, src, start, end, ocr)
+        if len(runs) > 1:
+            log(f"  {len(runs)} numbering runs in this span — the book prints no "
+                f"title for the surah(s) after {surah}")
+        for offset, run in enumerate(runs):
+            n = surah + offset
+            # PREFER THE ANCHORED READING. Keeping whichever candidate appeared
+            # first looked equivalent and was not: candidates are generated in
+            # span order, so surah N's overrun produces the N+1 candidate BEFORE
+            # surah N+1's own span does. Every surah following a split therefore
+            # took its predecessor's leftover — often empty — and was refused with
+            # "missing verses [1..N]" while its correct text was discarded as a
+            # duplicate. That alone cost 20 surahs.
+            prev = candidates.get(n)
+            if prev is None or offset < prev[0]:
+                candidates[n] = (offset, run)
+
+    for surah in sorted(candidates):
+        offset, verses = candidates[surah]
+        if surah not in wanted:
+            continue
         want = expected.get(surah)
 
         # Refuse anything that isn't exactly 1..N. A partial or misnumbered surah
@@ -367,7 +435,7 @@ def main() -> None:
                 problems.append(f"out-of-range verses {extra}")
         if problems:
             refused.append((surah, "; ".join(problems)))
-            log(f"  REFUSED: {'; '.join(problems)}")
+            log(f"  surah {surah} REFUSED: {'; '.join(problems)}")
             continue
 
         payload = {

@@ -217,14 +217,11 @@ recent enough that no public-domain argument is available.
    now, e.g. the `١` after 1:1). Strip it in `prepare_sources.py` if unwanted.
 
 Owner-only, still open:
-- **Repo visibility vs. the licence.** `LICENSE` is now **proprietary, all rights
-  reserved** (owner decision 2026-07-28, replacing a briefly-recorded MIT), but
-  `mdarif/alquran-data` is still a **public** GitHub repo — verified 2026-07-28.
-  An all-rights-reserved notice on a public repo asserts the right but doesn't
-  prevent the copying; GitHub's terms let anyone view and fork it, and it is
-  already indexed. **If the intent is to actually restrict reuse, make the repo
-  private** (`gh repo edit mdarif/alquran-data --visibility private`). Anything
-  already pushed publicly should be assumed to have been fetchable.
+- ~~**Repo visibility vs. the licence.**~~ **SETTLED 2026-07-28 (owner): repos
+  stay public.** `LICENSE` is proprietary, all rights reserved (replacing a
+  briefly-recorded MIT). `alquran-data`, `alquran-app` and `alquran-roman-urdu`
+  are public; `al-quran-web` is private. The owner's call is that the notice is
+  what matters and visibility holds nothing back. Do not re-raise.
 - **Confirm KFGQPC V2 604-page layout redistribution terms** (we store page
   numbers only — low risk).
 - **Alkhair Indore permission** for Ahsanul Kalam (see `TRANSLATIONS-ROADMAP.md`).

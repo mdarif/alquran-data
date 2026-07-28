@@ -116,7 +116,8 @@ DB (`sources/maulana-azizul-haque-al-umari-simple.db`) and a commented block in
   reservation: it covers our own work only and grants nobody rights over the
   source texts, which stay governed by this file. Note the Junagarhi translation
   is public domain and **cannot** be claimed by us either.
-  - **Consequence to act on:** the GitHub repo is currently **public**, and
-    publishing without an open licence does not prevent copying — GitHub's terms
-    let anyone view and fork a public repo. If the intent is to actually restrict
-    reuse, make the repo private. See `HANDOFF.md`.
+  - **Public repos are accepted (owner, 2026-07-28).** `alquran-data`,
+    `alquran-app` and `alquran-roman-urdu` stay public; `al-quran-web` is private.
+    The owner's position is that an all-rights-reserved notice is the point, and
+    visibility is not a reason to hold anything back. Recorded so it is not
+    re-raised: the reservation asserts the right, it does not prevent copying.
