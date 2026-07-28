@@ -179,7 +179,15 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   be checked against Alkhair's permission**, which may arrive with a
   no-modification clause that forbids exactly this.
 
-- **Status: ON HOLD 2026-07-28 (owner).** No further ingestion work until the
+- **Web pilot landed 2026-07-28 (owner request): surahs 1, 112, 113, 114.**
+  `pipeline/ahsanul_kalam/build_pilot.py` emits per-surah JSON; it lives on
+  `al-quran-web` as the `hi-ahsanul-kalam-pilot` file-edition, gated behind
+  `PUBLIC_SHOW_AK=1` so it cannot auto-deploy — **two** independent blockers, no
+  permission and no review. Details + the go-live checklist:
+  `al-quran-web/docs/ahsanul-kalam-pilot.md`. The generator refuses any surah
+  whose verses are not exactly 1..N against `quran.db`.
+
+- **Status: full ingestion ON HOLD 2026-07-28 (owner).** No further ingestion work until the
   owner has asked Rais Qureshi whether a **DTP source file** exists (the Win2PDF
   output implies InPage/PageMaker/Word upstream). Real text removes the OCR stage
   and the nukta problem outright, so OCR repair is not worth building until that
