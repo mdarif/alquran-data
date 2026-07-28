@@ -19,7 +19,9 @@ sole contributor).
 pipeline/prepare_sources.py   raw QUL files  -> arabic-ayah.sqlite + structure.sqlite
 pipeline/build_db.py          --config config/sources.yaml -> assets/quran.db
 pipeline/verify_db.py         --db assets/quran.db  (114 surahs / 6236 ayahs / index coverage)
-pipeline/build_editions.py    --db assets/quran.db --out dist/editions  (per-edition .db.gz + catalogue.json for R2)
+pipeline/build_editions.py    --db assets/quran.db --out dist/editions  (per-edition .db.gz + catalogue.json)
+pipeline/publish_editions.sh  upload dist/editions -> R2 bucket al-quran-editions
+pipeline/verify_editions.py   check the LIVE published editions match their digests
 ```
 
 Build (use a normal local disk — SQLite writes fail on network/synced mounts):
@@ -29,6 +31,7 @@ python pipeline/prepare_sources.py
 python pipeline/build_db.py --config config/sources.yaml
 python pipeline/verify_db.py --db assets/quran.db
 python pipeline/build_editions.py --db assets/quran.db --out dist/editions   # only when publishing downloads
+pipeline/publish_editions.sh                                                # then upload + verify
 ```
 
 Smoke test (no downloads): `python tests/make_fixtures.py && python pipeline/build_db.py --config tests/fixtures/sources.yaml`.
@@ -40,6 +43,31 @@ numbers) · Urdu Junagarhi (#305) · Hindi al-Umari (#166, substituted for the
 PRD's unavailable Farooq Khan/Ahmed) · surah names + juz/hizb/rub/ruku/sajda
 metadata. `prepare_sources.py` aggregates words→ayahs and derives per-ayah
 page/juz/hizb/rub/ruku/sajda (`per_ayah` mode).
+
+## Editions on R2 (downloadable translations)
+
+Live at **https://editions.alquranreader.com** (bucket `al-quran-editions`,
+APAC, custom domain on the `alquranreader.com` zone — same arrangement as
+`al-quran-audio` → `audio.alquranreader.com`; the r2.dev URL stays disabled).
+
+Publish with `pipeline/publish_editions.sh`, then `pipeline/verify_editions.py`.
+Three traps, all of which fail quietly:
+
+- **`--remote` is mandatory** on every `wrangler r2 object` command. Without it
+  wrangler writes to a LOCAL simulated bucket and still prints "Upload
+  complete". This happened on the first publish — the bucket read back empty
+  while every upload had "succeeded".
+- **Never set `Content-Encoding: gzip`.** The artifacts are gzip *files*, not
+  gzip-encoded responses. Marking them encoded makes HTTP clients decompress
+  transparently, so the bytes the app hashes stop matching the catalogue's
+  `sha256` and every install is rejected as corrupt. `verify_editions.py`
+  asserts the header is absent.
+- **Artifacts are content-addressed** (`<slug>-<sha12>.db.gz`) and cached
+  immutably; only `catalogue.json` gets a short TTL (300s). A stable filename
+  behind a CDN would serve stale bytes after an edition is corrected, and the
+  reader would see a checksum error that is really a cache.
+
+Upload artifacts first, catalogue last — the catalogue is what points at them.
 
 ## State & open items
 

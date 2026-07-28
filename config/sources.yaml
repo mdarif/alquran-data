@@ -92,7 +92,11 @@ sources:
       name: "Maulana Muhammad Junagarhi"
       native_name: "اردو"
       direction: rtl
-      sort_order: 1
+      # GLOBAL display order across all editions, not per-language: it decides
+      # the reading order of the translation blocks under each verse, and the
+      # language grouping in the selector falls out of it. Urdu first is app
+      # parity. Leave gaps so an edition can be slotted in without renumbering.
+      sort_order: 10
       # The reader's default edition (Urdu-first audience); everything else is
       # opt-in. Replaces the "Urdu defaults on" rule previously hardcoded in the
       # web toolbar.
@@ -124,7 +128,7 @@ sources:
       name: "Suhel Farooq Khan and Saifur Rahman Nadwi"
       native_name: "हिन्दी"
       direction: ltr
-      sort_order: 1
+      sort_order: 20
       author: "Suhel Farooq Khan/Saifur Rahman Nadwi"
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://tanzil.net/trans/hi.hindi"
@@ -144,7 +148,7 @@ sources:
       name: "The Noble Quran (Hilali & Khan)"
       native_name: "English"
       direction: ltr
-      sort_order: 1
+      sort_order: 30
       # Reader attribution label (owner-preferred short form, 2026-07-06).
       author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
@@ -165,7 +169,7 @@ sources:
     #   language_code: hi
     #   native_name: "हिन्दी"
     #   direction: ltr
-    #   sort_order: 3
+    #   sort_order: 22
     #   name: "Maulana Azizul Haque al-Umari"
     #   author: "Azizul Haque al-Umari"
     #   license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"

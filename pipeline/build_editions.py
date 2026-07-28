@@ -5,14 +5,24 @@
 
 Produces, for every translation edition in the built DB:
 
-    dist/editions/<slug>.db.gz   one edition's text, self-contained, gzipped
-    dist/editions/catalogue.json the manifest the app fetches
+    dist/editions/<slug>-<sha12>.db.gz  one edition's text, gzipped
+    dist/editions/catalogue.json        the manifest the app fetches
+
+Filenames are **content-addressed** (the digest is in the name) so a URL's bytes
+never change. Behind a CDN a stable `<slug>.db.gz` would keep serving the old
+bytes after an edition is corrected — bytes whose sha256 no longer matches the
+catalogue, so the app would report a corrupt download for what is really a stale
+cache. Immutable URLs also let the artifacts be cached indefinitely; only
+`catalogue.json` needs a short TTL.
 
 Artifacts ship **gzipped** because SQLite pages compress about 4:1 on this data
 (Hindi: 3.2 MB → 612 KB), and download size is the whole point of the feature.
-Do not rely on transport-level `Content-Encoding` instead: the app stores the
-file it fetched, so the compression has to be part of the artifact rather than
-of the connection.
+
+**Serve them with `Content-Type: application/gzip` and NO `Content-Encoding`.**
+Marking them `Content-Encoding: gzip` makes HTTP clients transparently
+decompress, so the bytes the app receives are not the bytes the catalogue's
+`sha256` describes and every install fails its integrity check. The compression
+is part of the artifact here, not of the connection.
 
 Why editions ship as separate files at all: the app bundles `quran.db` and
 re-seeds it from the asset whenever the version marker changes (see the app's
@@ -154,6 +164,22 @@ def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
 
     size = gz_path.stat().st_size
     digest = sha256_of(gz_path)
+
+    # CONTENT-ADDRESSED filename: the digest goes in the name, so a URL's bytes
+    # can never change. A stable `<slug>.db.gz` behind a CDN would serve stale
+    # bytes after an edition is corrected — bytes whose sha256 no longer matches
+    # the catalogue, so the app would reject the download as corrupt and the
+    # reader would see a checksum error for what is really a cache. Immutable
+    # URLs also mean the artifacts can be cached forever.
+    #
+    # The app resolves `file` relative to the catalogue URL, so this needs no
+    # client change.
+    final_path = gz_path.with_name(f"{slug}-{digest[:12]}.db.gz")
+    if final_path.exists():
+        final_path.unlink()
+    gz_path.rename(final_path)
+    gz_path = final_path
+
     log(
         f"{slug}: {len(rows)} ayahs, {size/1024:.0f} KB gzipped "
         f"({raw_size/1024:.0f} KB raw, {size/raw_size:.0%}), sha256 {digest[:16]}…"
@@ -171,7 +197,7 @@ def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
         "license": res["license"],
         "sourceUrl": res["source_url"],
         "ayahCount": len(rows),
-        "file": f"{slug}.db.gz",
+        "file": final_path.name,
         # What you download, and the hash to check it by.
         "bytes": size,
         "sha256": digest,
@@ -211,7 +237,7 @@ def main() -> None:
 
     resources = conn.execute(
         "SELECT * FROM resources WHERE type = 'translation'"
-        " ORDER BY language_code, sort_order, id"
+        " ORDER BY sort_order, language_code, id"
     ).fetchall()
     if not resources:
         sys.exit("no translation resources in the DB")

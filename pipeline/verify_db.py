@@ -225,7 +225,7 @@ def main() -> None:
     # silently resolve to one another — the exact failure this column exists to
     # prevent. Row ids can't stand in; they shift with sources.yaml ordering.
     resources = conn.execute(
-        "SELECT id, slug, name, language_code FROM resources ORDER BY language_code, sort_order, id"
+        "SELECT id, slug, name, language_code FROM resources ORDER BY sort_order, language_code, id"
     ).fetchall()
     slug_seen: dict[str, str] = {}
     for rid, slug, name, lang in resources:
