@@ -42,3 +42,7 @@ env/
 *.swp
 *.swo
 sources/ahsanul-kalam/
+
+# Wrangler local state — caches your Cloudflare account id and a simulated
+# bucket. Untracked so far by luck, not by rule; this repo is public.
+.wrangler/

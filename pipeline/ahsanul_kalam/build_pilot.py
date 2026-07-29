@@ -63,7 +63,23 @@ VERSE_RE = re.compile(r"\((\d{1,3})\)")
 # lookahead is what keeps the edition's bracketed glosses — (प्रशंसायें), (खुद),
 # and the "(यह मक्की सूरत है…)" subtitle — from being mistaken for verse numbers
 # and overwritten with digits.
-SLOT_RE = re.compile(r"\((?![^)]*[ऄ-हा-्])[^()]{0,3}\)")
+SLOT_RE = re.compile(
+    r"\((?![^)]*[ऄ-हा-्])(?:[^()]{0,3}|\d{1,3}[\]\[|!lI.,।:;'\"]{1,2})\)")
+# Two alternatives, deliberately narrow. Up to three characters of anything
+# non-Devanagari (covers "(2)", "()", "(।)" — the mangled markers), OR digits
+# followed by one or two stray non-digits, which is how al-Baqarah's verse 221
+# arrived: "(229])". At three characters flat that marker went unrecognised and the
+# verse merged into its predecessor.
+#
+# The stray characters are enumerated, not left open. "digits plus any one or two
+# non-digits" was tried and also regressed the corpus (to 99 surahs) — it admitted
+# things that are not markers. Only the characters OCR actually confuses with
+# marker punctuation are allowed.
+#
+# Simply allowing five characters of anything was tried first and regressed
+# from 110 surahs to 101: non-markers started matching, every subsequent verse
+# shifted, and the shortfall surfaced as verses missing in clumps ([43,44],
+# [25,26,27]). Requiring a digit to lead the longer form is what keeps that out.
 
 # Every surah opens with a parenthesised descriptor — "(यह मदनी सूरत है इसमें 73
 # आयतें और 9 रूकू हैं)". It carries no verse marker, so when it belongs to the NEXT
@@ -75,6 +91,10 @@ SLOT_RE = re.compile(r"\((?![^)]*[ऄ-हा-्])[^()]{0,3}\)")
 # surah, never to this verse. It also states the verse count, which is worth
 # harvesting as the book's own check on quran.db some day.
 SUBTITLE_RE = re.compile(r"\(\s*यह\s[^)]{0,80}?(?:सूरत|सूरह)\s[^)]{0,80}?\)")
+
+# How far ahead a printed verse number may sit before it stops being read as
+# "markers were missed just before this" and starts being read as a misread digit.
+MAX_MARKER_GAP = 4
 
 
 def log(msg: str) -> None:
@@ -131,6 +151,17 @@ def align_titles(readings: list[int | None],
             return 2
         if repaired[i] == surah:
             return 1
+        # A TRUNCATED read. "सूरह तीन-95" came back as "सूरह तीन-9" — the last digit
+        # dropped — and because 9 was already taken the title was discarded and
+        # at-Tin refused, though the page prints its number perfectly plainly. Give
+        # partial credit when one reading is a prefix of the other; ambiguity (9
+        # could be 9, 90..99) is resolved by the surrounding exact matches and by
+        # the assignment having to stay monotone.
+        r = readings[i]
+        if r is not None:
+            a, b = str(r), str(surah)
+            if a != b and (a.startswith(b) or b.startswith(a)):
+                return 1
         return 0
 
     # dp[i][j] = best total score using titles i.. against surahs j..
@@ -143,6 +174,7 @@ def align_titles(readings: list[int | None],
             dp[i][j] = max(take, skip_surah, skip_title)
 
     index: dict[int, int] = {}
+    unassigned: list[tuple[int, str]] = []
     i, j = 0, 1
     while i < n and j <= m:
         if dp[i][j] == score(i, j) + dp[i + 1][j + 1] and score(i, j) > 0:
@@ -152,9 +184,38 @@ def align_titles(readings: list[int | None],
         elif dp[i][j] == dp[i][j + 1]:
             j += 1
         else:
-            log(f"  unaligned title at stream {titles[i][0]}: {titles[i][1]!r} "
-                f"— its surah will be refused")
+            unassigned.append(titles[i])
             i += 1
+
+    # ELIMINATION. A strip whose number is unreadable is still pinned by its
+    # neighbours: titles are strictly ordered, so the strips falling between two
+    # assigned titles can only be the free numbers in that interval, in order.
+    # "GE अहजाब-85" (al-Ahzab, 33) and "सूरह सबा-$4" (Saba, 34) are past rescuing by
+    # digit similarity — but they sit consecutively between titles 32 and 35, and
+    # two strips for two free numbers has exactly one ordered solution.
+    #
+    # Handling only the single-strip case was not enough: the unreadable titles
+    # come in adjacent pairs, so each still saw two candidates and both were
+    # refused.
+    brackets: dict[tuple[int, int], list[tuple[int, str]]] = {}
+    for pos, text in unassigned:
+        before = max((n for n in index if index[n] < pos), default=0,
+                     key=lambda n: index[n])
+        after = min((n for n in index if index[n] > pos), default=115,
+                    key=lambda n: index[n])
+        brackets.setdefault((before, after), []).append((pos, text))
+    for (before, after), strips in brackets.items():
+        free = [n for n in range(before + 1, after) if n not in index]
+        if len(free) == len(strips):
+            for (pos, text), n in zip(sorted(strips), free):
+                index[n] = pos
+                log(f"  title {text!r} -> surah {n} by elimination "
+                    f"(between {before} and {after})")
+        else:
+            for pos, text in strips:
+                log(f"  unaligned title at stream {pos}: {text!r} — "
+                    f"{len(strips)} strips for {len(free)} free numbers {free}, "
+                    f"so refused")
     return index
 
 
@@ -235,10 +296,16 @@ def ocr_all(images: list[str], src: Path, jobs: int) -> dict[tuple[str, str], st
 
 
 def read_surah(stream: list[dict], src: Path, start: int, end: int,
-               ocr: dict[tuple[str, str], str]) -> dict[int, str]:
-    """Split the pre-OCR'd body lines in stream[start:end] into verses."""
+               ocr: dict[tuple[str, str], str], first_surah: int,
+               expected: dict[int, int]) -> tuple[list[dict[int, str]], list[str]]:
+    """Split the pre-OCR'd body lines in stream[start:end] into verses.
+
+    Returns (runs, digit_readings) — the runs numbered by marker position, and the
+    digit pass's readings for the caller to corroborate against.
+    """
     body = [r for r in stream[start:end] if r["px_height"] == BODY_PX]
     chunks: list[str] = []
+    readings: list[str] = []
     # One printed line is often several strips (the verse number is set as its
     # own strip), so regroup on the baseline within a page.
     for _, grp in itertools.groupby(
@@ -247,30 +314,15 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
         hin = " ".join(ocr[(r["img"], "hin")] for r in grp)
         num = " ".join(ocr[(r["img"], "eng+hin")] for r in grp)
 
-        # Splice the reliable digits into the reliable Devanagari. Both passes see
-        # the same marker slots in the same order; the hin pass just renders some
-        # of them badly — "(1)" comes back as "()" or "(।)". So collect the slots
-        # POSITIONALLY and refill them left to right.
-        #
-        # Filling the well-formed markers first and the empty ones afterwards
-        # (the obvious way) silently swaps verses: on al-Fatiha's opening line
-        # `() अल्लाह… (2) तमाम`, the only intact marker is (2), which would take
-        # the first digit — putting verse 1's text under 2 and vice versa. That
-        # reads perfectly, which is exactly why it has to be done positionally.
-        good = VERSE_RE.findall(num)
-        slots = list(SLOT_RE.finditer(hin))
-        if good and len(slots) == len(good):
-            out, last = [], 0
-            for slot, digit in zip(slots, good):
-                out.append(hin[last:slot.start()])
-                out.append(f"({digit})")
-                last = slot.end()
-            out.append(hin[last:])
-            hin = "".join(out)
-        elif good:
-            # Slot count disagrees between passes — leave the hin text alone and
-            # let the verse-sequence guard reject the surah rather than guess.
-            pass
+        # Record the digit pass's reading of each marker for LATER corroboration
+        # only — never to place or number a verse. On the eng+hin pass Devanagari
+        # glosses come back as Latin gibberish, so "(प्रतिकार)" becomes "(AeA)" and
+        # "(अ.क.)" becomes "(AH)" — and since those contain no Devanagari letter,
+        # the slot pattern matches them as if they were verse markers. Sometimes the
+        # gibberish is even numeric: "(99)" appeared where verse 22 belongs. The two
+        # passes then disagree about how many markers a line holds, and the
+        # positional splice mis-numbers everything after the first disagreement.
+        readings.extend(VERSE_RE.findall(num))
         chunks.append(hin)
 
     text = " ".join(chunks)
@@ -278,68 +330,76 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
     # sentence terminator here — the trailing-material trim below depends on it.
     text = text.replace("|", "।").replace("॥", "।")
 
-    # Split into RUNS on a numbering restart. ~11 surahs have no title strip, so
-    # the previous surah's span runs straight through them; with duplicate numbers
-    # merged into one dict, Surah Yusuf's verses were appended onto Hud's — 11:96
-    # carried Yusuf's shirt-on-the-face verse — and the 1..123 check passed
-    # because every number was present. A number that fails to advance is a surah
-    # boundary the book simply didn't print a title for.
-    parts = VERSE_RE.split(text)
-    # parts = [pre, num, body, num, body, ...]
-    marks = [(int(n), b) for n, b in zip(parts[1::2], parts[2::2])]
+    # NUMBER BY POSITION, NOT BY READING THE DIGITS.
+    #
+    # Verses run 1..N in order, so once the marker POSITIONS are known the numbers
+    # follow from their sequence — no digit needs to be read correctly. Finding
+    # positions is reliable (the Devanagari pass keeps glosses in Devanagari, so
+    # SLOT_RE excludes them); reading three-digit numbers off 297 DPI print is not.
+    # Every numbering failure so far came from trusting the digits: 22 read as 29,
+    # 32 read as 82, garbled glosses counted as markers.
+    #
+    # Expected counts come from quran.db, and a span may hold several surahs
+    # because ~11 have no printed title — so the slots are dealt out in order:
+    # count(S) to surah S, then count(S+1) to the next, and so on. The digits are
+    # kept only to CORROBORATE: caller compares them against the positional
+    # assignment and refuses the surah if they disagree too often.
+    slots = list(SLOT_RE.finditer(text))
+
+    # Number by position, but ANCHOR on the digits the Devanagari pass itself gets
+    # right — it renders plenty of them cleanly, "(286)" included.
+    #
+    # Pure position was not enough. When a marker is missed entirely, every verse
+    # after it shifts up by one, and the shortfall surfaces as "missing verses
+    # [284, 285, 286]" — the tail — even though the loss happened in the middle.
+    # al-Baqarah found 283 markers for 286 verses while its text ran correctly to
+    # the very last word of 2:286, so the diagnosis pointed at the wrong end of the
+    # surah entirely.
+    #
+    # An anchor a few ahead of the running count means markers were missed just
+    # before it: honour the anchor so everything after it stays aligned, and let the
+    # merged verses be caught by the length check rather than dragging the whole
+    # surah down.
+    parsed: list[int | None] = []
+    for m in slots:
+        digits = re.sub(r"[^0-9]", "", m.group(0))
+        parsed.append(int(digits) if digits else None)
 
     runs: list[dict[int, str]] = []
-    current: dict[int, str] = {}
-    highest = 0
-    i = 0
-    repaired = 0
-    while i < len(marks):
-        n, body = marks[i]
-
-        # NEIGHBOUR-PINNED REPAIR. A marker that is neither the expected successor
-        # nor a boundary, but whose FOLLOWING marker is the successor's successor,
-        # is a misread — both neighbours pin it to exactly one value, so this is
-        # arithmetic, not a guess.
-        #
-        # as-Sajdah showed why this matters: its sequence read 20, 21, 29, 23, 24…30.
-        # Verse 22 came back as 29; the jump was accepted, and the perfectly good
-        # 23 then looked like a new surah starting — so the surah was split there
-        # and verses 22-30 were lost. Nine verses discarded for one wrong digit.
-        expect = highest + 1
-        nxt = marks[i + 1][0] if i + 1 < len(marks) else None
-        if n != expect and nxt == expect + 1:
-            n = expect
-            repaired += 1
-
-        if n <= highest:
-            # A number that fails to advance is either a new surah the book gave
-            # no title, or a single misread digit. Distinguish them by LOOK-AHEAD:
-            # a real boundary begins a sustained ascending run.
-            #
-            # Splitting only on a restart at 1 was not enough. Where the next
-            # surah's verse 1 is itself misread — ad-Dukhan into al-Jathiyah — the
-            # numbers merely repeat, so no restart is ever seen and the second
-            # surah is appended verse-by-verse onto the first. 44:5 carried 45:5.
-            ahead = [m[0] for m in marks[i:i + 4]]
-            boundary = len(ahead) >= 3 and all(b == a + 1 for a, b
-                                               in zip(ahead, ahead[1:]))
-            if boundary:
-                runs.append(current)
-                current, highest = {}, 0
+    cursor = 0
+    surah = first_surah
+    gaps = 0
+    while cursor < len(slots) and surah in expected:
+        want = expected[surah]
+        verses: dict[int, str] = {}
+        n = 0
+        while cursor < len(slots) and n < want:
+            expect = n + 1
+            v = parsed[cursor]
+            # A small forward jump is a missed marker; a big disagreement is a
+            # misread digit and the position wins.
+            # A forward jump is honoured only if the NEXT printed number confirms
+            # it by continuing from there. Trusting a lone jump cost 11 surahs: a
+            # verse number misread upward (43 read as 45) looked exactly like a
+            # missed marker, so two good verses were skipped and reported missing,
+            # in clumps like [43, 44] and [65, 66, 67].
+            nxt_v = parsed[cursor + 1] if cursor + 1 < len(parsed) else None
+            confirmed = v is not None and nxt_v == v + 1
+            if confirmed and expect < v <= expect + MAX_MARKER_GAP:
+                gaps += v - expect
+                n = v
             else:
-                # Misread digit mid-surah: keep the text with the verse in
-                # progress rather than inventing one out of sequence.
-                if highest:
-                    current[highest] = (current[highest] + " " + body).strip()
-                i += 1
-                continue
-        current[n] = ((current.get(n, "") + " " + body).strip()
-                      if n in current else body.strip())
-        highest = max(highest, n)
-        i += 1
-    runs.append(current)
-    if repaired:
-        log(f"  {repaired} verse number(s) repaired from neighbours")
+                n = expect
+            body_start = slots[cursor].end()
+            nxt = slots[cursor + 1] if cursor + 1 < len(slots) else None
+            body_end = nxt.start() if nxt else len(text)
+            piece = text[body_start:body_end].strip()
+            verses[n] = (verses.get(n, "") + " " + piece).strip() if n in verses else piece
+            cursor += 1
+        runs.append(verses)
+        surah += 1
+    if gaps:
+        log(f"  {gaps} marker(s) missed and re-anchored from the printed number")
 
     def tidy(s: str) -> str:
         s = s.replace("‍", "")   # OCR sprinkles ZWJ inside conjuncts (मक्‍की)
@@ -364,7 +424,7 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
             if "।" in out[last]:
                 out[last] = out[last][:out[last].rfind("।") + 1].strip()
             cleaned.append(out)
-    return cleaned
+    return cleaned, readings
 
 
 def main() -> None:
@@ -375,6 +435,9 @@ def main() -> None:
     ap.add_argument("--surahs", default="1,112,113,114",
                     help="comma list, or a range like 78-114")
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--min-agreement", type=float, default=0.6,
+                    help="fraction of the digit pass's readable verse numbers that "
+                         "must match the positional numbering")
     args = ap.parse_args()
 
     if not shutil.which("tesseract"):
@@ -431,15 +494,17 @@ def main() -> None:
     # surahs recovered from this span's overrun because the book printed no title
     # for them.
     candidates: dict[int, tuple[int, dict[int, str]]] = {}
+    candidates_readings: dict[int, list[str]] = {}
     for surah, (start, end) in spans.items():
         log(f"surah {surah}: lines {start}-{end} "
             f"({stream[start]['file']} p{stream[start]['pdf_page']})")
-        runs = read_surah(stream, src, start, end, ocr)
+        runs, readings = read_surah(stream, src, start, end, ocr, surah, expected)
         if len(runs) > 1:
             log(f"  {len(runs)} numbering runs in this span — the book prints no "
                 f"title for the surah(s) after {surah}")
         for offset, run in enumerate(runs):
             n = surah + offset
+            candidates_readings.setdefault(n, readings if offset == 0 else [])
             # PREFER THE ANCHORED READING. Keeping whichever candidate appeared
             # first looked equivalent and was not: candidates are generated in
             # span order, so surah N's overrun produces the N+1 candidate BEFORE
@@ -469,6 +534,23 @@ def main() -> None:
                 problems.append(f"missing verses {missing}")
             if extra:
                 problems.append(f"out-of-range verses {extra}")
+            # CORROBORATION. Numbering comes from marker order, so a wrong number
+            # can no longer be detected by a gap — the sequence is 1..N by
+            # construction. What CAN go wrong is a missed or spurious marker,
+            # which shifts every verse after it while still numbering perfectly.
+            # The digit pass is an independent witness: it misreads individual
+            # numbers, but it does not systematically agree with a shifted
+            # sequence. Require most of its readable numbers to match.
+            digits = [int(d) for d in candidates_readings.get(surah, [])
+                      if d.isdigit()]
+            in_range = [d for d in digits if 1 <= d <= want]
+            if in_range:
+                agree = sum(1 for d in in_range if d in verses)
+                ratio = agree / len(in_range)
+                if ratio < args.min_agreement:
+                    problems.append(
+                        f"digit pass corroborates only {ratio:.0%} of the "
+                        f"positional numbering ({agree}/{len(in_range)})")
         if problems:
             refused.append((surah, "; ".join(problems)))
             log(f"  surah {surah} REFUSED: {'; '.join(problems)}")

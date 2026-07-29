@@ -134,6 +134,99 @@ def edit1(word: str, vocab: set[str]) -> list[str]:
     return sorted(hits)
 
 
+
+# --- Urdu as the nukta authority ------------------------------------------
+# The other Hindi edition cannot settle orthography because it has not settled it
+# itself: खूब 98 times against ख़ूब 90, काफिरों 75 against काफ़िरों 72. Perso-Arabic
+# script has no such ambiguity — a Devanagari nukta corresponds to exactly one
+# Urdu letter — and Junagarhi's Urdu is verse-parallel for all 6,236 verses. So
+# the Urdu decides, verse by verse, and cannot be led astray by another
+# translator's habits.
+URDU_TO_DEVA = {
+    'ب': 'ब', 'پ': 'प', 'ت': 'त', 'ٹ': 'ट', 'ث': 'स', 'ج': 'ज', 'چ': 'च',
+    'ح': 'ह', 'خ': 'ख़', 'د': 'द', 'ڈ': 'ड', 'ذ': 'ज़', 'ر': 'र', 'ڑ': 'ड़',
+    'ز': 'ज़', 'ژ': 'ज़', 'س': 'स', 'ش': 'श', 'ص': 'स', 'ض': 'ज़', 'ط': 'त',
+    'ظ': 'ज़', 'ع': '', 'غ': 'ग़', 'ف': 'फ़', 'ق': 'क़', 'ک': 'क', 'گ': 'ग',
+    'ل': 'ल', 'م': 'म', 'ن': 'न', 'ں': '', 'و': 'व', 'ہ': 'ह', 'ھ': 'ह',
+    'ی': 'य', 'ے': 'य', 'ئ': '', 'ء': '', 'آ': '', 'ا': '', 'ٰ': '',
+    'ۃ': 'त', 'ة': 'त',
+}
+# ں (noon ghunna) maps to NOTHING: it is nasalisation, which Devanagari writes as
+# anusvara rather than as a letter. Treating it as न left every nasal-final word one
+# consonant too long, so काफिरों/کافروں and जुल्मतों/ظلمتوں never matched and kept
+# their missing nuktas.
+URDU_DROP = set('ًٌٍَُِّْٰٓٔۖۗۘ۔،؟')
+CONSONANT = re.compile(r"[क-ह]़?")
+
+
+def urdu_skeletons(word: str) -> set[str]:
+    """Consonant skeletons for an Urdu word, nuktas kept.
+
+    Two variants, because و and ی are long vowels in exactly the words that matter
+    — خوب, عظیم, زمین — and Devanagari writes those as matras, not letters. Keeping
+    them in the skeleton makes nothing line up.
+    """
+    keep = [c for c in word if c not in URDU_DROP]
+    return {"".join(URDU_TO_DEVA.get(c, '') for c in keep),
+            "".join(URDU_TO_DEVA.get(c, '') for c in keep if c not in 'وی')}
+
+
+def deva_skeleton(word: str) -> str:
+    return "".join(CONSONANT.findall(word))
+
+
+def apply_skeleton(word: str, skeleton: str) -> str:
+    """Copy the skeleton's nuktas onto `word`'s consonants, in order."""
+    marks = [len(m.group(0)) > 1 for m in CONSONANT.finditer(skeleton)]
+    out, idx = [], 0
+    for ch in word:
+        out.append(ch)
+        if "क" <= ch <= "ह":
+            if idx < len(marks) and marks[idx]:
+                out.append(NUKTA)
+            idx += 1
+    return "".join(out)
+
+
+def urdu_nukta_table(db: Path, slug: str) -> dict[tuple[int, int], dict[str, str]]:
+    """Per-verse map: nukta-stripped skeleton -> the nuktaed skeleton."""
+    conn = sqlite3.connect(db)
+    rows = conn.execute(
+        "SELECT a.surah_id, a.ayah_number, t.text_content"
+        "  FROM translations t JOIN ayahs a ON a.id = t.ayah_id"
+        " WHERE t.resource_id = (SELECT id FROM resources WHERE slug = ?)",
+        (slug,)).fetchall()
+    conn.close()
+    table: dict[tuple[int, int], dict[str, str]] = {}
+    corpus: dict[str, set[str]] = collections.defaultdict(set)
+    for surah, ayah, text in rows:
+        seen: dict[str, set[str]] = collections.defaultdict(set)
+        words = text.split()
+        # Adjacent pairs as well as single words: Urdu writes some compounds as two
+        # tokens where Devanagari writes one — عظیم الشان against अज़ीमुश्शान — and a
+        # single-token table can never match those.
+        units = words + [a + b for a, b in zip(words, words[1:])]
+        for word in units:
+            for sk in urdu_skeletons(word):
+                if NUKTA in sk:
+                    seen[strip_nukta(sk)].add(sk)
+                    corpus[strip_nukta(sk)].add(sk)
+        # Only unambiguous skeletons are usable.
+        table[(surah, ayah)] = {k: next(iter(v)) for k, v in seen.items()
+                                if len(v) == 1}
+    # NO corpus-wide fallback. It was tried, to catch words whose own verse phrases
+    # the Urdu differently, and it CORRUPTED the text: short skeletons are hopelessly
+    # ambiguous across 6,236 verses, so की became क़ी, को became क़ो, कर became क़र,
+    # जो became ज़ो, खोल became ख़ोल. It "fixed" 34,606 words where the verse-local
+    # table fixes 4,810, and the difference was almost entirely wrong.
+    #
+    # Verse-local matching is what makes this sound: the Urdu word in the same verse
+    # IS the counterpart of the Devanagari word, so the correspondence is real rather
+    # than a coincidence of consonants. A word the verse's Urdu cannot settle stays
+    # bare and gets flagged.
+    return table
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pilot", default="dist/pilot/ahsanul-kalam")
@@ -143,6 +236,9 @@ def main() -> None:
     ap.add_argument("--min-evidence", type=int, default=5,
                     help="lexicon occurrences required to restore a nukta")
     ap.add_argument("--length-z", type=float, default=4.0)
+    ap.add_argument("--dominance", type=float, default=0.9,
+                    help="share of a word's occurrences that must carry the nukta "
+                         "in the reference before it is restored everywhere")
     ap.add_argument("--rare-max", type=int, default=2,
                     help="a word this rare in the edition itself may be an OCR slip")
     ap.add_argument("--twin-ratio", type=int, default=10,
@@ -154,6 +250,8 @@ def main() -> None:
     ap.add_argument("--min-context", type=int, default=5,
                     help="times the preceding word must appear in the reference "
                          "before its never-followed-by-में record counts")
+    ap.add_argument("--urdu", default="ur-junagarhi",
+                    help="edition whose Perso-Arabic script decides the nuktas")
     ap.add_argument("--english", default="en-hilali-khan",
                     help="edition used to detect that a verse is first person")
     ap.add_argument("--apply", action="store_true",
@@ -206,16 +304,34 @@ def main() -> None:
         " WHERE t.resource_id = ?", (rid,))}
     conn.close()
 
+    urdu_table = urdu_nukta_table(Path(args.db), args.urdu)
+    log(f"urdu nukta authority: {sum(len(v) for v in urdu_table.values())} "
+        f"skeleton(s) across {len(urdu_table)} verses")
+
     # --- nukta restorations, decided once over the whole corpus ---------------
     restore: dict[str, str] = {}
     thin: list[tuple[str, str, int]] = []
     for key, cand in forms.items():
         nuktaed = {f: n for f, n in cand.items()
                    if NUKTA in f and any(c in PERSO_ARABIC for c in f)}
-        if not nuktaed or cand.get(key, 0):
-            continue  # bare form is attested too — ambiguous, leave it alone
+        if not nuktaed:
+            continue
+        bare = cand.get(key, 0)
+        nn = sum(nuktaed.values())
         best, n = max(nuktaed.items(), key=lambda kv: kv[1])
-        if n >= args.min_evidence:
+        # DOMINANCE, not unanimity. Requiring the bare form to be attested ZERO
+        # times threw away overwhelming evidence over a single typo: the reference
+        # writes अज़ाब 548 times and अजाब once, ज़मीन 472 times and जमीन twice — and
+        # one stray occurrence blocked the restoration, so अजाब and जमीन shipped
+        # without their nuktas.
+        #
+        # Genuine ambiguity still blocks it, and looks quite different: तारीफ़ 9 vs
+        # तारीफ 12, काफ़िरों 72 vs काफिरों 75. There the edition itself is undecided
+        # and we have no business choosing.
+        if n < args.min_evidence:
+            thin.append((key, best, n))
+            continue
+        if nn / (nn + bare) >= args.dominance:
             restore[key] = best
         else:
             thin.append((key, best, n))
@@ -244,8 +360,31 @@ def main() -> None:
             flags: list[str] = []
             ws = tokens(text)
 
-            # 1. nukta restoration
+            # 1a. nuktas from the parallel URDU verse — the primary authority.
             new_text = text
+            verse_skels = urdu_table.get((surah, int(num)), {})
+            for w in set(ws):
+                if NUKTA in w:
+                    continue
+                skel = deva_skeleton(w)
+                # Two consonants minimum: a one-consonant skeleton matches far too
+                # much (की against any ق word) and carries no information.
+                if len(CONSONANT.findall(skel)) < 2:
+                    continue
+                sk = verse_skels.get(skel)
+                if not sk:
+                    continue
+                fixed = apply_skeleton(w, sk)
+                if fixed != w:
+                    new_text = re.sub(rf"(?<![ऀ-ॿ]){re.escape(w)}(?![ऀ-ॿ])",
+                                      fixed, new_text)
+                    counts["nukta_from_urdu"] += 1
+            if new_text != text:
+                doc["ayahs"][num] = new_text
+                changed = True
+                text, ws = new_text, tokens(new_text)
+
+            # 1b. fall back to the reference edition where the Urdu is silent.
             for w in set(ws):
                 if NUKTA in w:
                     continue
@@ -413,7 +552,7 @@ def main() -> None:
 
     log(f"nukta rules: {len(restore)} applied-eligible, {len(thin)} rejected as "
         f"thin evidence (< {args.min_evidence})")
-    for k in ("nukta_restored", "main_repaired", "main_suspect",
+    for k in ("nukta_from_urdu", "nukta_restored", "main_repaired", "main_suspect",
               "self_inconsistent", "unknown", "length_outlier"):
         log(f"{k}: {counts[k]}")
     flagged = sum(len(v) for v in per_verse_flags.values())
@@ -443,7 +582,13 @@ def main() -> None:
             doc = json.loads(path.read_text(encoding="utf-8"))
             surah = str(doc["surah"])
             if surah in bad:
-                path.unlink()
+                # MOVED, not deleted. Deleting made the quarantine impossible to
+                # study: to ask whether an outlier's damage is local you need the
+                # rejected surah, and it was gone. A gate should preserve its
+                # evidence.
+                held = path.parent.parent / f"{path.parent.name}-quarantine"
+                held.mkdir(parents=True, exist_ok=True)
+                path.rename(held / path.name)
                 removed.append(int(surah))
                 continue
             # Soft flags travel WITH the text, so a reader-facing surface can mark
