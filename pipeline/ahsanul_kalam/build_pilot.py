@@ -64,7 +64,24 @@ VERSE_RE = re.compile(r"\((\d{1,3})\)")
 # and the "(यह मक्की सूरत है…)" subtitle — from being mistaken for verse numbers
 # and overwritten with digits.
 SLOT_RE = re.compile(
-    r"\((?![^)]*[ऄ-हा-्])(?:[^()]{0,3}|\d{1,3}[\]\[|!lI.,।:;'\"]{1,2})\)")
+    r"\((?![^)]*[ऄ-हा-्])(?:[^()]{0,4}|\d{1,3}[\]\[|!lI.,।:;'\"]{1,2})\)"
+    r"|(?<=[\s।])\d{1,3}\)"
+    r"|\(श\)")
+# Second alternative: the marker's OWN OPEN PAREN, not the digits, went missing.
+# 79:39 printed as "। 39)" — tesseract dropped the "(" entirely, so even the
+# widened first alternative never sees an opening bracket to anchor on, and the
+# whole verse silently fused into its predecessor (same failure class as
+# 2:237, confirmed against the source scan). Requiring the digits be preceded
+# by whitespace or a danda is what keeps this from firing inside a normal
+# gloss: "(निकट)" never leaves a bare digit run sitting after a space.
+#
+# Third alternative is a literal, not a class: 12:21's marker OCR'd as the bare
+# consonant "(श)", with no digits at all, so nothing above can catch it —
+# widening the Devanagari exclusion to "any single consonant" was tried and
+# rejected, because "(न)" already appears a dozen times as GENUINE text across
+# already-published surahs (11, 18, 21, 22, 49, 7, 8) and would have been
+# swallowed as a false marker. "(श)" as an exact literal does not occur
+# anywhere else in the corpus, so it costs only itself.
 # Two alternatives, deliberately narrow. Up to three characters of anything
 # non-Devanagari (covers "(2)", "()", "(।)" — the mangled markers), OR digits
 # followed by one or two stray non-digits, which is how al-Baqarah's verse 221
@@ -80,6 +97,13 @@ SLOT_RE = re.compile(
 # from 110 surahs to 101: non-markers started matching, every subsequent verse
 # shifted, and the shortfall surfaced as verses missing in clumps ([43,44],
 # [25,26,27]). Requiring a digit to lead the longer form is what keeps that out.
+#
+# The cap sits at 4, not 3: an image showing a plain, correctly-printed "(33)"
+# still came back from tesseract as "(8338)" (4:33), which does not fit "3
+# characters of anything" or "a digit run plus 1-2 stray chars" — it is 4
+# straight digits, no stray characters at all. Confirmed against the source
+# scan, not guessed. The lookahead still excludes Devanagari, so this cannot
+# admit a real bracketed gloss; it only widens the room for glyph-level noise.
 
 # Every surah opens with a parenthesised descriptor — "(यह मदनी सूरत है इसमें 73
 # आयतें और 9 रूकू हैं)". It carries no verse marker, so when it belongs to the NEXT
@@ -383,8 +407,18 @@ def read_surah(stream: list[dict], src: Path, start: int, end: int,
             # verse number misread upward (43 read as 45) looked exactly like a
             # missed marker, so two good verses were skipped and reported missing,
             # in clumps like [43, 44] and [65, 66, 67].
+            #
+            # One confirming neighbour is not enough. 2:273's own marker misread
+            # as "274" and the marker after it happened to read correctly as
+            # "275" — so a single-step check confirmed a jump that was never
+            # there, and 273 was skipped exactly like the 43-read-as-45 case
+            # this guard exists for. Requiring the SECOND neighbour too
+            # (v+2 == nxt2_v) catches this: a genuinely missed marker keeps
+            # incrementing correctly for the rest of the surah, a lone misread
+            # does not coincidentally line up two verses running.
             nxt_v = parsed[cursor + 1] if cursor + 1 < len(parsed) else None
-            confirmed = v is not None and nxt_v == v + 1
+            nxt2_v = parsed[cursor + 2] if cursor + 2 < len(parsed) else None
+            confirmed = v is not None and nxt_v == v + 1 and nxt2_v == v + 2
             if confirmed and expect < v <= expect + MAX_MARKER_GAP:
                 gaps += v - expect
                 n = v

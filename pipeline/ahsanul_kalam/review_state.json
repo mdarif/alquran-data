@@ -1,0 +1,1514 @@
+{
+  "reviewed": {
+    "अक़ल": {
+      "note": "spelling variant",
+      "status": "rejected"
+    },
+    "अकाल": {
+      "note": "famine, real word",
+      "status": "rejected"
+    },
+    "अकू्ल": {
+      "correct": "अक़्ल",
+      "note": "garbled conjunct/nukta; intellect",
+      "status": "confirmed"
+    },
+    "अगला": {
+      "note": "idiom अगला-पिछला",
+      "status": "rejected"
+    },
+    "अज़्म": {
+      "note": "resolve/determination, real word",
+      "status": "rejected"
+    },
+    "अनक़रीब": {
+      "note": "valid spelling variant",
+      "status": "rejected"
+    },
+    "अनक़ुरीब": {
+      "note": "both spellings equally rare (1 vs 1) at 37:170; conflicts with already-accepted अनक़रीब variant elsewhere",
+      "status": "rejected"
+    },
+    "अनादर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "अन्ध्": {
+      "note": "41:44 — looks truncated, unclear intended word",
+      "status": "ambiguous"
+    },
+    "अमल पैरा": {
+      "note": "idiom",
+      "status": "rejected"
+    },
+    "अम्न": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "अहलो": {
+      "note": "izafat compound, correct",
+      "status": "rejected"
+    },
+    "आएँगी": {
+      "note": "fem plural agreement, correct",
+      "status": "rejected"
+    },
+    "आजिजी": {
+      "note": "humility (noun), correct",
+      "status": "rejected"
+    },
+    "आबिद": {
+      "note": "worshiper, real word (matches gloss)",
+      "status": "rejected"
+    },
+    "आये": {
+      "note": "came, hon",
+      "status": "rejected"
+    },
+    "आवाजे": {
+      "note": "izafat compound",
+      "status": "rejected"
+    },
+    "इत्तिबा": {
+      "note": "spelling variant of इत्तेबा",
+      "status": "rejected"
+    },
+    "इरादे": {
+      "note": "oblique, correct",
+      "status": "rejected"
+    },
+    "इसको": {
+      "note": "object marker, correct",
+      "status": "rejected"
+    },
+    "उठी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "उठे": {
+      "note": "correct verb forms",
+      "status": "rejected"
+    },
+    "उठो": {
+      "note": "arise!, imperative",
+      "status": "rejected"
+    },
+    "उड़े": {
+      "note": "plural agreement, correct",
+      "status": "rejected"
+    },
+    "उमूर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "कपड़ा": {
+      "note": "generic noun, correct",
+      "status": "rejected"
+    },
+    "कपड़ो": {
+      "note": "different real issue, not this pairing",
+      "status": "rejected"
+    },
+    "कमा": {
+      "note": "earned, real verb",
+      "status": "rejected"
+    },
+    "करनी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "करा": {
+      "note": "causative, correct",
+      "status": "rejected"
+    },
+    "करीम": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "करूंगी": {
+      "note": "1st-person fem (Maryam speaking), correct",
+      "status": "rejected"
+    },
+    "करेंगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "करेगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "करों": {
+      "note": "6:102/7:3 — likely imperative करो, neither तो's twin करें fits well",
+      "status": "ambiguous"
+    },
+    "करोगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "कहती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "कहनी": {
+      "note": "speak, correct construction",
+      "status": "rejected"
+    },
+    "कहां": {
+      "note": "where, distinct from कहीं",
+      "status": "rejected"
+    },
+    "कहूँ": {
+      "note": "1st-person subjunctive 'say', correct",
+      "status": "rejected"
+    },
+    "कहूं": {
+      "note": "1st-person subjunctive 'that I say', correct",
+      "status": "rejected"
+    },
+    "कहेंगी": {
+      "note": "correct, different grammatical subject than the other कहेंगे in same verse",
+      "status": "rejected"
+    },
+    "कहेगी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "कहों": {
+      "note": "61:3 — imperative कहो/करो likely, not either offered twin",
+      "status": "ambiguous"
+    },
+    "क़समों": {
+      "note": "oblique plural, correct",
+      "status": "rejected"
+    },
+    "क़िसमें": {
+      "note": "kinds, correct",
+      "status": "rejected"
+    },
+    "क़ुन": {
+      "note": "Persian compound, legitimate",
+      "status": "rejected"
+    },
+    "कातने": {
+      "note": "spinning, correct verb",
+      "status": "rejected"
+    },
+    "काफ़र": {
+      "note": "36:64/9:37 — probably कुफ़्र not काफ़िर, needs a second look",
+      "status": "ambiguous"
+    },
+    "काफ़ूर": {
+      "note": "camphor, real word",
+      "status": "rejected"
+    },
+    "कारसाजी": {
+      "note": "real word",
+      "status": "rejected"
+    },
+    "कार्ज़": {
+      "ayah": 12,
+      "correct": "क़र्ज़",
+      "note": "5:12 loan to Allah, misread nukta letter",
+      "status": "confirmed",
+      "surah": 5
+    },
+    "कितना": {
+      "note": "18:19 — depends on whether बर्सा is itself a typo",
+      "status": "ambiguous"
+    },
+    "किताबें": {
+      "note": "nominative plural, correct",
+      "status": "rejected"
+    },
+    "किसमें": {
+      "note": "56:7 likely needs क़िस्मों not क़समें; needs more certainty",
+      "status": "ambiguous"
+    },
+    "कुन": {
+      "note": "idiom रुस्वा-कुन",
+      "status": "rejected"
+    },
+    "कूट": {
+      "note": "pounded, correct (89:21 imagery)",
+      "status": "rejected"
+    },
+    "कौमों": {
+      "note": "already correct",
+      "status": "rejected"
+    },
+    "खड़ी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "ख़ता": {
+      "note": "mistake, real word (matches gloss)",
+      "status": "rejected"
+    },
+    "ख़बरों": {
+      "note": "oblique plural, correct",
+      "status": "rejected"
+    },
+    "ख़ीफ": {
+      "note": "51:28 — may be deliberate Quranic-Arabic transliteration",
+      "status": "ambiguous"
+    },
+    "ख़ुशू": {
+      "note": "khushu, humility, correct Arabic term (matches gloss)",
+      "status": "rejected"
+    },
+    "ख़ोर": {
+      "note": "Persian suffix compound, legitimate",
+      "status": "rejected"
+    },
+    "खाती": {
+      "note": "grazing, correct",
+      "status": "rejected"
+    },
+    "खाल": {
+      "note": "skin, real word",
+      "status": "rejected"
+    },
+    "खाली": {
+      "note": "empty, real word",
+      "status": "rejected"
+    },
+    "खिला": {
+      "note": "'feed', correct verb, not खुला",
+      "status": "rejected"
+    },
+    "खुल": {
+      "note": "adverbial 'openly', plausible as-is",
+      "status": "rejected"
+    },
+    "खेले": {
+      "note": "played, correct verb",
+      "status": "rejected"
+    },
+    "खैबर": {
+      "note": "place name",
+      "status": "rejected"
+    },
+    "खो": {
+      "note": "idiom, correct",
+      "status": "rejected"
+    },
+    "खोला": {
+      "note": "opened/proper noun, correct",
+      "status": "rejected"
+    },
+    "खोली": {
+      "note": "opened, correct verb",
+      "status": "rejected"
+    },
+    "खोले": {
+      "note": "passive construction, correct",
+      "status": "rejected"
+    },
+    "गढ़ी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "गढ़ो": {
+      "note": "imperative 'fabricate!', correct",
+      "status": "rejected"
+    },
+    "गयी": {
+      "note": "went, fem",
+      "status": "rejected"
+    },
+    "गये": {
+      "note": "went, plural/hon",
+      "status": "rejected"
+    },
+    "गिनते": {
+      "note": "imperative continuous, correct",
+      "status": "rejected"
+    },
+    "गुज़री": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "गुजारे": {
+      "note": "spend time, distinct verb",
+      "status": "rejected"
+    },
+    "गुन": {
+      "note": "idiom, legitimate",
+      "status": "rejected"
+    },
+    "गुमराहो": {
+      "note": "vocative/oblique",
+      "status": "rejected"
+    },
+    "गृह": {
+      "note": "valid gloss, correct",
+      "status": "rejected"
+    },
+    "गैर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "गौश्त": {
+      "note": "systemic translator spelling variant",
+      "status": "rejected"
+    },
+    "घिर": {
+      "note": "correct verb root (passive)",
+      "status": "rejected"
+    },
+    "चखे": {
+      "note": "3rd-person subjunctive, correct",
+      "status": "rejected"
+    },
+    "चमकते": {
+      "note": "plural agreement, correct",
+      "status": "rejected"
+    },
+    "चाहती": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "चुको": {
+      "note": "compound verb चुकना, correct",
+      "status": "rejected"
+    },
+    "चुनी": {
+      "note": "idiom गिनी-चुनी",
+      "status": "rejected"
+    },
+    "चूर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "चैन": {
+      "note": "idiom, peace",
+      "status": "rejected"
+    },
+    "चोर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "छिपा": {
+      "note": "spelling variant of छुपा",
+      "status": "rejected"
+    },
+    "छिपी": {
+      "note": "spelling variant of छुपी",
+      "status": "rejected"
+    },
+    "छु": {
+      "note": "21:46 — likely छू, offered twin छा doesn't fit",
+      "status": "ambiguous"
+    },
+    "छुपाता": {
+      "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "छू": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "जमी": {
+      "note": "settled, correct",
+      "status": "rejected"
+    },
+    "ज़दा": {
+      "note": "idiom ग़म-ज़दा (grief-stricken)",
+      "status": "rejected"
+    },
+    "ज़ब्ह": {
+      "note": "translator variance",
+      "status": "rejected"
+    },
+    "ज़रार": {
+      "note": "proper noun, Masjid Dirar",
+      "status": "rejected"
+    },
+    "ज़री": {
+      "note": "99:7-8 — likely ज़र्रा (atom's weight), not जारी; needs a different fix mechanism",
+      "status": "ambiguous"
+    },
+    "ज़िन्दे": {
+      "note": "correct parallel plural (living/dead)",
+      "status": "rejected"
+    },
+    "ज़िम्मा": {
+      "note": "responsibility, real word",
+      "status": "rejected"
+    },
+    "ज़ैद": {
+      "note": "proper noun (Zayd ibn Harithah)",
+      "status": "rejected"
+    },
+    "जाएँगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "जाति": {
+      "note": "nation, gloss",
+      "status": "rejected"
+    },
+    "जादा": {
+      "note": "idiom हराम-जादा",
+      "status": "rejected"
+    },
+    "जादे": {
+      "note": "idiom, provisions",
+      "status": "rejected"
+    },
+    "जानना": {
+      "note": "to know, infinitive",
+      "status": "rejected"
+    },
+    "जानी": {
+      "note": "real term, fornicator",
+      "status": "rejected"
+    },
+    "जानो": {
+      "note": "souls (oblique)/imperative 'consider', both correct",
+      "status": "rejected"
+    },
+    "जिएगा": {
+      "note": "will live, correct",
+      "status": "rejected"
+    },
+    "जिनको": {
+      "note": "object marker, correct",
+      "status": "rejected"
+    },
+    "जिसको": {
+      "note": "object marker, correct",
+      "status": "rejected"
+    },
+    "जीना": {
+      "note": "to live, correct",
+      "status": "rejected"
+    },
+    "जीने": {
+      "note": "living, correct (tree of eternal life)",
+      "status": "rejected"
+    },
+    "जुए": {
+      "note": "gambling, correct",
+      "status": "rejected"
+    },
+    "जुड़े": {
+      "note": "connected, correct",
+      "status": "rejected"
+    },
+    "जू": {
+      "note": "suffix, correct",
+      "status": "rejected"
+    },
+    "जूऐं": {
+      "note": "lice, real word (Pharaoh plagues)",
+      "status": "rejected"
+    },
+    "जूते": {
+      "note": "shoes, correct (Moses at the valley)",
+      "status": "rejected"
+    },
+    "जैब": {
+      "note": "idiom, adornment",
+      "status": "rejected"
+    },
+    "जोता": {
+      "note": "ploughed, correct verb",
+      "status": "rejected"
+    },
+    "झगड़ता": {
+      "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "झुठलाना": {
+      "note": "to deny, correct",
+      "status": "rejected"
+    },
+    "झुठलाये": {
+      "note": "correct plural passive agreement",
+      "status": "rejected"
+    },
+    "झुठे": {
+      "note": "systemic short/long ऊ ambiguity, recurs on both sides",
+      "status": "ambiguous"
+    },
+    "ठहराता": {
+      "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "ठहरी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "ठहरो": {
+      "note": "imperative plural, correct",
+      "status": "rejected"
+    },
+    "ठाक": {
+      "note": "idiom ठीक-ठाक",
+      "status": "rejected"
+    },
+    "ठिकाने": {
+      "note": "oblique, correct",
+      "status": "rejected"
+    },
+    "डरती": {
+      "note": "fem plural",
+      "status": "rejected"
+    },
+    "डराना": {
+      "note": "warning, gerund",
+      "status": "rejected"
+    },
+    "डराये": {
+      "note": "subjunctive, correct",
+      "status": "rejected"
+    },
+    "डालती": {
+      "note": "fem agreement (हवा), correct",
+      "status": "rejected"
+    },
+    "डालो": {
+      "note": "imperative, correct",
+      "status": "rejected"
+    },
+    "डोल": {
+      "note": "bucket/idiom",
+      "status": "rejected"
+    },
+    "ढाल": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "तक़वा": {
+      "note": "valid spelling variant of तक्वा",
+      "status": "rejected"
+    },
+    "तक्वे": {
+      "note": "oblique case, correct",
+      "status": "rejected"
+    },
+    "तफ़सील": {
+      "note": "nukta spelling variant",
+      "status": "rejected"
+    },
+    "ता": {
+      "note": "muqattaʿat letter-names (Ta-Seen), correct",
+      "status": "rejected"
+    },
+    "ताक़": {
+      "note": "niche/yoke, real word, distinct senses",
+      "status": "rejected"
+    },
+    "तान": {
+      "note": "stretch, correct verb",
+      "status": "rejected"
+    },
+    "ताने": {
+      "note": "taunts, real word",
+      "status": "rejected"
+    },
+    "तारी": {
+      "note": "idiom तारी होना",
+      "status": "rejected"
+    },
+    "तारे": {
+      "note": "stars, real word",
+      "status": "rejected"
+    },
+    "तीर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "तु": {
+      "note": "see word fix",
+      "status": "rejected"
+    },
+    "तुम्हीं": {
+      "note": "emphatic 'you yourselves', correct",
+      "status": "rejected"
+    },
+    "ते": {
+      "note": "6:139/19:21/+1 — same तय-शुदा idiom, likely तय not तो",
+      "status": "ambiguous"
+    },
+    "तै": {
+      "note": "20:129 — likely तय (decided), not तो; needs missing-य fix, not matra",
+      "status": "ambiguous"
+    },
+    "दंगा": {
+      "note": "riot, real word",
+      "status": "rejected"
+    },
+    "दर्जा": {
+      "note": "rank (singular), correct with वाला",
+      "status": "rejected"
+    },
+    "दांया": {
+      "note": "right (adjective), correct",
+      "status": "rejected"
+    },
+    "दाना": {
+      "note": "grain, real word",
+      "status": "rejected"
+    },
+    "दार": {
+      "note": "Persian suffix",
+      "status": "rejected"
+    },
+    "दिये": {
+      "note": "correct plural participle",
+      "status": "rejected"
+    },
+    "दिवाने": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "दीनी": {
+      "note": "adjective 'of the faith', correct",
+      "status": "rejected"
+    },
+    "दीनों": {
+      "note": "religions, correct (famous verse)",
+      "status": "rejected"
+    },
+    "दुखी": {
+      "note": "sad, matches gloss",
+      "status": "rejected"
+    },
+    "दुध": {
+      "correct": "दूध",
+      "note": "matra slip; milk",
+      "status": "confirmed"
+    },
+    "दुबारा": {
+      "note": "valid spelling variant",
+      "status": "rejected"
+    },
+    "देखती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "देखना": {
+      "note": "to see, infinitive",
+      "status": "rejected"
+    },
+    "देखीं": {
+      "note": "past tense fem agreement, correct",
+      "status": "rejected"
+    },
+    "देखूं": {
+      "note": "1st-person subjunctive 'that I see', correct",
+      "status": "rejected"
+    },
+    "देन": {
+      "note": "idiom/noun, correct",
+      "status": "rejected"
+    },
+    "दौर": {
+      "note": "idiom दौर चलना (trays passed around)",
+      "status": "rejected"
+    },
+    "नफ़ीस": {
+      "note": "fine/exquisite, real word",
+      "status": "rejected"
+    },
+    "नफ़े": {
+      "note": "oblique, correct",
+      "status": "rejected"
+    },
+    "नफीस": {
+      "note": "fine, adjective",
+      "status": "rejected"
+    },
+    "नफे": {
+      "note": "oblique case before व, correct",
+      "status": "rejected"
+    },
+    "नहरों": {
+      "note": "oblique, correct",
+      "status": "rejected"
+    },
+    "ना": {
+      "note": "legitimate negation 'not'",
+      "status": "rejected"
+    },
+    "नाक": {
+      "note": "nose, real word",
+      "status": "rejected"
+    },
+    "नाहकु": {
+      "note": "systemic Perso-Arabic transliteration family, no dominant form",
+      "status": "ambiguous"
+    },
+    "निअमत": {
+      "note": "valid spelling variant of नेअमत",
+      "status": "rejected"
+    },
+    "निकलना": {
+      "note": "infinitive, correct",
+      "status": "rejected"
+    },
+    "निकली": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "निकालो": {
+      "note": "imperative, correct",
+      "status": "rejected"
+    },
+    "निशाना": {
+      "note": "idiom",
+      "status": "rejected"
+    },
+    "नीचा": {
+      "note": "idiom नीचा दिखाना",
+      "status": "rejected"
+    },
+    "नीची": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "नुक़सान": {
+      "note": "spelling variant, correct",
+      "status": "rejected"
+    },
+    "नेकोकारों": {
+      "note": "izafat-style compound variant",
+      "status": "rejected"
+    },
+    "नो": {
+      "note": "nine, correct in both locations",
+      "status": "rejected"
+    },
+    "नोक": {
+      "note": "idiom नोक-पलक",
+      "status": "rejected"
+    },
+    "पकड़ी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "पड़ो": {
+      "note": "correct set",
+      "status": "rejected"
+    },
+    "पढ़ता": {
+      "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "पढ़ती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "परिन्दो": {
+      "note": "vocative plural, correct",
+      "status": "rejected"
+    },
+    "परीक्षा": {
+      "note": "correct spelling, परिक्षा is translator shorthand",
+      "status": "rejected"
+    },
+    "पहला": {
+      "note": "first, correct ordinal agreement",
+      "status": "rejected"
+    },
+    "पहुँचना": {
+      "note": "infinitive-as-noun, correct",
+      "status": "rejected"
+    },
+    "पहुँचू": {
+      "note": "ambiguous, flagged separately",
+      "status": "rejected"
+    },
+    "पहुँचो": {
+      "note": "ambiguous, see separate entry",
+      "status": "rejected"
+    },
+    "पाठ": {
+      "note": "recitation, distinct word",
+      "status": "rejected"
+    },
+    "पाती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "पारा": {
+      "note": "idiom पारा-पारा (torn to shreds), unrelated to पूरा",
+      "status": "rejected"
+    },
+    "पिता": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "पिया": {
+      "note": "drank, real distinct verb",
+      "status": "rejected"
+    },
+    "पी": {
+      "note": "idiom, correct",
+      "status": "rejected"
+    },
+    "पीछा": {
+      "note": "idiom पीछा करना, correct",
+      "status": "rejected"
+    },
+    "पीता": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "पीते": {
+      "note": "drink, correct verb",
+      "status": "rejected"
+    },
+    "पीना": {
+      "note": "infinitive-as-noun, correct",
+      "status": "rejected"
+    },
+    "पीप": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "पूछता": {
+      "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "पे": {
+      "note": "idiom पे-दर-पे",
+      "status": "rejected"
+    },
+    "पैरा": {
+      "note": "idiom अमल-पैरा (acting upon)",
+      "status": "rejected"
+    },
+    "पोते": {
+      "note": "grandsons, real word",
+      "status": "rejected"
+    },
+    "पोर": {
+      "note": "correct as-is (except 8:12, fixed separately)",
+      "status": "rejected"
+    },
+    "फजूल": {
+      "note": "useless, real word",
+      "status": "rejected"
+    },
+    "फरिश्तो": {
+      "note": "vocative",
+      "status": "rejected"
+    },
+    "फ़रमाबरदार": {
+      "note": "legitimate co-existing spelling",
+      "status": "rejected"
+    },
+    "फासला": {
+      "note": "distance, real word",
+      "status": "rejected"
+    },
+    "फिला": {
+      "note": "translator's own consistent transliteration, no clean form exists",
+      "status": "ambiguous"
+    },
+    "फुसला": {
+      "note": "entice, correct verb",
+      "status": "rejected"
+    },
+    "फूंकी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "फूला": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "फूले": {
+      "note": "idiom फलना-फूलना",
+      "status": "rejected"
+    },
+    "फेंका": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "फेरे": {
+      "note": "different verb from फिरे",
+      "status": "rejected"
+    },
+    "फेरो": {
+      "note": "different verb from फिरो",
+      "status": "rejected"
+    },
+    "फैले": {
+      "note": "spread, correct verb",
+      "status": "rejected"
+    },
+    "फोड़": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बंद": {
+      "note": "closed, real word",
+      "status": "rejected"
+    },
+    "बचे": {
+      "note": "plural subjunctive, correct",
+      "status": "rejected"
+    },
+    "बच्ची": {
+      "note": "girl child, correct (matches gloss)",
+      "status": "rejected"
+    },
+    "बढ़ना": {
+      "note": "infinitive, correct",
+      "status": "rejected"
+    },
+    "बढ़ी": {
+      "note": "5:48 — likely बढ़ो, neither offered twin fits",
+      "status": "ambiguous"
+    },
+    "बदलना": {
+      "note": "infinitive, correct",
+      "status": "rejected"
+    },
+    "बदली": {
+      "note": "changed, fem agreement",
+      "status": "rejected"
+    },
+    "बदलो": {
+      "note": "exchange!, imperative",
+      "status": "rejected"
+    },
+    "बनाना": {
+      "note": "infinitive object, correct",
+      "status": "rejected"
+    },
+    "बनानी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "बनाये": {
+      "note": "made, correct",
+      "status": "rejected"
+    },
+    "बने": {
+      "note": "correct plural verb agreement",
+      "status": "rejected"
+    },
+    "बनो": {
+      "note": "imperative 'be!', correct",
+      "status": "rejected"
+    },
+    "बन्दी": {
+      "note": "compound दरजा-बन्दी, legitimate",
+      "status": "rejected"
+    },
+    "बस्ता": {
+      "note": "idiom",
+      "status": "rejected"
+    },
+    "बहकी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "बहते": {
+      "note": "masc agreement, correct",
+      "status": "rejected"
+    },
+    "बहरो": {
+      "note": "izafat compound बहरो-बर्र",
+      "status": "rejected"
+    },
+    "बागी": {
+      "note": "rebellious, real word",
+      "status": "rejected"
+    },
+    "बागो": {
+      "note": "see ambiguous",
+      "status": "rejected"
+    },
+    "बाजी": {
+      "note": "idiom सौदा-बाज़ी",
+      "status": "rejected"
+    },
+    "बाजू": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बारी": {
+      "note": "idiom, turn",
+      "status": "rejected"
+    },
+    "बाल": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बाला": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बाली": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बीत": {
+      "note": "passes, real verb",
+      "status": "rejected"
+    },
+    "बीन": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बीना": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बुलाती": {
+      "note": "fem plural agreement, correct",
+      "status": "rejected"
+    },
+    "बेख़बर": {
+      "note": "unaware, correct (negation), not the opposite बाख़बर",
+      "status": "rejected"
+    },
+    "बेटी": {
+      "note": "daughter, correct (famous verse), not बेटे",
+      "status": "rejected"
+    },
+    "बेटें": {
+      "note": "52:39 — likely बेटे (plain plural), not बेटों",
+      "status": "ambiguous"
+    },
+    "बेटो": {
+      "note": "vocative plural, correct",
+      "status": "rejected"
+    },
+    "बैठा": {
+      "note": "gender agreement, correct",
+      "status": "rejected"
+    },
+    "बैत": {
+      "note": "Ahl al-Bayt idiom, correct",
+      "status": "rejected"
+    },
+    "बोरे": {
+      "note": "sack, real word",
+      "status": "rejected"
+    },
+    "भटके": {
+      "note": "plural agreement, correct",
+      "status": "rejected"
+    },
+    "भली": {
+      "note": "idiom/fem agreement, correct",
+      "status": "rejected"
+    },
+    "भले": {
+      "note": "plural/adverbial, correct",
+      "status": "rejected"
+    },
+    "भाल": {
+      "note": "idiom देख-भाल",
+      "status": "rejected"
+    },
+    "भेजती": {
+      "note": "1st-person fem, correct",
+      "status": "rejected"
+    },
+    "भेजो": {
+      "note": "correct set",
+      "status": "rejected"
+    },
+    "मज़े": {
+      "note": "idiom, correct",
+      "status": "rejected"
+    },
+    "मनी": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "मांगती": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "माफी": {
+      "note": "pardon (noun), correct",
+      "status": "rejected"
+    },
+    "मारती": {
+      "note": "fem plural agreement, correct",
+      "status": "rejected"
+    },
+    "मारी": {
+      "note": "'was blown' (trumpet), correct verb, not मेरी",
+      "status": "rejected"
+    },
+    "माली": {
+      "note": "financial, correct adjective",
+      "status": "rejected"
+    },
+    "मालो": {
+      "note": "izafat compound",
+      "status": "rejected"
+    },
+    "मिना": {
+      "note": "proper noun (Mina)",
+      "status": "rejected"
+    },
+    "मिलो": {
+      "note": "subjunctive, correct",
+      "status": "rejected"
+    },
+    "मिस्ल": {
+      "note": "like/similar to, real word",
+      "status": "rejected"
+    },
+    "मुक़ाबला": {
+      "note": "contest, real word",
+      "status": "rejected"
+    },
+    "मुकीम": {
+      "note": "distinct word, resident",
+      "status": "rejected"
+    },
+    "मुझी": {
+      "note": "myself, emphatic",
+      "status": "rejected"
+    },
+    "मुड़": {
+      "note": "intransitive, legitimate",
+      "status": "rejected"
+    },
+    "मुताबिक्": {
+      "correct": "मुताबिक़",
+      "note": "dangling halant instead of nukta; according to",
+      "status": "confirmed"
+    },
+    "मुर्दो": {
+      "note": "oblique plural, correct",
+      "status": "rejected"
+    },
+    "मूंगे": {
+      "note": "coral, distinct word",
+      "status": "rejected"
+    },
+    "मूल": {
+      "note": "fundamental basis, real word",
+      "status": "rejected"
+    },
+    "मृत": {
+      "note": "dead, correct standalone gloss",
+      "status": "rejected"
+    },
+    "मैल": {
+      "note": "dirt, real word",
+      "status": "rejected"
+    },
+    "मोजिजा": {
+      "note": "grammatical form variant",
+      "status": "rejected"
+    },
+    "मोल": {
+      "note": "price, real word",
+      "status": "rejected"
+    },
+    "मोहब्बत": {
+      "note": "valid spelling variant",
+      "status": "rejected"
+    },
+    "मोहर": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "मोहलत": {
+      "note": "valid spelling variant",
+      "status": "rejected"
+    },
+    "मौला": {
+      "note": "protector/lord, distinct word",
+      "status": "rejected"
+    },
+    "यहूदे": {
+      "note": "izafat compound, correct",
+      "status": "rejected"
+    },
+    "ये": {
+      "note": "demonstrative 'this/these', correct",
+      "status": "rejected"
+    },
+    "रखती": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "रखीं": {
+      "note": "past tense, correct",
+      "status": "rejected"
+    },
+    "रहती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "रहना": {
+      "note": "infinitive, correct",
+      "status": "rejected"
+    },
+    "रहूं": {
+      "note": "1st-person subjunctive, correct",
+      "status": "rejected"
+    },
+    "रहेंगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "राजा": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "रिज़्क़": {
+      "note": "19:62 — see रिज़्क् fix; this specific instance flagged separately, needs check",
+      "status": "ambiguous"
+    },
+    "रूकते": {
+      "note": "different verb, correct",
+      "status": "rejected"
+    },
+    "रूकने": {
+      "note": "fits meaning, correct",
+      "status": "rejected"
+    },
+    "रूका": {
+      "note": "transitive vs intransitive, distinct",
+      "status": "rejected"
+    },
+    "रूकी": {
+      "note": "fem passive participle, correct",
+      "status": "rejected"
+    },
+    "रूके": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "रेत": {
+      "note": "sand, real word",
+      "status": "rejected"
+    },
+    "रोकती": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "रोको": {
+      "note": "negative imperative, correct",
+      "status": "rejected"
+    },
+    "रोज़ा": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "लगो": {
+      "note": "correct set",
+      "status": "rejected"
+    },
+    "लाख": {
+      "note": "numeral, real word",
+      "status": "rejected"
+    },
+    "लात": {
+      "note": "idol name Al-Lat",
+      "status": "rejected"
+    },
+    "लाना": {
+      "note": "infinitive, correct",
+      "status": "rejected"
+    },
+    "लानी": {
+      "note": "to bring, correct",
+      "status": "rejected"
+    },
+    "लाये": {
+      "note": "brought, correct",
+      "status": "rejected"
+    },
+    "लिखना": {
+      "note": "infinitive+चाहिए, correct",
+      "status": "rejected"
+    },
+    "लिये": {
+      "note": "for, correct",
+      "status": "rejected"
+    },
+    "लीं": {
+      "note": "past fem-plural agreement, correct",
+      "status": "rejected"
+    },
+    "लुटा": {
+      "note": "squandered, real distinct verb",
+      "status": "rejected"
+    },
+    "लू": {
+      "note": "6:14 — likely लूं, missing nasal, neither offered twin fits",
+      "status": "ambiguous"
+    },
+    "लूं": {
+      "note": "correct subjunctive",
+      "status": "rejected"
+    },
+    "लेगी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "लेट": {
+      "note": "9:106 — unclear, may need a different word entirely",
+      "status": "ambiguous"
+    },
+    "लेती": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "लों": {
+      "note": "10:23 — likely लो (enjoy!), not लें",
+      "status": "ambiguous"
+    },
+    "लोग़": {
+      "note": "31:6 — likely लोगों, not लोगो",
+      "status": "ambiguous"
+    },
+    "लौटो": {
+      "note": "imperative plural, correct",
+      "status": "rejected"
+    },
+    "लौहे": {
+      "note": "लौहे महफ़ूज़ fixed term",
+      "status": "rejected"
+    },
+    "वकृत": {
+      "note": "translator's own transliteration convention, not corruption",
+      "status": "rejected"
+    },
+    "वहा": {
+      "note": "see word fix 36:57 only",
+      "status": "rejected"
+    },
+    "वालीं": {
+      "note": "correct fem plural (houris)",
+      "status": "rejected"
+    },
+    "विदा": {
+      "note": "farewell/release, correct",
+      "status": "rejected"
+    },
+    "शिक्र": {
+      "note": "36:64/9:37 — likely कुफ़्र not शुक्र, needs closer look",
+      "status": "ambiguous"
+    },
+    "सकी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "सकूं": {
+      "note": "1st-person subjunctive, correct",
+      "status": "rejected"
+    },
+    "सकेंगी": {
+      "note": "fem agreement",
+      "status": "rejected"
+    },
+    "सकेगी": {
+      "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "सच्चो": {
+      "note": "7:106/24:6 — likely सच्चों (oblique), neither offered twin fits",
+      "status": "ambiguous"
+    },
+    "सबका": {
+      "note": "genitive, correct",
+      "status": "rejected"
+    },
+    "सलीम": {
+      "note": "idiom सलीम दिल",
+      "status": "rejected"
+    },
+    "साद": {
+      "note": "Quranic disjointed letter",
+      "status": "rejected"
+    },
+    "सामना": {
+      "note": "idiom",
+      "status": "rejected"
+    },
+    "साली": {
+      "note": "12:49 — unclear intended word, needs source access",
+      "status": "ambiguous"
+    },
+    "सिरे": {
+      "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "सीरत": {
+      "note": "character, real word",
+      "status": "rejected"
+    },
+    "सुने": {
+      "note": "correct verb form",
+      "status": "rejected"
+    },
+    "सूत": {
+      "note": "thread/yarn, real word",
+      "status": "rejected"
+    },
+    "सूरतों": {
+      "note": "oblique plural, correct",
+      "status": "rejected"
+    },
+    "सेन": {
+      "note": "16:120 — looks like a word-merge, not a matra swap",
+      "status": "ambiguous"
+    },
+    "सेर": {
+      "note": "satiated, real word",
+      "status": "rejected"
+    },
+    "सोना": {
+      "note": "gold, real word",
+      "status": "rejected"
+    },
+    "सोये": {
+      "note": "asleep, correct",
+      "status": "rejected"
+    },
+    "सोर": {
+      "note": "proper noun (Cave of Thawr)",
+      "status": "rejected"
+    },
+    "हंसे": {
+      "note": "subjunctive parallel to रोए, correct",
+      "status": "rejected"
+    },
+    "हकृदार": {
+      "note": "translator's transliteration convention",
+      "status": "rejected"
+    },
+    "हटो": {
+      "note": "negative imperative, correct",
+      "status": "rejected"
+    },
+    "हमीं": {
+      "note": "we ourselves, emphatic",
+      "status": "rejected"
+    },
+    "हल्के": {
+      "note": "plural agreement, correct",
+      "status": "rejected"
+    },
+    "हिल": {
+      "note": "idiom पहाड़ हिल",
+      "status": "rejected"
+    },
+    "हे": {
+      "note": "see word fix 62:2 only",
+      "status": "rejected"
+    },
+    "होनी": {
+      "note": "infinitive+चाहिए construction, correct",
+      "status": "rejected"
+    }
+  }
+}

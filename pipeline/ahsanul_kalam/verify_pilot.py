@@ -39,8 +39,11 @@ Checks, all mechanical:
      genuine Ahsanul Kalam vocabulary the other translator never used
      (बिलाशुब्ह, मअबूद), so these rank suspicion, they do not condemn.
   5. LENGTH OUTLIERS — verse length vs the same verse in the bundled Hindi
-     edition, flagged beyond `--length-z`. Catches dropped or duplicated text,
-     which correct numbering hides completely.
+     edition, flagged beyond `--length-z`. Meant to catch dropped or duplicated
+     text that correct numbering hides completely — but two translators gloss
+     independently, so this flags plenty of correct verses too (see the
+     length-outlier block below); it is a per-verse suspicion, not grounds to
+     withhold a surah.
 
 Exit code is non-zero if any verse carries an unresolved flag, so this is usable
 as a gate rather than a report nobody reads.
@@ -69,6 +72,537 @@ PERSO_ARABIC = set("कखगजफ")
 # "keep Devanagari" filter keeps it and every sentence-final word looks unknown
 # (हो।, कहाः). The visarga is used as a colon by this edition.
 PUNCT = "।॥ः"
+
+# Word-boundary lookaround for the exact-word substitutions below. Plain
+# `(?<![ऀ-ॿ])...(?![ऀ-ॿ])` looks safe but silently under-matches: PUNCT lives
+# INSIDE the Devanagari block, so a word running straight into a sentence-
+# final danda with no space — लोटेंगे। — was not treated as its own word,
+# and 2:18's known fix quietly never applied there while applying fine
+# everywhere else the same word appeared with a space after it (a coverage
+# gap, not a wrong-fix risk, but still a real one — found only by manually
+# spot-checking a "confirmed 0 remaining changes" state against the source).
+WORD_BEFORE = rf"(?:(?<![ऀ-ॿ])|(?<=[{PUNCT}]))"
+WORD_AFTER = rf"(?=[^ऀ-ॿ]|[{PUNCT}]|$)"
+
+# KNOWN WORD FIXES — literal, whole-word, confirmed by hand against an
+# independent reference (never guessed, never applied corpus-wide on a
+# pattern). Each exists because the automatic checks structurally cannot see
+# it: वद्यी is a systematic misread of ह्य as द्य (two similar Devanagari
+# conjuncts at 297 DPI) that recurs 17 times, so it clears both the
+# self-consistency check's rare-word floor (>2) and the nukta table (neither
+# word carries one) — it is invisible to every check above, and वद्यी is not
+# a Hindi word at all (0 occurrences in the 207k-word reference corpus,
+# against वह्यी's own 0 — this edition simply doesn't share that reference's
+# vocabulary for "revelation", so absence there proves nothing either way;
+# what settles it is that only one of the two spellings is a real word).
+# अज़ीमुश्शान/ज़ुल्मतों lost their nukta with no parallel-Urdu skeleton to
+# restore from (HANDOFF.md), so they are fixed the same way: literally.
+KNOWN_WORD_FIXES = {
+    "वद्यी": "वह्यी",
+    "अजीमुश्शान": "अज़ीमुश्शान",
+    "जुल्मतों": "ज़ुल्मतों",
+    # 2026-07-29 batch: matra/anusvara/chandrabindu drops and one dangling
+    # halant, found by scanning for a rare word one matra from a much commoner
+    # one (see HANDOFF.md — that scan produced 740 raw candidates and ~40
+    # strict ones; the large majority, things like गयी/गया, बंद/बाद, मूल/माल,
+    # were REJECTED as genuine distinct Hindi words, not OCR noise, because
+    # Hindi's grammar lives in its matras — a blanket version of this check is
+    # NOT safe, unlike the nukta case. Each of these seven was individually
+    # checked against the Quran verse it appears in and confirmed to have no
+    # other legitimate reading:
+    "वह्": "वह",       # 4:25 — a pronoun cannot take a dangling halant
+    "बैशक": "बेशक",     # 6:78 — बैशक is not a word; बेशक appears 1225x elsewhere
+    "हे": "है",         # 62:2 — "वही हे जिसने" needs the copula "है" ("He IS...")
+    "दूसरो": "दूसरों",   # 39:42 — "और दूसरो को...भेज देता है" needs the oblique plural
+    "तु": "तू",         # 46:15 — "तु मुझे तौफ़िक़ दे" needs the 2nd-person pronoun
+    "ज़्यादी": "ज़्यादती", # 28:28 — missing त; ज़्यादती ("injustice") fits, ज़्यादी is not a word
+    "वहा": "वहाँ",      # 36:57 — "उनके लिए वहा...फल होंगे" needs "there", not "वही"
+
+    # 2026-07-29 batch, round 3 — background-agent review of the next tier
+    # of matra-twin candidates (frequency 2-5, not just the freq==1 strict
+    # set), each individually checked against its verse. Unlike round 1,
+    # these ARE safe as blanket word-level fixes: every occurrence of each
+    # exact spelling below was read in context and confirmed wrong, with
+    # zero legitimate alternate meaning found for the bad spelling itself
+    # (unlike कम, which genuinely means "less" and stays verse-anchored
+    # below).
+    "हें": "हैं",       # 21:44, 28:54 — हें is not a word; needs the plural copula
+    "फ्र": "फिर",       # 11:14, 24:58 — फ्र is not a word
+    "कह्": "कह",        # 46:8, 6:148, 42:23 — a dangling halant on the
+                        # standard phrase "कह दीजिए" (say!)
+    "कह्ाः": "कहाः",    # 11:25, 5:25, 12:50, 43:63, 38:33 — same dangling
+                        # halant, on "कहाः" (said:) instead
+    "नू": "नौ",         # 17:49, 17:98, 50:15 — all three are the idiom
+                        # "अज़-सर-ए-नौ" ("anew"), glossed right there as
+                        # "(नए सिरे)"; नू is not a word on its own
+    "अजसरे": "अज़सरे",   # 17:98, 34:7, 50:15 — same idiom, missing nukta
+                        # on ज (the ज़ of "अज़", Persian "from")
+    "केसी": "कैसी",     # 17:48 — "आपके लिए केसी मिसालें" needs "what kind
+                        # of" (5:75's "केसी कैसी" is a literal duplicate,
+                        # not this word alone — handled per-verse below)
+
+    # "क़ौम" (people/nation) is easily this edition's single most
+    # frequently mis-OCR'd word — it appears correctly 109 times but also
+    # turns up as five distinct broken spellings across ~83 further
+    # occurrences, none of which are real Hindi words on their own. Checked
+    # a representative sample across many surahs (2, 4, 5, 6, 7, 9, 10, 11,
+    # 40...) rather than every single one, given the volume, but every
+    # sample read exactly as "O my PEOPLE!" / "his PEOPLE" / "an enemy
+    # PEOPLE" with no exception. कम/क़म are the ONE variant that needed
+    # care: क़म (WITH a nukta) is never legitimately "less" (that's कम,
+    # bare), so it is safe here; but bare कम genuinely means "less" 31
+    # times, so it stays a per-verse fix below (7:142, 14:5, 25:36, 27:43),
+    # not a blanket rule.
+    "क़ोम": "क़ौम",
+    "कोम": "क़ौम",
+    "क़म": "क़ौम",
+    "कोौम": "क़ौम",
+    "कीम": "क़ौम",
+
+    # Pharaoh's name, misread with the इ/र transposed or dropped —
+    # फ़्रिऔन(14x)/फ़्रऔन(1x) vs the correct फ़िरऔन(58x). Not ambiguous; it is
+    # a proper noun with exactly one correct spelling.
+    "फ़्रिऔन": "फ़िरऔन",
+    "फ़्रऔन": "फ़िरऔन",
+
+    # 2026-07-29 batch, round 5 — a background agent checked the SOURCE PAGE
+    # IMAGES directly (not just the OCR text) for a cluster of words ending
+    # in a bare consonant + dangling halant, to settle whether this is OCR
+    # damage or a deliberate translator spelling convention. Every checked
+    # page shows a complete, correctly printed word; tesseract is losing
+    # part of it. Two distinct, but both mechanical, failure modes:
+    "हक्": "हक़",   # the nukta dot on क़ (haqq, "truth/right") is being read
+                    # as a halant instead — same root word, no counter-example
+                    # found across dozens of instances of either spelling.
+    "अज्": "अज्र",  # "reward" — the final र is dropped.
+    "उज्": "उज्र",  # "recompense" — same dropped-र pattern.
+    "फज्": "फ़ज्र",  # "dawn/fajr" — same pattern; spelled with the nukta
+                    # (फ़ज्र) elsewhere in this same edition, matched for
+                    # consistency.
+
+    # 2026-07-29 batch, round 6 — next tier of matra-twin candidates,
+    # reviewed by a background agent against each verse individually:
+    "कूबूल": "क़बूल",  # misspelling of "accept"
+    "ख़ीफ": "ख़ौफ",     # not a real word; needs "fear"
+    "बतार": "बतौर",    # not a word; needs "as/by way of"
+    "बतोर": "बतौर",    # same word, different vowel-sign drop
+    "शह्दत": "शहादत",  # missing vowel sign; "testimony"
+    "पेदाईश": "पैदाईश",  # 39:6 has both spellings in the same sentence for
+                        # the same word; पैदाईश is the one used 16x elsewhere
+    "ग़ेर": "ग़ैर",       # 33:13 similarly pairs a correct and incorrect
+                        # spelling of the same word in one sentence
+    "क़ूमे": "क़ौमे",     # "people of [Prophet]" izafat compound — both
+                        # occurrences (11:89, 25:37) are "क़ूमे नूह"
+    "क़ोमे": "क़ौमे",     # same compound, different vowel-sign drop —
+                        # not a standalone word under any reading
+
+    # 2026-07-29 batch, round 7 — next tier, background-agent reviewed,
+    # numerically sanity-checked (bad-word count vs. dominant-spelling count)
+    # before adding; every one below is a plain spelling variant with no
+    # separate legitimate meaning of its own.
+    "पुरी": "पूरी",       "तूझे": "तुझे",
+    "क़ूदिर": "क़ादिर",    "कीन": "कौन",
+    "खूद": "खुद",         "कृयामत": "क़यामत",
+    "क्यामत": "क़यामत",    "पैश": "पेश",
+    "जेसा": "जैसा",       "कुफ्": "कुफ़",
+    "हकु": "हक़",          "पेरवी": "पैरवी",
+    "फेसला": "फैसला",     "अवतरीत": "अवतरित",
+    "लोट": "लौट",         "कूसम": "क़सम",
+    "क्सम": "क़सम",        "मुश्रीकीन": "मुश्रिकीन",
+    "रुस्वा": "रूस्वा",    "इब्राहिम": "इब्राहीम",
+
+    # 2026-07-29 batch, round 8 — owner's own continued manual check of
+    # surah 2 (al-Baqarah), each individually confirmed and frequency-
+    # sanity-checked before adding.
+    "निफ़ाक़्": "निफ़ाक़",  # dangling halant instead of the word's own final
+                          # nukta; "hypocrisy"
+    "शेतानों": "शैतानों",  # matra slip; "devils/satans" — this was a
+                          # near-miss in the original self-consistency scan
+                          # (8x ratio, just under the 10x threshold)
+    "जोरदार": "ज़ोरदार",   # missing nukta; "forceful" (of rain)
+    "क़्रीब": "क़रीब",     # extra consonant cluster; "near" — 16 occurrences,
+                          # not a one-off
+    "रिज़्क्": "रिज़्क़",    # dangling halant instead of nukta; "provision/
+                          # sustenance" — 22 occurrences settle what an
+                          # earlier review flagged as possibly a deliberate
+                          # transliteration convention; it isn't
+    "अहृद": "अहद",        # stray ऋ vowel-sign inserted; "covenant/promise"
+    "लोटेंगे": "लौटेंगे",   # "will return", not "will roll" — लौटना/लोटना
+                          # are both real verbs, but every occurrence of
+                          # this specific conjugated form is the "return"
+                          # sense
+    "लोटाए": "लौटाए",     # same verb, causative form — checked all 8
+                          # occurrences of either spelling, all "returned/
+                          # will be returned to", none are "rolled"
+
+    # 2026-07-29 batch, round 9 — continued matra-twin candidate review
+    # using the new review_candidates.py tool.
+    "क्यो": "क्यों",  # decided earlier in the session (2:118, 16:28 both
+                     # need "क्यों नहीं", not "क्या") but never actually
+                     # written into this dict — caught by review_candidates.py
+                     # re-surfacing it as still-unfixed.
+    "कृसम": "क़सम",   # not a word; "oath" (1 occurrence vs क़सम's 29)
+    "यू": "यूं",      # missing chandrabindu on "thus/like this" (75:6),
+                     # not the twin's "या" ("or")
+    "बन्दो": "बन्दों", # missing anusvara on the oblique plural "servants"
+                     # (50:11), not the twin's "बन्दे" (a different case)
+
+    # 2026-07-29 batch, round 10 — owner's third manual pass on surah 2,
+    # cross-checked against a divergent copy found in al-quran-web (see
+    # HANDOFF.md — someone had hand-patched that file directly, bypassing
+    # this pipeline entirely; ported the corrections back here instead of
+    # leaving them stranded outside the source of truth).
+    "ग़रज़": "गरज",    # "thunder/rumble" — both occurrences (2:19, 13:13)
+                      # need the same degemination; ग़रज़ ("purpose/motive")
+                      # is a real but DIFFERENT word, not attested here
+    "क़ान": "कान",     # "ear(s)" — all 3 occurrences (2:20, 9:61, 41:5)
+    "ख़ोौफ": "ख़ौफ़",   # "fear" — both occurrences (2:38, 43:68), a garbled
+                      # double vowel-sign
+    "क॒ुफ्र": "कुफ़्र", # stray combining mark before उ; "disbelief"
+
+    # 2026-07-29 batch, round 11 — continued matra-twin review.
+    "फज्ल": "फज़ल",     # missing nukta; "grace/favour" (2 vs 34 occurrences)
+    "कुबूल": "क़बूल",   # missing nukta; "accept" (3 vs 49) — a different
+                       # bad spelling of the same word as the already-fixed
+                       # कूबूल→क़बूल
+    "नहो": "नहीं",      # not a word; "not" (1 vs 1707)
+
+    # 2026-07-29 batch, round 12 — continued matra-twin review.
+    "कूाबिले": "क़ाबिले",  # garbled matra; "worthy of" (izafat)
+    "मौड़ा": "मोड़ा",       # not a word; "turned" (verb)
+    "कुरीब": "क़रीब",       # missing nukta + extra matra; "near"
+    "बग़र": "बग़ैर",        # missing ऐ matra; "without" — same word repeated
+                          # correctly right before it in 22:8's own sentence
+    "पेग़ाम": "पैग़ाम",     # matra slip; "message"
+    "कुफ़र": "कुफ़्र",      # missing halant; "disbelief"
+    "जिदा": "ज़िन्दा",     # 2:258 — "I too give LIFE and cause death"
+                          # (Abraham/Nimrod dialogue); needs ज़िन्दा
+                          # ("alive/give life"), not जुदा ("separate")
+
+    # 2026-07-29 batch, round 13 — continued matra-twin review.
+    "तस्दीक्": "तस्दीक़",  # dangling halant instead of nukta; "confirms"
+    "क़ृमे": "क़ौमे",       # garbled izafat compound; "people of [Jonah/Noah]"
+    "केसा": "कैसा",        # matra slip; "what kind/how" (question word)
+    "फेसले": "फैसले",      # matra slip; plural of "decision/judgment"
+    "सिफ": "सिर्फ",        # missing र्; "only"
+    "लोटने": "लौटने",      # "returning", not "rolling" — same लौटना/लोटना
+                          # family as लोटेंगे/लोटाए, already confirmed correct
+    "क़ूसमें": "क़ुसमें",   # garbled; "oaths" — matched to this edition's own
+                          # more common local spelling of the two (11 vs 8)
+    "क़्समें": "क़ुसमें",   # same word, different garbling
+
+    # 2026-07-29 batch, round 14 — continued matra-twin review.
+    "जीड़े": "जोड़े",      # garbled matra; "joints"
+    "मुनाफिक्": "मुनाफिक़", # dangling halant instead of nukta; "hypocrites"
+    "ग़ेब": "ग़ैब",        # matra slip; "the unseen"
+
+    # 2026-07-29 batch, round 15 — three parallel review agents covering
+    # the remaining candidate ranks in one pass to fit a time constraint.
+    "अकू्ल": "अक़्ल",     # garbled conjunct; "intellect"
+    "दुध": "दूध",         # matra slip; "milk"
+    "मुताबिक्": "मुताबिक़", # dangling halant instead of nukta; "according to"
+    "फुंक": "फूंक",       # missing matra; "breathe into" (verb)
+    "कुसम": "क़सम",       # missing nukta; "oath"
+    "क़ोन": "कौन",        # wrong matra+nukta; "who"
+    "बगेर": "बगैर",       # matra slip; "without"
+    "फेला": "फैला",       # matra slip; "spread"
+    "तैज़": "तेज़",        # matra slip; "intense/boiling"
+    "दिवार": "दीवार",     # short vowel; "wall"
+    "मज़ाक्": "मज़ाक़",     # dangling halant instead of nukta; "joke/mockery"
+    "दोड़ते": "दौड़ते",     # ओ/औ confusion; "running"
+    "लोटना": "लौटना",     # "to return", not "to roll" — both occurrences
+                          # are "you must return"/"a chance to return"
+    "सक़ता": "सकता",      # spurious nukta on the modal "can"
+    "सक़ती": "सकती",      # same modal, feminine
+    "बेठे": "बैठे",       # matra slip; "sat" (5 vs 25 occurrences)
+    "विरूध": "विरोध",     # matra slip; "opposition/against"
+
+    # 2026-07-29 batch, round 16 — fresh sweep of the halant-fragment class
+    # (unswept since round 10), same "dropped trailing consonant" pattern
+    # as the हक्/अज्/उज्/फज् family confirmed against the source images.
+    "अज़्": "अज्र",        # 12:57 — "the reward of the Hereafter", dropped र
+    "खिज्": "खिज्र",       # the figure in Surah al-Kahf's story (18:71 and
+                          # 4 more instances in the same narrative) — the
+                          # name recurs 5x truncated against 1x correct
+    "मीम्": "मीम",         # 42:1 — the muqattaʿat letter-name "Meem" carries
+                          # no trailing halant elsewhere (14 occurrences),
+                          # matching सीन/ता's bare form
+
+    # 2026-07-29 batch, round 17 — owner's fourth manual pass on surah 2.
+    "क़॒त्ल": "क़त्ल",     # stray combining mark before त; "killing"
+    "नाहक़॒": "नाहक़",     # same stray mark; "wrongfully"
+    "परेहजगार": "परहेज़गार",  # garbled; "God-fearing/pious"
+    "परेहज़गार": "परहेज़गार", # same word, different garbling (both wrong
+                             # spellings recur; 4 occurrences already use
+                             # the correct परहेज़गार)
+    "बेएब": "बेऐब",       # matra slip; "without fault"
+
+    # 2026-07-29 batch, round 18 — owner clarification: क़ाम is not a real
+    # Hindi word under any reading; every occurrence is a corrupted क़ौम
+    # ("people/nation") or काम ("work/deed/affair"), decided per verse below
+    # since the two real targets differ by instance. लिहाजा/क़ृत्ल, by
+    # contrast, the owner confirmed have ONE correct spelling everywhere —
+    # blanket, not per-verse, superseding this session's earlier caution
+    # about their more-common alternate spellings.
+    "लिहाजा": "लिहाज़ा",   # "therefore/so" — owner confirmed this is the
+                          # correct spelling corpus-wide, not लिहाजा
+    "क़ृत्ल": "क़त्ल",      # "murder/killing" — owner confirmed corpus-wide,
+                          # not the ऋ-inserted spelling
+    "क़ामों": "कामों",     # plural of क़ाम, same non-word — all 4 occurrences
+                          # gloss as "deeds/works" (कार्यों, कारसाज़)
+}
+
+# KNOWN VERSE FIXES — same idea, but the error only shows up in specific
+# verses because the correct word (क़ौम, "people/nation") happens to look
+# like a different real word (कम, "less") once OCR drops the ौ matra. कम is
+# common and legitimate elsewhere (कम ही शुक्र करते = "seldom give thanks"),
+# so it cannot be corrected as a pattern — only these four verses, checked
+# individually against the Quran's actual meaning, are wrong:
+#   7:142  तू मेरी कम में मेरे पीछे  -> "you be my successor AMONG MY PEOPLE"
+#   14:5   अपनी कम को जुल्मतों से    -> "bring YOUR PEOPLE out of the darkness"
+#   25:36  उस कम की तरफ़ जाओ        -> "go to THAT PEOPLE (who denied)"
+#   27:43  वह काफिर कम में से थी    -> "she was of a disbelieving PEOPLE"
+# 35:11's "उसकी उम्र कम की जाती है" (a lifespan is SHORTENED) is the same
+# two tokens and is already correct — left alone on purpose.
+#
+# Patterns are regex, not literal strings, and deliberately tolerant of
+# whether a neighbouring word's own nukta/मैं-में repair has run yet: this
+# step runs BEFORE those (so the unknown-word count downstream sees the
+# corrected spelling too), but नुक्ता restoration and the मैं/में bigram
+# check live further down in the SAME per-verse pass and mutate the very
+# words these patterns anchor on (काफ़िर, मैं). Matching only the
+# already-repaired spelling meant 3 of these 4 verses silently fell back to
+# needing a second `verify_pilot.py` run to actually apply — caught by
+# rebuilding from scratch and finding only 1 of 4 landed in one pass.
+KNOWN_VERSE_FIXES: dict[tuple[int, int], tuple[str, str]] = {
+    (7, 142): (r"कम (मैं|में) मेरे", "क़ौम में मेरे"),
+    (14, 5): (r"अपनी क़?म को", "अपनी क़ौम को"),
+    (25, 36): (r"उस कम की", "उस क़ौम की"),
+    (27, 43): (r"काफ़?िर कम में", "काफ़िर क़ौम में"),
+    # 2026-07-29 batch, continued — same rule as above (word is right
+    # elsewhere, wrong only here), but these five are multi-word idioms or
+    # splits rather than a single swapped word, so a literal `KNOWN_WORD_FIXES`
+    # entry would be too blunt (2:75's फैर alone is one matra from फिर, the
+    # highest-frequency candidate in the whole scan — but THIS verse needs
+    # फेर, part of the हेर-फेर idiom, not फिर; fixing फैर as a bare word
+    # would have applied the wrong correction here).
+    (2, 75): (r"हैर फैर", "हेर फेर"),          # हेर-फेर = "tampering", an idiom
+    (38, 63): (r"यू हीं", "यूँ ही"),           # यूँ ही = "just like that", an idiom
+    (55, 52): (r"दो दों क़िस्में", "दो क़िस्में"),  # OCR duplicated दो with a stray ं
+    # 2:159's second "लअनत" (the first, earlier in the same verse, OCR'd
+    # fine) fell across two body-line strips: tesseract left a stray
+    # zero-width NON-joiner (U+200C) where the join happened AND a literal
+    # space, so "लअनत" survived as "लअन" + "त्‌" — invisible in a
+    # terminal, only found by dumping the verse's raw codepoints. Written
+    # here without the ZWNJ because step -1, above, already strips it before
+    # this step ever runs.
+    (2, 159): ("लअन त् करने", "लअनत करने"),
+    # 46:15's "मेर ० रब" — a Devanagari zero digit (०) sitting where "े" +
+    # "रब" should read "मेरे रब"; same family as the ZWNJ artifact above, a
+    # stray character tesseract inserted at a strip boundary.
+    (46, 15): ("मेर ० रब", "मेरे रब"),
+    # 2026-07-29 batch, round 2 — user's own manual check of surah 2 plus a
+    # background scan for the same "stray character at a strip join" family
+    # as 2:159/46:15, this time a Devanagari "६" (six) or "०" (zero) standing
+    # in for "ध" or "े". Confirmed against the source verse in each case:
+    (2, 3): (r"इन्फाक(?!़)", "इन्फाक़"),  # "spending" — no parallel-Urdu lexeme
+                                       # to restore from (Junagarhi uses
+                                       # ख़र्च here, not انفاق); see
+                                       # KNOWN_WORD_FIXES' अज़ीमुश्शान for
+                                       # the same class of gap. The (?!़) is
+                                       # not decorative: क़'s nukta trails
+                                       # the consonant, so "इन्फाक" is a
+                                       # literal PREFIX of the correct
+                                       # "इन्फाक़" — without the lookahead,
+                                       # every re-run matched the already-fixed
+                                       # word again and stacked another
+                                       # combining nukta onto it. Four
+                                       # `verify_pilot.py` invocations in a
+                                       # row (chasing the फ़्रिऔन/नुक्ता
+                                       # interaction below) piled up FOUR
+                                       # invisible nuktas on 2:3 before this
+                                       # was caught — step -1 below now also
+                                       # collapses any repeated nukta as a
+                                       # blanket safety net.
+    (2, 10): ("निफाक", "निफ़ाक़"),      # "hypocrisy" — same gap, AND the
+                                       # reference edition's own 6
+                                       # occurrences split four ways
+                                       # (निफ़ाक़/निफाक़/निफ़ाक/निफाक), so even
+                                       # the fallback dominance check
+                                       # couldn't arbitrate this one.
+    (2, 16): ("नफा", "नफ़ा"),          # "profit" — Junagarhi uses فائده
+                                       # here, not نفع; reference dominance
+                                       # is only 33%, correctly rejected as
+                                       # genuine ambiguity by the fallback,
+                                       # but THIS verse's context is
+                                       # unambiguous.
+    (3, 17): (r"\(६ र्य\)", "(धैर्य)"),          # "patience" — ६ (digit six)
+                                                # standing in for ध
+    (4, 92): (r"\(म६ य\)", "(मध्य)"),            # "middle/between"
+    (4, 161): (r"नाहक़्? \(अवै६ \)\)", "नाहक़ (अवैध)"),  # "wrongfully
+        # (illegitimate)" — both the stray ६ and a doubled close-paren
+    (23, 21): (r"उने पेटों में \(दू६ \)", "उनके पेटों में (दूध)"),  # "in
+        # their bellies is (milk)" — उने is also missing क (उनके)
+    (65, 6): ("दू६ पिलाए", "दूध पिलाए"),         # "breastfeed"
+    # 8:41 has TWO independent breaks: माल ० ग़नीमत ("spoils of war", a
+    # misread े folded into माल as a stray ० — not a numeral) near the
+    # start, and "रखत। है।" (a stray danda splitting रखता, the same
+    # word-split family as 2:159/46:15, found by hand while confirming the
+    # first fix) at the very end. One regex spanning both, rather than a
+    # second dict key, since KNOWN_VERSE_FIXES holds one pair per verse.
+    (8, 41): (r"माल ० ग़नीमत(.+)रखत। है।", r"माले ग़नीमत\1रखता है।"),
+    (43, 64): (r"सी६ गरास्ता", "सीधा रास्ता"),  # "the straight path"
+
+    # 2026-07-29 batch, round 3, continued — verse-specific because either
+    # the surrounding words differ per verse (a bare word fix could match
+    # the wrong span) or the correct word genuinely differs by context, the
+    # same reasoning as the कम/क़ौम verses above.
+    (5, 75): (r"केसी कैसी", "कैसी"),   # a literal OCR duplicate — one
+        # strip read correctly, the overlapping one didn't; delete the
+        # wrong copy rather than "fixing" it into "कैसी कैसी"
+    (34, 7): (r"अजसरे नो", "अज़सरे नौ"),  # same "anew" idiom as the नू/नो
+        # WORD_FIXES entries, but this instance reads "नो" not "नू"
+    (49, 6): (r"कर लिया करा", "कर लिया करो"),  # "investigate (करो, verify!)"
+        # — plural imperative addressed to believers
+    (4, 137): (r"काफ़ में", "कुफ़्र में"),  # "increased IN DISBELIEF" — काफ़
+        # is not a word; the verse uses कुफ़्र three times already for the
+        # same concept
+    (7, 37): ("फरिश्ति", "फरिश्ते"),  # "our angels reach them" — फरिश्ति
+        # (singular-looking) doesn't agree with the plural verb पहुंचेंगे
+    (56, 24): (r"\(यहा\)", "(यह)"),  # "This is the reward for what they
+        # used to do" — यहा is not a word; यह ("this"), not यही, fits the
+        # plain continuation from the previous verse
+    (57, 14): (r"यहा तक", "यहाँ तक"),  # "until" — missing chandrabindu
+    (47, 4): (r"यहा तक", "यहाँ तक"),   # same idiom, different verse
+    (10, 15): (r"करू तो", "करूं तो"),  # "if I disobey (करूं) my Lord" —
+        # subjunctive, missing anusvara; spelled करूं (not करूँ) elsewhere
+        # in this same edition (27:19), matched for consistency
+    (3, 10): (r"ईध् न", "ईंधन"),  # "fuel" — split across two body-line
+        # strips (source page confirmed by a background agent), losing the
+        # chandrabindu and merging what's left of "न" with a stray space
+
+    # 2026-07-29 batch, round 7, continued — these three needed a DIFFERENT
+    # correction than the automated scan's raw suggestion (matra-twin
+    # matching found the nearest common word, not necessarily the right
+    # one); a background agent read the actual context and identified the
+    # correct target in each case, so they're anchored per-verse rather
+    # than added to KNOWN_WORD_FIXES with the scan's original (wrong) twin.
+    (16, 63): ("कोमों", "क़ौमों"),  # "nations" (oblique plural)
+    (6, 6): ("कामें", "क़ौमें"),    # "nations" (plural)
+    (14, 9): ("क़ामे", "क़ौमे"),    # "people of [Noah and 'Aad...]"
+
+    # 2026-07-29 batch, round 8, continued — the two owner-found errors
+    # this round that aren't single-word swaps.
+    (2, 17): (r"अंध् 'रों", "अंधेरों"),  # "darkness(es)" — split across two
+        # body-line strips with a stray apostrophe-like character at the
+        # join, same family as 2:159/3:10's word-splits
+    (2, 29): (r"कर ; के", "कर के"),  # a semicolon standing in for a space
+        # mid-phrase — a new stray-punctuation variant of the same
+        # strip-boundary artifact family
+
+    # 2026-07-29 batch, round 10, continued — these two need care at the
+    # word level: कुफ़ (94x) and किस्म (21x) are BOTH legitimate spellings
+    # elsewhere in this edition, so a blanket rule would be wrong; only
+    # these specific verses are.
+    (2, 6): (r"कुफ़(?!्र)( \(इन्कार\))", r"कुफ़्र\1"),  # "disbelief" — needs
+        # the ्र this verse's print drops; guarded so it doesn't refire on
+        # an already-correct कुफ़्र elsewhere in the same sentence
+    (2, 22): (r"\(कई किस्म के\)", "(कई क़िस्म के)"),  # "(of several) KINDS
+        # (of fruit)"
+
+    # 2026-07-29 batch, round 11, continued — 27:19 has a SECOND, later
+    # occurrence of the same subjunctive drop already fixed at 10:15
+    # ("करूं", not "करू"), in a different clause of the same verse.
+    (27, 19): (r"नेक काम करू जो", "नेक काम करूं जो"),
+
+    # 2026-07-29 batch, round 12, continued — the scan's suggested twin
+    # wasn't the right target for either of these, so both are anchored
+    # per-verse with the actually-correct word instead.
+    (22, 5): (r"के बरे में", "के बारे में"),  # "concerning/about" — बरे is
+        # missing आ, not the offered बरी ("acquitted"), a different word
+    (35, 5): (r"सच्चा है, फिरि", "सच्चा है, फिर"),  # "the promise is true,
+        # THEN [do not let the world deceive you]" — not the offered फिरे
+
+    # 2026-07-29 batch, round 13, continued — काफ्र needs कुफ़्र specifically
+    # in these two verses (both use the standard "disbelieved" construction
+    # with a verb, which needs the noun कुफ़्र, not the person-word काफ़िर
+    # the scan offered), so it's anchored per-verse rather than a blanket
+    # word fix.
+    (9, 66): (r"बाद काफ्र किया", "बाद कुफ़्र किया"),
+    (13, 17): (r"बातिल \(काफ्र\)", "बातिल (कुफ़्र)"),
+
+    # 2026-07-29 batch, round 14, continued.
+    (39, 7): (r"तुम काफ्र करोगे", "तुम कुफ़्र करोगे"),  # a third instance of
+        # the same काफ्र->कुफ़्र need ("if you disbelieve")
+    (7, 195): (r"फिर देखों वह", "फिर देखो वह"),  # "then SEE what harm..." —
+        # imperative, not देखें; देखो/देखें are equally common elsewhere in
+        # this edition so this stays per-verse rather than a blanket rule
+    (54, 16): (r"\(देखों\) मेरा", "(देखो) मेरा"),  # same imperative, same reasoning
+
+    # 2026-07-29 batch, round 15, continued.
+    (5, 12): (r"कार्ज़", "क़र्ज़"),  # "a loan [to Allah]" — misread nukta letter
+    (8, 12): (r"हर हर पौर पर", "हर हर पोर पर"),  # "strike at every JOINT" —
+        # not पुर, which is an unrelated place-name suffix
+
+    # 2026-07-29 batch, round 16, continued — fresh sweep of the
+    # stray-punctuation class, same "semicolon standing in for a space at a
+    # strip join" family as 2:29's "कर ; के" fix.
+    (2, 229): (r"ख़ुला ; हासिल", "ख़ुला हासिल"),
+    (3, 78): (r"अल्लाह ; की जानिब", "अल्लाह की जानिब"),
+    (11, 78): (r"थे। ; उसने", "थे। उसने"),
+
+    # 2026-07-29 batch, round 17, continued — surah 2 (al-Baqarah), each
+    # anchored per-verse rather than blanket: क़ाम/लिहाजा/क़ृत्ल all have
+    # substantial legitimate or house-style use elsewhere in the corpus
+    # (क़ाम alone also appears as a real word "deeds/work" in other verses),
+    # so only the specific instances confirmed against these verses are
+    # touched, not the wider pattern.
+    (2, 54): (r"अपनी क़ाम से कहाः(.+)लिहाजा(.+)क़ृत्ल",
+              r"अपनी क़ौम से कहाः\1लिहाज़ा\2क़त्ल"),
+    (2, 58): (r"अनक्रीब", "अनक़रीब"),
+    (2, 60): (r"हर कूबीले ने", "हर क़बीले ने"),
+    (2, 61): (r"लिहाजा(.+)लोटे(.+)", r"लिहाज़ा\1लौटे\2"),
+    (2, 62): (r"\(सत्कर्म, किए", "(सत्कर्म) किए"),  # missing closing bracket
+    (2, 64): (r"फ़ूज़ल", "फज़ल"),  # matches this corpus's own dominant
+        # spelling of "grace" (51 occurrences), not a nuktaed फ़
+    (2, 66): (r"उस \(वाकिये\)", "उस (वाक़िये)"),
+    (2, 78): (r"आरजुओं", "आरज़ूओं"),
+    (2, 80): (r"लिया है\? है फिर", "लिया है? फिर"),  # duplicated है
+
+    # 2026-07-29 batch, round 18, continued — the 26 remaining bare क़ाम
+    # instances (2:54 already fixed above), each individually read and
+    # classified as क़ौम ("people/nation") or काम ("work/deed/affair") since
+    # it is not a real word under either reading and splits between the two
+    # depending on context. Patterned as {WORD_BEFORE}क़ाम{WORD_AFTER} so it
+    # cannot touch the "क़ाम" substring inside मक़ाम/मुक़ाम/इन्तिक़ाम, which
+    # are different words entirely and appear in several of these surahs.
+    (21, 52): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (27, 56): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (11, 88): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (11, 89): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (11, 93): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (50, 14): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (7, 59): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (7, 150): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (6, 80): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (6, 83): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (6, 133): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (6, 135): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (10, 3): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (10, 71): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (10, 84): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (48, 16): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (29, 29): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (29, 36): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (5, 20): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (13, 11): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (4, 90): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (28, 15): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (28, 76): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (28, 79): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
+    (19, 27): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+    (14, 31): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+}
 
 
 def log(msg: str) -> None:
@@ -358,6 +892,74 @@ def main() -> None:
 
         for num, text in list(doc["ayahs"].items()):
             flags: list[str] = []
+
+            # -1/0. MECHANICAL cleanup + known, hand-confirmed fixes, run to
+            # a FIXED POINT rather than once. 55:52's known-verse fix
+            # reproducibly needed a second `verify_pilot.py` invocation to
+            # land even though it depends on nothing else in this loop and
+            # matches fine in isolation — never root-caused (not an ordering
+            # dependency like 7:142/14:5/27:43's, which the regex tolerance
+            # above already fixed), so rather than leave a known-fix that
+            # silently requires re-running the tool by hand, this loop just
+            # keeps applying steps -1/0 until nothing changes. Capped at 5
+            # iterations — these are literal/near-literal substitutions, not
+            # a search that could genuinely oscillate.
+            for _ in range(5):
+                start = text
+
+                # -1. MECHANICAL cleanup — orthographically invalid
+                #     regardless of word or context, so no per-verse
+                #     judgment is needed. A doubled halant (््) cannot occur
+                #     in valid Devanagari; a zero-width non-joiner (U+200C,
+                #     distinct from the ZWJ build_pilot.py already strips)
+                #     turned up wedged inside a word at a body-line join
+                #     (2:159). Found 51 doubled-halant tokens corpus-wide in
+                #     the 2026-07-29 scan. A repeated nukta (़़+) can't occur
+                #     either — added after a KNOWN_VERSE_FIXES entry without
+                #     a (?!़) guard stacked four of them onto 2:3 by matching
+                #     its own already-fixed output on successive runs; this
+                #     is the general-purpose backstop for that whole class
+                #     of mistake, not just the one instance that got caught.
+                cleaned = (text.replace("‌", "")
+                               .replace("््", "्")
+                               .replace("़़", "़"))
+                while "़़" in cleaned:
+                    cleaned = cleaned.replace("़़", "़")
+                if cleaned != text:
+                    text = cleaned
+                    counts["mechanical_cleanup"] += 1
+
+                # 0. known, hand-confirmed fixes — checked in first because
+                #    they are invisible to every mechanical check below (see
+                #    the two dicts' comments for why each exists).
+                fixed_verse = KNOWN_VERSE_FIXES.get((surah, int(num)))
+                if fixed_verse and re.search(fixed_verse[0], text):
+                    text = re.sub(fixed_verse[0], fixed_verse[1], text)
+                    counts["known_verse_fix"] += 1
+                for bad, good in KNOWN_WORD_FIXES.items():
+                    if bad in text:
+                        # `bad in text` is a plain substring pre-filter, not
+                        # word-boundary-aware — "हे" is also the last two
+                        # characters of रहे/कहे/वहे, ordinary words nowhere
+                        # near this list. The re.sub below IS
+                        # boundary-aware and leaves those alone, but
+                        # comparing before/after is what keeps the counter
+                        # honest: without it, this logged known_word_fix:
+                        # 3874 on a corpus where only 28 replacements
+                        # actually happened — the text was never wrong, only
+                        # the count was.
+                        new_text = re.sub(
+                            rf"{WORD_BEFORE}{re.escape(bad)}{WORD_AFTER}", good, text)
+                        if new_text != text:
+                            text = new_text
+                            counts["known_word_fix"] += 1
+
+                if text == start:
+                    break
+
+            if text != doc["ayahs"][num]:
+                doc["ayahs"][num] = text
+                changed = True
             ws = tokens(text)
 
             # 1a. nuktas from the parallel URDU verse — the primary authority.
@@ -376,7 +978,7 @@ def main() -> None:
                     continue
                 fixed = apply_skeleton(w, sk)
                 if fixed != w:
-                    new_text = re.sub(rf"(?<![ऀ-ॿ]){re.escape(w)}(?![ऀ-ॿ])",
+                    new_text = re.sub(rf"{WORD_BEFORE}{re.escape(w)}{WORD_AFTER}",
                                       fixed, new_text)
                     counts["nukta_from_urdu"] += 1
             if new_text != text:
@@ -390,7 +992,7 @@ def main() -> None:
                     continue
                 target = restore.get(w)
                 if target:
-                    new_text = re.sub(rf"(?<![ऀ-ॿ]){re.escape(w)}(?![ऀ-ॿ])",
+                    new_text = re.sub(rf"{WORD_BEFORE}{re.escape(w)}{WORD_AFTER}",
                                       target, new_text)
                     counts["nukta_restored"] += 1
             if new_text != text:
@@ -498,6 +1100,36 @@ def main() -> None:
                 text = doc["ayahs"][num]
                 ws = tokens(text)
 
+            # 0b. re-apply the known fixes ONE more time, now that nukta
+            # restoration and मैं/में have both had their turn. Necessary,
+            # not defensive: ग़रज़/क़ान's fixes (round 10) each want a nukta
+            # REMOVED, but 1a/1b's job is putting nuktas BACK — the two
+            # disagreed on every run, forever, because step 0 ran once,
+            # before 1a/1b could re-add what it had just taken off. A
+            # `verify_pilot.py --apply` loop never converged past 4 stuck
+            # oscillating changes until this was added. Confirmed fixes
+            # always get the last word over an automatic nukta guess.
+            text = doc["ayahs"][num]
+            for _ in range(5):
+                start = text
+                fixed_verse = KNOWN_VERSE_FIXES.get((surah, int(num)))
+                if fixed_verse and re.search(fixed_verse[0], text):
+                    text = re.sub(fixed_verse[0], fixed_verse[1], text)
+                    counts["known_verse_fix"] += 1
+                for bad, good in KNOWN_WORD_FIXES.items():
+                    if bad in text:
+                        new_text = re.sub(
+                            rf"{WORD_BEFORE}{re.escape(bad)}{WORD_AFTER}", good, text)
+                        if new_text != text:
+                            text = new_text
+                            counts["known_word_fix"] += 1
+                if text == start:
+                    break
+            if text != doc["ayahs"][num]:
+                doc["ayahs"][num] = text
+                changed = True
+                ws = tokens(text)
+
             # 5. length outlier vs the reference edition
             ref = ref_len.get((surah, int(num)))
             if ref:
@@ -533,6 +1165,21 @@ def main() -> None:
                                  "words": len(tokens(text)), "reference": ref})
     findings.extend(outliers)
     counts["length_outlier"] = len(outliers)
+    # SOFT, not hard. Owner review 2026-07-29: spot-checked ~20 outliers spanning
+    # the full range (26:219 at 6x the reference length down to 6:67 at 0.2x)
+    # against the Quran's actual meaning, and every one was a correct, complete,
+    # correctly-sequenced verse — Ahsanul Kalam and hi-suhel-farooq-nadwi simply
+    # gloss different verses to different degrees, with no fixed ratio between
+    # two independent humans' choices. That makes this a noisy proxy once
+    # build_pilot.py's 1..N completeness check (which is what actually caught
+    # Hud/Yusuf and ad-Dukhan/Jathiyah) already holds. Quarantining the whole
+    # surah over it repeats the exact mistake documented below for the
+    # orthographic flags — condemning on a suspicion, not a finding. Flag the
+    # verse instead and let the surah publish.
+    for o in outliers:
+        per_verse_flags.setdefault(str(o["surah"]), {}).setdefault(
+            str(o["ayah"]), []).append(
+            f"length-outlier:{o['words']}w vs ref {o['reference']}w (z={o['z']})")
 
     report = {
         "reference": args.reference,
@@ -552,7 +1199,8 @@ def main() -> None:
 
     log(f"nukta rules: {len(restore)} applied-eligible, {len(thin)} rejected as "
         f"thin evidence (< {args.min_evidence})")
-    for k in ("nukta_from_urdu", "nukta_restored", "main_repaired", "main_suspect",
+    for k in ("mechanical_cleanup", "known_word_fix", "known_verse_fix", "nukta_from_urdu",
+              "nukta_restored", "main_repaired", "main_suspect",
               "self_inconsistent", "unknown", "length_outlier"):
         log(f"{k}: {counts[k]}")
     flagged = sum(len(v) for v in per_verse_flags.values())
@@ -561,18 +1209,23 @@ def main() -> None:
 
     # Two severities, because conflating them is useless in both directions.
     #
-    # HARD — structural. A length outlier means text crossed a verse boundary, so
-    # the whole surah is suspect, not just that verse: this is exactly how
-    # ad-Dukhan came to carry al-Jathiyah's verses with all 59 numbers present.
-    # Quarantine the surah.
+    # HARD — structural. build_pilot.py already refused anything that isn't
+    # exactly 1..N against quran.db before this script ever sees it, which is
+    # what actually caught ad-Dukhan carrying al-Jathiyah (59 numbers present,
+    # wrong surah underneath) and Hud carrying Yusuf. Nothing downstream from
+    # that check currently promotes to HARD; length-outlier used to, but
+    # 2026-07-29 review found it flags normal translator-style variance far
+    # more often than real corruption (see the length-outlier block above), so
+    # it moved to SOFT.
     #
-    # SOFT — orthographic suspicion. A rare word beside a commoner twin, an
-    # undecided मैं/में, a word the other translator never used. These are ranked
-    # suspicions, and many are simply Ahsanul Kalam's own vocabulary. Condemning a
-    # surah for one of them quarantined 77 of 88 and published 11 — which is not
-    # more rigorous, just less useful. Publish, and record the flags per verse so
-    # the site can mark them.
-    hard = {str(o["surah"]) for o in outliers}
+    # SOFT — suspicion, not a finding. A rare word beside a commoner twin, an
+    # undecided मैं/में, a word the other translator never used, a verse whose
+    # length doesn't match the reference. Many of these are simply Ahsanul
+    # Kalam's own vocabulary or phrasing. Condemning a surah for one of them
+    # quarantined 77 of 88 and published 11 — which is not more rigorous, just
+    # less useful. Publish, and record the flags per verse so the site can
+    # mark them.
+    hard: set[str] = set()
     soft = {s: v for s, v in per_verse_flags.items() if s not in hard}
     bad = hard
 
