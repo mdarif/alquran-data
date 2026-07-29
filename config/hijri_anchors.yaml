@@ -1,0 +1,26 @@
+# Manually verified local moon-sighting corrections for the Hijri date the Al
+# Quran app displays — NOT auto-generated. Add an entry whenever a sighting
+# authority's announced date diverges from the tabular (Kuwaiti) calendar the
+# app computes by default.
+#
+# Each entry:
+#   date:            Gregorian 'YYYY-MM-DD' the correction applies FROM
+#                     (inclusive), until a later entry for the same region.
+#   region:           sighting authority scope — 'PK' (Ruet-e-Hilal Committee
+#                     Pakistan) is the app's only wired region today.
+#   correction_days:  added to the tabular result, e.g. +1 if the tabular date
+#                     is one Hijri day behind the announced date.
+#   source:           who announced it (for the record, not consumed by the app).
+#   note:             optional context.
+#
+# Verified against the reported bug: on 2026-07-29 the app showed "13 Safar
+# 1448 AH" against the Ruet-e-Hilal Committee Pakistan's announced "14 Safar
+# 1448 AH" — a +1 day drift that the tabular algorithm alone does not correct.
+anchors:
+  - date: "2026-06-17"
+    region: "PK"
+    correction_days: 1
+    source: "Ruet-e-Hilal Committee Pakistan"
+    note: >
+      Muharram 1448 sighting announcement — start of the drift this anchor
+      corrects for; carries forward until superseded by a later entry.

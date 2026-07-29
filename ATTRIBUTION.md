@@ -93,6 +93,71 @@ Hindi deferred).
 - **CAVEAT:** monetizing the app later requires re-clearing — Tanzil's
   translation terms are non-commercial only.
 
+## 4. Hindi translation — Ahsanul Kalam (Shaikh Muhammad Rais Qureshi Salafi) — EXPERIMENTAL
+
+**Status: owner-confirmed OK to ship as an experimental/pilot edition
+(2026-07-29), pending both a formal permission grant and an OCR quality
+review.** Distinct from the two other Hindi-ish editions on the site: §3 above
+is Suhel Farooq Khan & Saifur Rahman Nadwi's translation; the Devanagari
+pilot (`alquran-roman-urdu`) is Junagarhi's *Urdu* transliterated into
+Devanagari script. This is a third, separate translation, in the Perso-Arabic
+Hindi register, publisher Alkhair (Indore).
+
+- **Source:** machine OCR of the publisher's (Alkhair, Indore) master PDF, not
+  sourced via Tanzil or QUL. Stored as file sidecars in `data/ahsanul-kalam/`
+  in `al-quran-web` rather than a DB resource (see that repo's
+  `scripts/export-quran.mjs`), specifically because neither blocker below is
+  resolved yet.
+- **Permission — not formally granted.** No grant letter or written permission
+  from Alkhair, Indore is on file. Owner reviewed the situation and confirmed
+  OK to ship anyway for this free, non-commercial, no-ads deployment with
+  credit given (surfaced on `/credits/`) — the same treatment given to the
+  Hilali-Khan English clearance in §1's sibling entry. This is an
+  owner-confirmed judgment call, not a documented grant; revisit if Alkhair
+  ever objects or a formal permission becomes available.
+- **OCR quality — NOT reviewed against the print.** Nuktas are unrestored and
+  there is a known OCR error class that changes meaning (मैं "I" misread as
+  में "in"). Owner decision: ship anyway, but **only** in the
+  experimental/pilot lane — `partial: true` + `feedback: true` in the export
+  script keep the "Experimental" pill, the coverage note, and a
+  "Suggest a correction" affordance visible so readers aren't misled into
+  treating it as a reviewed text. Do not promote it out of the experimental
+  lane without an actual text review against the print.
+- **Required credit:** "Hindi translation by Shaikh Muhammad Rais Qureshi Salafi.
+  Publisher: Alkhair, Indore."
+- **Plan:** owner intends this to eventually **replace** §3 (Suhel Farooq Khan)
+  as the primary Hindi edition once reviewed. Until then both ship
+  side-by-side.
+- **Copyright in the digital reconstruction — asserted.** This edition does
+  not exist anywhere else in digital form; the compiled Hindi text bundled
+  here is the product of original work by this project: OCR extraction from
+  Win2PDF-tiled line images, verse/line segmentation (the dual-OCR-pass,
+  monotone-DP-alignment pipeline in `pipeline/ahsanul_kalam/`), and lexical
+  nukta restoration. That reconstruction is Al Marfa Technologies' own
+  protectable expression, layered on top of — and without displacing —
+  Rais Qureshi's and Alkhair's rights in the underlying translation/tafsir
+  (permission still pending, see above) and the fact that no one owns the
+  public-domain Arabic/Urdu the translation is compiled from. **Bulk
+  extraction, scraping, or reuse of this compiled text (as distinct from an
+  independent re-transcription from the printed book) requires the owner's
+  prior written permission**, same as the pipeline code under `LICENSE`.
+
+## Roman Urdu (upcoming — not yet a resource in this repo)
+
+The Roman Urdu transliteration project lives in `../alquran-roman-urdu` and is
+not yet ingested here (see `TRANSLATIONS-ROADMAP.md`, "Other deferred items").
+Recording the licensing position now so it doesn't need re-deriving once it
+ships: the Junagarhi Urdu source is public domain (§2) and stays that way —
+nobody, including us, can restrict the underlying words. But the vowelized
+Roman transliteration itself (the phonemic-store rendering built in that
+project, per its ADR 0003) is original creative and editorial labor, not a
+mechanical 1:1 transcription, and is Al Marfa Technologies' own protectable
+expression once it lands as a `resources.type = "transliteration"` row here.
+The same "we own the rendering, not the source" claim as above applies, and
+the parallel copyright/licensing language needs to be added to
+`alquran-roman-urdu`'s own `ATTRIBUTION.md`/`LICENSE` — not done as part of
+this pass.
+
 ### (Previously) Hindi — Maulana Azizul Haque al-Umari — SUPERSEDED
 
 Earlier builds used the al-Umari Hindi (QuranEnc `hindi_omari`, QUL #166;

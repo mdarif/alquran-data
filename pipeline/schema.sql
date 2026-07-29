@@ -74,6 +74,21 @@ CREATE TABLE IF NOT EXISTS translations (
     UNIQUE (ayah_id, resource_id)
 );
 
+-- Manually verified local moon-sighting corrections for the Hijri date the app
+-- displays, keyed by the Gregorian date FROM WHICH the correction applies
+-- (until superseded by a later anchor for the same region). Replaces a pure
+-- tabular (Kuwaiti) calendar, which is astronomically calculated and drifts
+-- from the region's actual sighting-based announcement by a variable (not
+-- constant) number of days. See config/hijri_anchors.yaml for the source data
+-- and Al Quran's lib/core/hijri/ for the app-side consumer.
+CREATE TABLE IF NOT EXISTS hijri_anchor_points (
+    gregorian_date   TEXT    NOT NULL,   -- 'YYYY-MM-DD', from-date (inclusive)
+    region           TEXT    NOT NULL,   -- e.g. 'PK', 'IN' — sighting authority
+    correction_days  INTEGER NOT NULL,   -- applied to the tabular result
+    source           TEXT,               -- e.g. 'Ruet-e-Hilal Committee PK'
+    PRIMARY KEY (gregorian_date, region)
+);
+
 -- Navigation indices: every dimension the dashboard browses by must be fast.
 CREATE INDEX IF NOT EXISTS idx_ayahs_surah  ON ayahs(surah_id);
 CREATE INDEX IF NOT EXISTS idx_ayahs_page   ON ayahs(page_number);

@@ -74,6 +74,15 @@ Four traps, all of which fail quietly:
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
 
+**Legal notice is not technical deterrence.** `ATTRIBUTION.md`/`LICENSE`
+assert copyright over the original Ahsanul Kalam Hindi reconstruction (and,
+once shipped, the Roman Urdu rendering) and forbid scraping/reuse without
+permission — but nothing on `editions.alquranreader.com` today enforces that
+technically; the artifacts are plain unauthenticated static files. If the
+owner wants actual friction (rate limiting, signed/expiring URLs, a
+Terms-of-Use page on the domain), that's separate follow-up work, not
+something the legal notice alone provides.
+
 ## State & open items
 
 - **Editions carry a stable `slug`** (schema_version 2). Consumers select and

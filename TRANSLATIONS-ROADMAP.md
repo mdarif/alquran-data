@@ -170,6 +170,13 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   the PDF is *तुलबा के लिए* (for students). Owner has the translator's permission
   and is obtaining Alkhair's. Until both are recorded in `ATTRIBUTION.md`, the
   licence is `UNVERIFIED — clear before release`.
+- **Licensing enforcement.** Separately from clearing the underlying
+  translation/tafsir rights above, `ATTRIBUTION.md` §4 now asserts the owner's
+  own copyright in the *digital reconstruction* — the OCR/segmentation/nukta-
+  restoration work this pipeline does, which exists nowhere else — and
+  `LICENSE` carries the matching exception to its source-text scope limit.
+  Reuse of the compiled text requires permission even independent of the
+  Alkhair clearance above.
 
 - **Nukta policy — DECIDED 2026-07-28 (owner): restore nuktas lexically.** Store
   the fully-nuktaed form throughout, matching `alquran-roman-urdu`'s faithful-nukta

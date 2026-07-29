@@ -483,6 +483,35 @@ def validate_editions(config: dict) -> None:
         seen[slug] = name
 
 
+def load_hijri_anchors(conn: sqlite3.Connection, anchors_path: Path) -> None:
+    """Load manually verified moon-sighting corrections (config/hijri_anchors.yaml)
+    into hijri_anchor_points. Entirely optional and best-effort: a missing file
+    just means no anchors ship yet (the app falls back to the raw tabular
+    calendar), matching the app-side graceful-degradation contract — this is
+    NOT a build-breaking requirement like the Quran text sources are."""
+    if not anchors_path.exists():
+        log(f"hijri anchors: {anchors_path} not found, skipping (0 anchors)")
+        return
+    data = yaml.safe_load(anchors_path.read_text(encoding="utf-8")) or {}
+    anchors = data.get("anchors", [])
+    inserted = 0
+    for a in anchors:
+        date = a["date"]
+        region = a["region"]
+        correction_days = int(a["correction_days"])
+        source = a.get("source")
+        # A malformed date is a config-authoring mistake, not a valid anchor —
+        # fail the build loudly rather than shipping bad data silently.
+        datetime.strptime(date, "%Y-%m-%d")
+        conn.execute(
+            "INSERT OR REPLACE INTO hijri_anchor_points"
+            "(gregorian_date, region, correction_days, source) VALUES (?,?,?,?)",
+            (date, region, correction_days, source),
+        )
+        inserted += 1
+    log(f"hijri anchors: {inserted} loaded from {anchors_path.name}")
+
+
 def build(config: dict, graft: bool = True, output: str | None = None,
           surgical: bool = True) -> None:
     validate_editions(config)
@@ -651,7 +680,10 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             inserted += 1
         log(f"translation [{tr['slug']}] {tr['name']}: {inserted} ayahs")
 
-    # 5) db_meta -------------------------------------------------------------
+    # 5) hijri_anchor_points ---------------------------------------------------
+    load_hijri_anchors(conn, Path(__file__).parent.parent / "config" / "hijri_anchors.yaml")
+
+    # 6) db_meta -------------------------------------------------------------
     db_meta = {
         "schema_version": str(int(config.get("schema_version", 1))),  # always a bare integer
         "db_version": str(config.get("db_version", "0.0.0")),

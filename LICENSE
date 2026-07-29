@@ -35,3 +35,18 @@ therefore cannot be claimed by anyone, including us.
 ATTRIBUTION.md is canonical for what may be redistributed and under what
 obligations; config/sources.yaml records the terms per resource (the `license`
 field, which is compiled into the database and its published edition artifacts).
+
+EXCEPTION TO THE SCOPE LIMIT — ORIGINAL DIGITAL RECONSTRUCTIONS.
+
+The scope limit above excludes source *texts*: the words of a translation or
+the Qur'anic Arabic. It does not exclude original digital renderings this
+project produces from those texts where no equivalent digital rendering
+existed before. Two such works are asserted as Al Marfa Technologies' own
+protectable expression, reservation and all: the OCR-reconstructed, nukta-
+restored Ahsanul Kalam Hindi text compiled by this pipeline (ATTRIBUTION.md
+§4), and any Roman Urdu / Devanagari transliteration text produced by the
+sibling `alquran-roman-urdu` project once it ships here. Scraping, bulk
+extraction, or reuse of those specific compiled texts requires the owner's
+prior written permission, same as the pipeline code — this does not touch the
+public-domain or separately-licensed status of the underlying source
+translations themselves.
