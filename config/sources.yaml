@@ -78,10 +78,8 @@ sources:
   # Licensing decision (2026-06-20): the app ships as a FREE, NON-COMMERCIAL
   # / da'wah product. Under that distribution model the Urdu (Junagarhi)
   # translation is cleared for use with attribution (see ATTRIBUTION.md).
-  # Three editions ship: Urdu (Junagarhi, public domain), Hindi (Suhel Farooq
-  # Khan/Nadwi, Tanzil terms, verbatim) and English (Hilali & Khan). The
-  # al-Umari Hindi at the bottom of this file is REJECTED on register, not
-  # deferred — see TRANSLATIONS-ROADMAP.md.
+  # Urdu is the only default-on edition. Additional translations are emitted as
+  # installable CDN editions so the native app size stays lean.
   translations:
     - file: sources/ur-junagarri-simple.db
       # STABLE identity — consumers persist this, never the row id (which is
@@ -135,6 +133,43 @@ sources:
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://tanzil.net/trans/hi.hindi"
 
+    # --- Hindi: Ahsanul Kalam (Muhammad Rais Qureshi Salafi) ----------------
+    # Intended as the Ahle Hadith / Salafi-manhaj Hindi replacement path.
+    # Keep installable, not bundled, so the native app size stays lean. Generated
+    # from the reviewed OCR pilot via:
+    #   python3 pipeline/ahsanul_kalam/export_simple_db.py
+    #
+    # Permission granted by the owner/publisher channel (owner confirmed
+    # 2026-07-30). Publish through the downloadable-editions CDN, not bundled
+    # into the app seed DB, so the native app size stays lean.
+    - file: sources/hi-ahsanul-kalam-simple.db
+      slug: hi-ahsanul-kalam
+      language_code: hi
+      name: "Ahsanul Kalam"
+      native_name: "हिन्दी"
+      direction: ltr
+      sort_order: 21
+      author: "Muhammad Rais Qureshi Salafi"
+      license: "Used with permission from Alkhair, Indore. Attribution required."
+      source_url: "Ahsanul Kalam publisher master PDF"
+
+    # --- English: Sahih International --------------------------------------
+    # QUL resource 193. Installable/downloadable alternative to Hilali & Khan,
+    # requested by owner 2026-07-30. Keep before Hilali & Khan in the English
+    # list because it is the cleaner/common-reader option; Urdu remains the only
+    # default-on translation.
+    - file: sources/en-sahih-international-simple.db
+      slug: en-sahih-international
+      language_code: en
+      name: "Sahih International"
+      native_name: "English"
+      direction: ltr
+      sort_order: 30
+      default_on: false
+      author: "Sahih International"
+      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      source_url: "https://qul.tarteel.ai/resources/translation/193"
+
     # --- English: Dr. Hilali & Dr. Muhsin Khan ("The Noble Quran") ----------
     # Salafi / Ahle Hadith translation, published by King Fahd Complex.
     # DOWNLOAD: qul.tarteel.ai/resources/translation/301 (requires QUL login)
@@ -150,7 +185,7 @@ sources:
       name: "The Noble Quran (Hilali & Khan)"
       native_name: "English"
       direction: ltr
-      sort_order: 30
+      sort_order: 40
       # Reader attribution label (owner-preferred short form, 2026-07-06).
       author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
@@ -165,14 +200,118 @@ sources:
       # reader column. Convert them to regular spaces so the text flows normally.
       collapse_nbsp: true
 
-    # --- DEFERRED: Hindi (Azizul Haque al-Umari) — replaced by English ------
-    # - file: sources/maulana-azizul-haque-al-umari-simple.db
-    #   slug: hi-al-umari
-    #   language_code: hi
-    #   native_name: "हिन्दी"
+    # --- Bengali: Dr. Abu Bakr Muhammad Zakaria -----------------------------
+    # Salafi/Ahle Hadith translator (Athari creed, Ghayr Muqallid/non-madhab,
+    # studied directly under Sheikh Muhammad ibn Salih al-Uthaymin), requested
+    # 2026-07-30 (owner, who follows Salafi/Ahle Hadith creed) as an authentic
+    # verified addition. Published by King Fahd Complex, same lineage as the
+    # already-shipped Hilali & Khan English edition.
+    # DOWNLOAD: qul.tarteel.ai/resources/translation/200 (requires QUL login)
+    #   -> save as sources/bn-abu-bakr-zakaria-simple.db, then rebuild.
+    - file: sources/bn-abu-bakr-zakaria-simple.db
+      slug: bn-abu-bakr-zakaria
+      language_code: bn
+      name: "Dr. Abu Bakr Muhammad Zakaria"
+      native_name: "বাংলা"
+      direction: ltr
+      sort_order: 50
+      default_on: false
+      author: "Abu Bakr Muhammad Zakaria"
+      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      source_url: "https://qul.tarteel.ai/resources/translation/200"
+
+    # --- Indonesian: King Fahd Quran Complex --------------------------------
+    # Requested 2026-07-30 (owner, Salafi/Ahle Hadith creed). Same publisher as
+    # the already-shipped Hilali & Khan English edition — institutional, no
+    # individual translator named on the QUL page.
+    # DOWNLOAD: qul.tarteel.ai/resources/translation/173 (requires QUL login)
+    #   -> save as sources/id-king-fahd-complex-simple.db, then rebuild.
+    - file: sources/id-king-fahd-complex-simple.db
+      slug: id-king-fahd-complex
+      language_code: id
+      name: "King Fahd Quran Complex"
+      native_name: "Bahasa Indonesia"
+      direction: ltr
+      sort_order: 60
+      default_on: false
+      author: "King Fahd Quran Complex"
+      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      source_url: "https://qul.tarteel.ai/resources/translation/173"
+
+    # --- Swahili: Rowwad Translation Center ----------------------------------
+    # Requested 2026-07-30 (owner, Salafi/Ahle Hadith creed). Rowwad is a Saudi
+    # charity founded 2018 under IslamHouse.com by Ibrahim al-Ali, funded by the
+    # Awqaf Muhammad Abd al-Aziz al-Rajihi Foundation, committee-vetted rather
+    # than a single named scholar.
+    # DOWNLOAD: qul.tarteel.ai/resources/translation/466 (requires QUL login)
+    #   -> save as sources/sw-rowwad-simple.db, then rebuild.
+    - file: sources/sw-rowwad-simple.db
+      slug: sw-rowwad
+      language_code: sw
+      name: "Rowwad Translation Center"
+      native_name: "Kiswahili"
+      direction: ltr
+      sort_order: 61
+      default_on: false
+      author: "Rowwad Translation Center"
+      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      source_url: "https://qul.tarteel.ai/resources/translation/466"
+
+    # --- Albanian: Rowwad Translation Center ---------------------------------
+    # Requested 2026-07-30 (owner). Same Rowwad institutional lineage as
+    # Swahili above. Albanian's other QUL translator, Sherif Ahmeti, was
+    # checked and rejected (Maturidi creed, Hanafi fiqh, Mufti of Pristina).
+    # BLOCKED 2026-07-30: the QUL #298 download obtained so far
+    # (translation-pioneers-center-simple.db) is a 3-language bundle (Vietnamese
+    # + Sinhala + a third, 18708 rows = 3x6236), not single-language Albanian —
+    # wrong export, not usable. Re-download the correct simple.sqlite from
+    # qul.tarteel.ai/resources/translation/298, save as
+    # sources/sq-rowwad-simple.db, then uncomment this block and rebuild.
+    # - file: sources/sq-rowwad-simple.db
+    #   slug: sq-rowwad
+    #   language_code: sq
+    #   name: "Rowwad Translation Center"
+    #   native_name: "Shqip"
     #   direction: ltr
-    #   sort_order: 22
-    #   name: "Maulana Azizul Haque al-Umari"
-    #   author: "Azizul Haque al-Umari"
-    #   license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
-    #   source_url: "https://qul.tarteel.ai/resources/translation/166"
+    #   sort_order: 62
+    #   default_on: false
+    #   author: "Rowwad Translation Center"
+    #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+    #   source_url: "https://qul.tarteel.ai/resources/translation/298"
+
+    # --- German: Rowwad Translation Center ------------------------------------
+    # Requested 2026-07-30 (owner). Same Rowwad institutional lineage as
+    # Swahili/Albanian above. German's other QUL translators (Bubenheim &
+    # Nadeem #191, Abu Reda #197) were not creed-checked; Rowwad is preferred
+    # as the verified-institutional option.
+    # BLOCKED 2026-07-30: the QUL #467 download obtained so far
+    # (german-translation-rowwad-translation-center-simple.db) covers only
+    # surahs 1-44 (4473 of 6236 ayahs) — incomplete on QUL's side, not usable.
+    # Re-check qul.tarteel.ai/resources/translation/467 for a complete export,
+    # save as sources/de-rowwad-simple.db, then uncomment this block and rebuild.
+    # - file: sources/de-rowwad-simple.db
+    #   slug: de-rowwad
+    #   language_code: de
+    #   name: "Rowwad Translation Center"
+    #   native_name: "Deutsch"
+    #   direction: ltr
+    #   sort_order: 63
+    #   default_on: false
+    #   author: "Rowwad Translation Center"
+    #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+    #   source_url: "https://qul.tarteel.ai/resources/translation/467"
+
+    # --- Hindi: Maulana Azizul Haque al-Umari ------------------------------
+    # QUL resource 166. Non-default/installable option; keep after Ahsanul Kalam
+    # in the Hindi list.
+    - file: sources/maulana-azizul-haque-al-umari-simple.db
+      slug: hi-al-umari
+      language_code: hi
+      native_name: "हिन्दी"
+      direction: ltr
+      sort_order: 22
+      default_on: false
+      name: "Maulana Azizul Haque al-Umari"
+      author: "Azizul Haque al-Umari"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://qul.tarteel.ai/resources/translation/166"

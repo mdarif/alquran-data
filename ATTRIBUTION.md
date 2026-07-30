@@ -93,11 +93,10 @@ Hindi deferred).
 - **CAVEAT:** monetizing the app later requires re-clearing — Tanzil's
   translation terms are non-commercial only.
 
-## 4. Hindi translation — Ahsanul Kalam (Shaikh Muhammad Rais Qureshi Salafi) — EXPERIMENTAL
+## 4. Hindi translation — Ahsanul Kalam (Muhammad Rais Qureshi Salafi) — EXPERIMENTAL
 
-**Status: owner-confirmed OK to ship as an experimental/pilot edition
-(2026-07-29), pending both a formal permission grant and an OCR quality
-review.** Distinct from the two other Hindi-ish editions on the site: §3 above
+**Status: permission granted; ship as an experimental/pilot edition
+(2026-07-30), pending OCR quality review.** Distinct from the two other Hindi-ish editions on the site: §3 above
 is Suhel Farooq Khan & Saifur Rahman Nadwi's translation; the Devanagari
 pilot (`alquran-roman-urdu`) is Junagarhi's *Urdu* transliterated into
 Devanagari script. This is a third, separate translation, in the Perso-Arabic
@@ -108,13 +107,8 @@ Hindi register, publisher Alkhair (Indore).
   in `al-quran-web` rather than a DB resource (see that repo's
   `scripts/export-quran.mjs`), specifically because neither blocker below is
   resolved yet.
-- **Permission — not formally granted.** No grant letter or written permission
-  from Alkhair, Indore is on file. Owner reviewed the situation and confirmed
-  OK to ship anyway for this free, non-commercial, no-ads deployment with
-  credit given (surfaced on `/credits/`) — the same treatment given to the
-  Hilali-Khan English clearance in §1's sibling entry. This is an
-  owner-confirmed judgment call, not a documented grant; revisit if Alkhair
-  ever objects or a formal permission becomes available.
+- **Permission granted.** Owner confirmed permission on 2026-07-30 for this
+  free, non-commercial, no-ads deployment with credit given.
 - **OCR quality — NOT reviewed against the print.** Nuktas are unrestored and
   there is a known OCR error class that changes meaning (मैं "I" misread as
   में "in"). Owner decision: ship anyway, but **only** in the
@@ -123,7 +117,7 @@ Hindi register, publisher Alkhair (Indore).
   "Suggest a correction" affordance visible so readers aren't misled into
   treating it as a reviewed text. Do not promote it out of the experimental
   lane without an actual text review against the print.
-- **Required credit:** "Hindi translation by Shaikh Muhammad Rais Qureshi Salafi.
+- **Required credit:** "Hindi translation by Muhammad Rais Qureshi Salafi.
   Publisher: Alkhair, Indore."
 - **Plan:** owner intends this to eventually **replace** §3 (Suhel Farooq Khan)
   as the primary Hindi edition once reviewed. Until then both ship
@@ -142,6 +136,22 @@ Hindi register, publisher Alkhair (Indore).
   independent re-transcription from the printed book) requires the owner's
   prior written permission**, same as the pipeline code under `LICENSE`.
 
+## 5. English translation — Sahih International — DOWNLOADABLE
+
+**Status: source confirmed in QUL as resource #193; source file pending local
+download. Licence terms still need verification before release.**
+
+- **Source:** QUL translation resource #193,
+  `https://qul.tarteel.ai/resources/translation/193`, exported as
+  `simple.sqlite` and ingested as `sources/en-sahih-international-simple.db`.
+- **Use in app:** installable/downloadable English alternative to Hilali & Khan.
+  It is not bundled and not default-on; it appears before Hilali & Khan in the
+  English list for reader familiarity.
+- **Required credit draft:** "English translation by Sahih International.
+  Source: Quranic Universal Library — https://qul.tarteel.ai/resources/translation/193"
+- **Release gate:** confirm QUL/resource-specific license terms and any
+  commercial-use caveat before public release.
+
 ## Roman Urdu (upcoming — not yet a resource in this repo)
 
 The Roman Urdu transliteration project lives in `../alquran-roman-urdu` and is
@@ -158,13 +168,91 @@ the parallel copyright/licensing language needs to be added to
 `alquran-roman-urdu`'s own `ATTRIBUTION.md`/`LICENSE` — not done as part of
 this pass.
 
-### (Previously) Hindi — Maulana Azizul Haque al-Umari — SUPERSEDED
+## 6. Hindi translation — Maulana Azizul Haque al-Umari — DOWNLOADABLE
 
-Earlier builds used the al-Umari Hindi (QuranEnc `hindi_omari`, QUL #166;
-redistribution permitted if unmodified + "QuranEnc.com" + version credited +
-embedded metadata preserved). Replaced by the Tanzil edition above; the source
-DB (`sources/maulana-azizul-haque-al-umari-simple.db`) and a commented block in
-`config/sources.yaml` remain if a switch back is ever wanted.
+Non-default/installable Hindi option from QUL #166.
+
+- **Source:** QUL translation resource #166,
+  `https://qul.tarteel.ai/resources/translation/166`, exported as
+  `simple.sqlite` and ingested as
+  `sources/maulana-azizul-haque-al-umari-simple.db`.
+- **Terms:** QuranEnc terms — use unmodified, credit QuranEnc.com, preserve
+  embedded/version metadata where applicable. Confirm current resource terms
+  before release.
+- **Required credit draft:** "Hindi translation by Maulana Azizul Haque
+  al-Umari. Source: Quranic Universal Library / QuranEnc.com."
+- **Use in app:** downloadable Hindi alternative, not bundled and not default-on.
+
+## 7. Bengali translation — Dr. Abu Bakr Muhammad Zakaria — DOWNLOADABLE, LIVE
+
+**Status: published 2026-07-30.** Requested by the owner (who follows
+Salafi/Ahle Hadith creed) as part of a wider sweep for verified Salafi-creed
+translations across QUL's catalogue.
+
+- **Source:** QUL translation resource #200,
+  `https://qul.tarteel.ai/resources/translation/200`, exported as
+  `simple.sqlite` and ingested as `sources/bn-abu-bakr-zakaria-simple.db`.
+- **Creed verification:** Athari creed, Ghayr Muqallid (non-madhab, consistent
+  with Ahle Hadith practice), studied directly under Sheikh Muhammad ibn
+  Salih al-Uthaymin. Published by King Fahd Complex — same publishing lineage
+  as §1 (Arabic) and the shipped Hilali & Khan English edition.
+- **Terms:** owner determination 2026-07-30 — QUL/King Fahd Complex material
+  is distributed for free Islamic/da'wah use, no explicit per-resource
+  license text is published on the QUL page itself (checked; only generic
+  Tarteel terms-of-use links are present). Ship on that basis, consistent
+  with how §1 and the Hilali & Khan English edition are already handled.
+  Revisit if a more specific restriction surfaces from the publisher directly.
+- **Required credit draft:** "Bengali translation by Dr. Abu Bakr Muhammad
+  Zakaria. Source: Quranic Universal Library — King Fahd Quran Complex."
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+
+## 8. Indonesian translation — King Fahd Quran Complex — DOWNLOADABLE, LIVE
+
+**Status: published 2026-07-30.** Same Salafi-creed sweep as §7.
+
+- **Source:** QUL translation resource #173,
+  `https://qul.tarteel.ai/resources/translation/173`, exported as
+  `simple.sqlite` and ingested as `sources/id-king-fahd-complex-simple.db`.
+- **Institutional basis:** same publisher as §1 (Arabic) and the shipped
+  Hilali & Khan English edition. No individual translator named on the QUL
+  page. Preferred over Indonesian's other QUL options (Sabiq company #194,
+  Indonesian Islamic affairs ministry #224), neither of which was
+  creed-verified.
+- **Known minor defect:** footnote-marker digits leak into the plain text on
+  2 of 6236 verses — 1:2 and 2:194 (see `TRANSLATIONS-ROADMAP.md` for the
+  exact strings). This is a QUL source-export bug (footnote-tagged variant's
+  markers bled into the plain `simple.sqlite`), not introduced by this
+  pipeline. Owner decision 2026-07-30: ship as-is, fix later.
+- **Terms:** owner determination 2026-07-30, same basis as §7 — no
+  per-resource license text on the QUL page itself; shipped on the King Fahd
+  Complex free-distribution basis already established for §1.
+- **Required credit draft:** "Indonesian translation by King Fahd Quran
+  Complex. Source: Quranic Universal Library."
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+
+## 9. Swahili translation — Rowwad Translation Center — DOWNLOADABLE, LIVE
+
+**Status: published 2026-07-30.** Same Salafi-creed sweep as §7/§8.
+
+- **Source:** QUL translation resource #466,
+  `https://qul.tarteel.ai/resources/translation/466`, exported as
+  `simple.sqlite` and ingested as `sources/sw-rowwad-simple.db`.
+- **Creed verification:** Rowwad Translation Center (Markaz Rawwād
+  al-Tarjama) is a Saudi charity founded 2018 under IslamHouse.com by
+  Ibrahim al-Ali, funded by the Awqaf Muhammad Abd al-Aziz al-Rajihi
+  Foundation — a committee-vetted institutional Salafi source, not a single
+  named scholar, publishing in 60+ languages via QuranEnc.com.
+- **Terms:** owner determination 2026-07-30, same basis as §7/§8 — no
+  per-resource license text found on the QUL page itself.
+- **Required credit draft:** "Swahili translation by Rowwad Translation
+  Center. Source: Quranic Universal Library."
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+- **Related, not shipped:** Albanian and German editions from the same Rowwad
+  institution were attempted in this pass but are blocked on bad source
+  downloads (Albanian: a 3-language bundle, not single-language; German: only
+  surahs 1-44, incomplete) — see `TRANSLATIONS-ROADMAP.md` and the commented
+  block in `config/sources.yaml` for the re-download steps once QUL serves a
+  correct export.
 
 ---
 

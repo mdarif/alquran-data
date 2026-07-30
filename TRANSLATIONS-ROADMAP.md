@@ -7,8 +7,14 @@ see `HANDOFF.md`), so a new edition is added **once, here**, then flows to both
 consumers on their next DB refresh. Don't duplicate this list in either
 consumer repo; link back to this file instead.
 
-Current lineup (shipped): Urdu (Junagarhi), Hindi (Farooq Khan/Nadwi), English
-(Hilali & Khan). Licensing basis for each: `ATTRIBUTION.md`.
+Current lineup (shipped, all as downloadable/installable editions except
+Urdu/Hindi-Farooq-Khan/English-Hilali-Khan which are bundled): Urdu
+(Junagarhi), Hindi (Farooq Khan/Nadwi), English (Hilali & Khan), Hindi
+(Ahsanul Kalam), Hindi (al-Umari), Bengali (Zakaria), Indonesian (King Fahd
+Complex), Swahili (Rowwad Translation Center). Licensing basis for each:
+`ATTRIBUTION.md`. Configured but not yet downloaded/shipped: English (Sahih
+International); blocked on bad downloads: Albanian, German (Rowwad) — see
+the candidate sections below.
 
 ## The edition model (landed 2026-07-28) — read before adding any translation
 
@@ -256,13 +262,12 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   | Suhel Farooq Khan (shipping) | अल्लाह के नाम से जो **रहमान व रहीम** है। | Perso-Arabic |
   | Junagarhi → Devanagari (target) | शुरू करता हूँ अल्लाह ताअला के नाम से जो बड़ा **मेहरबान निहायत रहम** वाला है। | Perso-Arabic |
 
-- **al-Umari is REJECTED, not deferred.** It is the only Salafi/Ahle Hadith
-  Hindi translation that exists, it is permissively licensed via QuranEnc, and
-  `sources/maulana-azizul-haque-al-umari-simple.db` is already downloaded — and
-  it is still the wrong artifact, because its register is the rejected one. The
-  commented-out block in `config/sources.yaml` should be read as "rejected on
-  register", not "cheap win waiting to be enabled". This is the single most
-  likely thing for a future session to get wrong.
+- **al-Umari is available, but not preferred/default.** It is a
+  Salafi/Ahle Hadith Hindi translation, permissively licensed via QuranEnc, and
+  `sources/maulana-azizul-haque-al-umari-simple.db` is already downloaded. Its
+  Sanskritic register is not the product's preferred Hindi voice, so it stays
+  non-default and installable rather than replacing Ahsanul Kalam or the
+  existing Suhel Farooq Khan/Nadwi edition.
 
 - **~~Therefore: Devanagari is the only route.~~ SUPERSEDED 2026-07-28.** This
   item used to conclude that the only Salafi Hindi translation in existence had
@@ -303,40 +308,142 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
   was never a register change — अल्लाह sits as comfortably in Urdu-flavoured
   Hindi as खुदा — so it bought nothing while costing Tanzil verbatim compliance.
 
-## Candidate: Saheeh International (English)
+## Candidate: Sahih International (English) — CONFIRMED SOURCE
 
 - **Requested:** 2026-07-20 (owner, via al-quran-web session) — a second,
   *alternate* English edition alongside the existing Hilali & Khan text (this
   is not "unlocking English" — English already ships). Framed as an editorial
   choice: readers who find Hilali & Khan's bracketed-gloss style dense often
-  prefer Saheeh International's plainer register. Same idea would need to land
+  prefer Sahih International's plainer register. Same idea would need to land
   in the app too, since both read from the same DB.
-- **Source — NOT settled, needs a real look before building anything:**
-  quranproject.org (the URL the owner pointed at) turns out to **not** host
-  Saheeh International — it's their own house translation, unrelated. Saheeh
-  International text most likely already exists among QUL's 201 translation
-  resources (this pipeline already sources everything through QUL — see
-  `pipeline/prepare_sources.py`), which would make this a `config/sources.yaml`
-  addition rather than a new ingestion path. **Confirm the QUL resource ID and
-  its license terms before scoping further** — do not assume non-commercial
-  terms carry over from the Tanzil-sourced Urdu/Hindi editions; Saheeh
-  International's terms need their own check, same rigor as `ATTRIBUTION.md`
-  §2/§3.
-- **Shape of the work, once the source is confirmed:**
-  1. Add the resource to `config/sources.yaml`, rebuild + `verify_db.py`.
-  2. Record it in `ATTRIBUTION.md` (license, required credit, any commercial
-     caveat) — this repo's existing gate, don't skip it.
-  3. **App:** new translation becomes selectable wherever English/Urdu/Hindi
-     already are (see `alquran-app/lib/core/database/app_database.dart`
-     resource-ordering comment) — likely a "choose your English edition"
-     setting rather than a silent replacement, since Hilali & Khan stays.
-  4. **Web:** `al-quran-web/src/lib/quran.ts` (`translatorName`) and
+- **Source confirmed 2026-07-30:** QUL translation resource #193
+  (`https://qul.tarteel.ai/resources/translation/193`) is **Sahih
+  International** and offers `simple.sqlite`, the same ayah-by-ayah SQLite shape
+  consumed by `build_db.py`.
+- **Data shape:** added to `config/sources.yaml` as
+  `slug: en-sahih-international`, `file:
+  sources/en-sahih-international-simple.db`, `sort_order: 30`, with Hilali &
+  Khan moved to `sort_order: 40`. Urdu remains the only default-on edition.
+- **Remaining work:**
+  1. Download QUL #193 `simple.sqlite` into
+     `sources/en-sahih-international-simple.db` while signed in to QUL.
+  2. Verify licence terms and update `ATTRIBUTION.md` from its draft state.
+  3. Rebuild + `verify_db.py`, then `build_editions.py`.
+  4. Publish the new content-addressed artifact and `catalogue.json` to R2.
+  5. **App:** no hardcoded language work should be needed; the Translations
+     sheet reads the CDN catalogue and supports several editions per language.
+  6. **Web:** `al-quran-web/src/lib/quran.ts` (`translatorName`) and
      `Ayah.astro`'s per-language blocks are keyed by `resources.lang` today
      (one row per language) — two English editions means that assumption
      needs revisiting (a `resources.edition` or similar disambiguator), not
      just dropping in a second `en` row.
-- **Status:** not started. Not scheduled. Flagging here so it isn't
-  re-discovered from scratch next time it comes up.
+- **Status:** configured, blocked on authenticated QUL source download and
+  licence verification.
+
+## Candidate: Bengali (Dr. Abu Bakr Muhammad Zakaria) — CONFIRMED CREED, source pending
+
+- **Requested 2026-07-30 (owner)**, who follows Salafi/Ahle Hadith creed and
+  asked for more authentic Salafi-creed translations from QUL's catalogue
+  (`https://qul.tarteel.ai/resources/translation`, 204 entries across ~40
+  languages). Creed affiliation verified before adding, per owner's explicit
+  instruction — QUL's listing carries no creed metadata, so each candidate
+  needs an independent check; the obvious "Salafi-sounding" publisher name is
+  not sufficient on its own (see the Montada rejection below).
+- **Verified:** Athari creed, Ghayr Muqallid (non-madhab — consistent with
+  Ahle Hadith practice), studied directly under Sheikh Muhammad ibn Salih
+  al-Uthaymin. Published by King Fahd Complex — same publishing lineage as
+  the already-shipped Hilali & Khan English edition.
+- **Data shape:** added to `config/sources.yaml` as `slug:
+  bn-abu-bakr-zakaria`, `file: sources/bn-abu-bakr-zakaria-simple.db`,
+  `sort_order: 50`, `default_on: false`. QUL resource #200.
+- **Status: SHIPPED 2026-07-30.** Downloaded, built, verified, and published
+  to R2 — live at `https://editions.alquranreader.com` alongside the other
+  downloadable editions. Licence recorded in `ATTRIBUTION.md` §7 on the same
+  free-distribution basis as the Arabic/Hilali & Khan King Fahd Complex
+  material (owner determination; no per-resource license text is published
+  on the QUL page itself).
+
+## Rejected candidate: Montada Islamic Foundation (French) — creed check failed
+
+- **Considered 2026-07-30** alongside the Bengali candidate above (QUL #174).
+  On the surface it reads as another Salafi-published option, parallel to
+  King Fahd Complex — but the organization was founded in London by
+  **Muhammad Surur Zain al-Abidin**, a former Muslim Brotherhood member
+  expelled from Saudi Arabia, whose "Sururi" current blends Salafi *creed*
+  with Ikhwani/Qutbist political activism. Traditional Ahle Hadith/Salafi
+  scholarship treats Sururiyyah as distinct from — and often critical of —
+  mainstream Salafism precisely because of that Brotherhood lineage.
+- **Rejected, not deferred**, same standing as the al-Umari Hindi rejection
+  above: this is the kind of candidate future sessions should not re-add on
+  the strength of the publisher's name alone. If it resurfaces, the creed
+  question needs re-litigating, not just a licence check.
+- **Also considered, left unresolved:** Elmir Kuliev (Russian) — respected
+  translation, but no source found establishing his creed affiliation either
+  way. Not added; needs a real answer before it's proposed again.
+
+## Candidates: Indonesian, Swahili, Albanian, German — Rowwad/King Fahd lineage
+
+- **Requested 2026-07-30 (owner)**, continuing the Salafi-creed sweep above.
+  Chased a lead from research into other QUL languages: **Rowwad Translation
+  Center** (Markaz Rawwād al-Tarjama) is a Saudi charity founded 2018 under
+  IslamHouse.com by Ibrahim al-Ali, funded by the Awqaf Muhammad Abd al-Aziz
+  al-Rajihi Foundation — committee-vetted institutional Salafi source (parallel
+  to how King Fahd Complex backs the shipped Hilali & Khan English edition),
+  publishing in 60+ languages via QuranEnc.com and mirrored onto QUL.
+- **Verified directly against QUL** (fetched each resource page, not just
+  QuranEnc's listing):
+  - **Indonesian** — QUL #173, **King Fahd Quran Complex** (not Rowwad — a
+    better match, since it's the same publisher as the shipped English
+    edition). Indonesian's other QUL options (Sabiq company #194, Indonesian
+    Islamic affairs ministry #224) were not creed-checked and are not
+    preferred.
+  - **Swahili** — QUL #466, Rowwad Translation Center.
+  - **Albanian** — QUL #298, Rowwad Translation Center. Albanian's other QUL
+    translator, **Sherif Ahmeti, was checked and rejected**: Maturidi creed,
+    Hanafi fiqh, Mufti of Pristina — confirmed non-Salafi.
+  - **German** — QUL #467, Rowwad Translation Center. German's other options
+    (Bubenheim & Nadeem #191, Abu Reda #197) were not creed-checked.
+- **Added to `config/sources.yaml`**: `id-king-fahd-complex` (sort_order 60),
+  `sw-rowwad` (61) — both `default_on: false`. `sq-rowwad` (62) and
+  `de-rowwad` (63) are present but **commented out**, blocked on bad
+  downloads (see below).
+- **Known minor defect (Indonesian, King Fahd Complex simple.sqlite):**
+  footnote-marker digits leak into the plain text on 2 of 6236 verses —
+  1:2 (`Segala puji30993>1 bagi Allah, Tuhan3 semesta alam.`) and 2:194
+  (`...bulan haram3>1... yang patut dihormati 119, berlaku...`). This is a
+  QUL source-export bug (the footnote-tagged variant's markers bled into the
+  plain `simple.sqlite`), not introduced by this pipeline. Owner decision
+  2026-07-30: **ship as-is**, fix later — affects 0.03% of verses. Revisit if
+  QUL corrects their export, or add a targeted text override (same pattern as
+  `reading_overrides` on the Arabic source) if it needs fixing sooner.
+- **Not chased this pass** (Rowwad publishes here too per QuranEnc's own
+  language list, but no QUL resource ID was confirmed): Tagalog, Cebuano,
+  Maguindanao, Circassian, Georgian, Uzbek, Tajik, Bosnian, Serbian, Croatian,
+  Lithuanian, Greek, Dutch, Swedish, Italian, Portuguese, Russian. Worth a
+  follow-up QUL page check before assuming any of these exist there.
+  Tamil (Abdul Hameed Baqavi) and Isa García's Spanish translation remain
+  **inconclusive** — institutionally plausible (Umm al-Qura, Darussalam/IIPH
+  for García) but no explicit creed self-identification found for either.
+- **Status: Indonesian and Swahili SHIPPED 2026-07-30** — downloaded, built,
+  verified, published to R2, live at `https://editions.alquranreader.com`.
+  Licence recorded in `ATTRIBUTION.md` §8/§9 on the same owner-determined
+  free-distribution basis as §7 (Zakaria) above.
+- **Albanian and German — BLOCKED, not shipped.** The first downloads
+  obtained for both were unusable, discovered by cross-checking row counts
+  and sample text before building:
+  - **Albanian (QUL #298):** the file obtained
+    (`translation-pioneers-center-simple.db`) is a **3-language bundle** —
+    18,708 rows (3×6236) mixing Vietnamese and Sinhala text (and a third,
+    unidentified language) under the same `sura`/`ayah` keys, no language
+    column to disambiguate. Not single-language Albanian at all — wrong
+    export. ("Translation Pioneers Center" is just Rowwad's own English
+    self-translation of "Rowwad" — confirms the org, not the file.)
+  - **German (QUL #467):** the file obtained covers only **surahs 1-44**
+    (4,473 of 6236 ayahs) — incomplete on QUL's side, not a full Quran
+    translation.
+  - Both blocks are commented out in `config/sources.yaml` with the exact
+    re-download steps; uncomment and rebuild once correct/complete exports
+    are obtained from QUL.
 
 ## Other deferred items (carried over from `HANDOFF.md`)
 
