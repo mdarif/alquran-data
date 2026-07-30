@@ -1,6 +1,7 @@
 # Downloaded QUL source files (large; not redistributed in the repo)
 sources/*.sqlite
 sources/*.db
+sources/*.zip
 sources/*.json
 
 # Build outputs

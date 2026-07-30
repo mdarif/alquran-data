@@ -1,7 +1,135 @@
 {
   "reviewed": {
+    "mai-vs-mein:11:72": {
+      "note": "11:72 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:14:22": {
+      "note": "14:22 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:17:102": {
+      "note": "17:102 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:17:67": {
+      "note": "17:67 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:19:4": {
+      "note": "19:4 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:21:45": {
+      "note": "21:45 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:23:111": {
+      "note": "23:111 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:26:115": {
+      "note": "26:115 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:27:40": {
+      "note": "27:40 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:28:34": {
+      "note": "28:34 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:28:36": {
+      "note": "28:36 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:28:38": {
+      "note": "28:38 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:28:78": {
+      "note": "28:78 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:2:137": {
+      "note": "2:137 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:2:61": {
+      "note": "2:61 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:34:46": {
+      "note": "34:46 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:38:70": {
+      "note": "38:70 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:38:85": {
+      "note": "38:85 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:40:26": {
+      "note": "40:26 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:41:6": {
+      "note": "41:6 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:4:65": {
+      "note": "4:65 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:51:50": {
+      "note": "51:50 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:51:51": {
+      "note": "51:51 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:5:29": {
+      "note": "5:29 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:67:26": {
+      "note": "67:26 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:74:17": {
+      "note": "74:17 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:79:16": {
+      "note": "79:16 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:7:61": {
+      "note": "7:61 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:7:62": {
+      "note": "7:62 — main_suspect main-vs-mein finding, confirmed real error, fixed round 22",
+      "status": "resolved"
+    },
+    "mai-vs-mein:8:43": {
+      "note": "8:43 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
+    "mai-vs-mein:9:40": {
+      "note": "9:40 — locative में correct (noun+postposition, तो starts next clause), false positive",
+      "status": "rejected"
+    },
     "अक़ल": {
       "note": "spelling variant",
+      "status": "rejected"
+    },
+    "अक़्ले": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "अकाल": {
@@ -13,12 +141,36 @@
       "note": "garbled conjunct/nukta; intellect",
       "status": "confirmed"
     },
+    "अखज़": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "अगला": {
       "note": "idiom अगला-पिछला",
       "status": "rejected"
     },
+    "अगली": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "अज़्म": {
       "note": "resolve/determination, real word",
+      "status": "rejected"
+    },
+    "अत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "अत्यचार": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "अदना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "अन": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
       "status": "rejected"
     },
     "अनक़रीब": {
@@ -33,52 +185,264 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "अन्दज़ा": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "अन्धी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "अन्धें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "अन्ध्": {
-      "note": "41:44 — looks truncated, unclear intended word",
-      "status": "ambiguous"
+      "note": "41:44 — looks truncated, unclear intended word — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "अपवित्र": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "अपवित्रता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "अबू": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
     },
     "अमल पैरा": {
       "note": "idiom",
+      "status": "rejected"
+    },
+    "अमालों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "अमीर": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "अम्न": {
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "अला": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "अल्लह": {
+      "note": "probable-ocr candidate: confirmed real error, fixed round 23 final batch",
+      "status": "resolved"
+    },
+    "असत्य": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "अस्पष्ट": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "अहट": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "अहम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "अहलो": {
       "note": "izafat compound, correct",
       "status": "rejected"
     },
+    "आँखे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "आँखो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "आएँगी": {
       "note": "fem plural agreement, correct",
+      "status": "rejected"
+    },
+    "आका": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आज़ादी": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
       "status": "rejected"
     },
     "आजिजी": {
       "note": "humility (noun), correct",
       "status": "rejected"
     },
+    "आज्ञाकरी": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "आदि": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आध": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आधी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "आनन": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "आपे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "आबिद": {
       "note": "worshiper, real word (matches gloss)",
       "status": "rejected"
     },
+    "आमद": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "आमाली": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आयशा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आयहतें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "आये": {
       "note": "came, hon",
+      "status": "rejected"
+    },
+    "आरास्ता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आलम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आलमे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "आवाजे": {
       "note": "izafat compound",
       "status": "rejected"
     },
+    "आसमनों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "आसमाने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "आह": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "इज़ाफे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "इत्तिबा": {
       "note": "spelling variant of इत्तेबा",
+      "status": "rejected"
+    },
+    "इन्कारे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "इन्सानी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "इरादे": {
       "note": "oblique, correct",
       "status": "rejected"
     },
+    "इल्मी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "इसको": {
       "note": "object marker, correct",
+      "status": "rejected"
+    },
+    "इसने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "इसानों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "इसीलिए": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "इस्राईली": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "इस्हाक़ू": {
+      "note": "matra variant on the proper name \"Ishaq\" — needs a human call on house spelling, not a meaning error — normalized round 21",
+      "status": "resolved"
+    },
+    "ईजा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ईनाम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ईला": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उगए": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "उजड़": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "उठता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उठवा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उठवाया": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उठाएं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उठाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "उठी": {
@@ -97,8 +461,84 @@
       "note": "plural agreement, correct",
       "status": "rejected"
     },
+    "उतरा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उतारता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उतारना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उतारी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "उतारे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "उनसें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "उबल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "उमूर": {
       "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "उम्मते": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "उम्म्त": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "उसीकी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "उसीको": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "उसीमें": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "ऐे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "ओऔलाद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "ओले": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "औरो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "औलादे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "औलिया": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कटा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "कपड़ा": {
@@ -109,8 +549,36 @@
       "note": "different real issue, not this pairing",
       "status": "rejected"
     },
+    "कफिरों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "कबूले": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कमरे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
     "कमा": {
       "note": "earned, real verb",
+      "status": "rejected"
+    },
+    "कमाता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "कमानों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कयास": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "करकट": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "करनी": {
@@ -121,8 +589,20 @@
       "note": "causative, correct",
       "status": "rejected"
     },
+    "कराना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
     "करीम": {
       "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "करूँ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "करूँगा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "करूंगी": {
@@ -138,11 +618,23 @@
       "status": "rejected"
     },
     "करों": {
-      "note": "6:102/7:3 — likely imperative करो, neither तो's twin करें fits well",
-      "status": "ambiguous"
+      "note": "6:102/7:3 — likely imperative करो, neither तो's twin करें fits well — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "करोगी": {
       "note": "fem agreement",
+      "status": "rejected"
+    },
+    "कलामी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कलामे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कशी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "कहती": {
@@ -174,32 +666,84 @@
       "status": "rejected"
     },
     "कहों": {
-      "note": "61:3 — imperative कहो/करो likely, not either offered twin",
-      "status": "ambiguous"
+      "note": "61:3 — imperative कहो/करो likely, not either offered twin — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "क़रीबन": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "क़रीबी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "क़लम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "क़समों": {
       "note": "oblique plural, correct",
+      "status": "rejected"
+    },
+    "क़ाम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "क़िसमें": {
       "note": "kinds, correct",
       "status": "rejected"
     },
+    "क़िस्मत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "क़ुन": {
       "note": "Persian compound, legitimate",
+      "status": "rejected"
+    },
+    "क़ृसमों": {
+      "note": "corpus itself has 3 coexisting spellings (क़ुसमें 15x, क़ुसमों 8x, क़समें 8x) with no single dominant form — a normalization-family issue like मुक़र्रर, not a one-off — normalized round 21",
+      "status": "resolved"
+    },
+    "क़ृुसमों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "क़॒समें": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "काटा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "काटे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "काटो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "कातने": {
       "note": "spinning, correct verb",
       "status": "rejected"
     },
+    "काना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "काफ़र": {
-      "note": "36:64/9:37 — probably कुफ़्र not काफ़िर, needs a second look",
-      "status": "ambiguous"
+      "note": "36:64/9:37 — probably कुफ़्र not काफ़िर, needs a second look — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "काफ़ूर": {
       "note": "camphor, real word",
       "status": "rejected"
+    },
+    "कामयबी": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "कारसाजी": {
       "note": "real word",
@@ -212,45 +756,101 @@
       "status": "confirmed",
       "surah": 5
     },
+    "काूफ़्र": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "कितना": {
-      "note": "18:19 — depends on whether बर्सा is itself a typo",
-      "status": "ambiguous"
+      "note": "18:19 — depends on whether बर्सा is itself a typo — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "किताबे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "किताबें": {
       "note": "nominative plural, correct",
       "status": "rejected"
     },
     "किसमें": {
-      "note": "56:7 likely needs क़िस्मों not क़समें; needs more certainty",
-      "status": "ambiguous"
+      "note": "56:7 likely needs क़िस्मों not क़समें; needs more certainty — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "किस्मत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "कुन": {
       "note": "idiom रुस्वा-कुन",
       "status": "rejected"
     },
+    "कुव्वते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "कुृव्वत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "कूट": {
       "note": "pounded, correct (89:21 imagery)",
       "status": "rejected"
     },
+    "कृतल्ल": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "केद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "कौमों": {
       "note": "already correct",
+      "status": "rejected"
+    },
+    "क्योंकर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "क्रीबन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "खजाना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "खड़ी": {
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "खरूजू": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "ख़ता": {
       "note": "mistake, real word (matches gloss)",
       "status": "rejected"
+    },
+    "ख़बरे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "ख़बरों": {
       "note": "oblique plural, correct",
       "status": "rejected"
     },
+    "ख़बीर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ख़िलाफ़ी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "ख़ीफ": {
-      "note": "51:28 — may be deliberate Quranic-Arabic transliteration",
-      "status": "ambiguous"
+      "note": "51:28 — may be deliberate Quranic-Arabic transliteration — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "ख़ुशू": {
       "note": "khushu, humility, correct Arabic term (matches gloss)",
@@ -259,6 +859,10 @@
     "ख़ोर": {
       "note": "Persian suffix compound, legitimate",
       "status": "rejected"
+    },
+    "खाओं": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "खाती": {
       "note": "grazing, correct",
@@ -278,6 +882,10 @@
     },
     "खुल": {
       "note": "adverbial 'openly', plausible as-is",
+      "status": "rejected"
+    },
+    "खूबी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "खेले": {
@@ -304,8 +912,20 @@
       "note": "passive construction, correct",
       "status": "rejected"
     },
+    "ख्यालत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ख्वाहिशत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "गढ़ी": {
       "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "गढ़े": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "गढ़ो": {
@@ -320,12 +940,56 @@
       "note": "went, plural/hon",
       "status": "rejected"
     },
+    "गरम": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "गला": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "गले": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ग़षाफिल": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "ग़ारत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ग़ुलामी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ग़्मगीन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "गिनते": {
       "note": "imperative continuous, correct",
       "status": "rejected"
     },
+    "गिरे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "गुज़रता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "गुज़रती": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "गुज़री": {
       "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "गुज़रो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "गुजारे": {
@@ -335,6 +999,14 @@
     "गुन": {
       "note": "idiom, legitimate",
       "status": "rejected"
+    },
+    "गुनहगार": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "गुनहों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "गुमराहो": {
       "note": "vocative/oblique",
@@ -348,28 +1020,116 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "गोई": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "गौश्त": {
       "note": "systemic translator spelling variant",
+      "status": "rejected"
+    },
+    "घने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "घिर": {
       "note": "correct verb root (passive)",
       "status": "rejected"
     },
+    "घेरा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "चख": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "चखा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "चखाता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "चखे": {
       "note": "3rd-person subjunctive, correct",
+      "status": "rejected"
+    },
+    "चखों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "चमकती": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "चमकते": {
       "note": "plural agreement, correct",
       "status": "rejected"
     },
+    "चर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चलना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "चलाएँगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चलाती": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चलेंगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चलेगा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चाकर": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "चादर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चारो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चालों": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "चाहती": {
       "note": "fem agreement",
       "status": "rejected"
     },
+    "चाहने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "चुकीं": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "चुकें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "चुको": {
       "note": "compound verb चुकना, correct",
+      "status": "rejected"
+    },
+    "चुना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "चुनी": {
@@ -388,6 +1148,14 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "चौपाएऐ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "चौोपायों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "छिपा": {
       "note": "spelling variant of छुपा",
       "status": "rejected"
@@ -397,8 +1165,16 @@
       "status": "rejected"
     },
     "छु": {
-      "note": "21:46 — likely छू, offered twin छा doesn't fit",
-      "status": "ambiguous"
+      "note": "21:46 — likely छू, offered twin छा doesn't fit — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "छुपता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "छुपने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "छुपाता": {
       "note": "singular agreement, correct",
@@ -408,16 +1184,100 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "छोटे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "छोड़ी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "छोड़ो": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "जंगल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जंगी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जड़ा": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "जड़ो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "जताए": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "जताओ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जताते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "जनती": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जमने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जमाअते": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "जमाऐं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "जमी": {
       "note": "settled, correct",
       "status": "rejected"
+    },
+    "जलाया": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "जलेंगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जहन्नुम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "जहाँनों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "ज़दा": {
       "note": "idiom ग़म-ज़दा (grief-stricken)",
       "status": "rejected"
     },
+    "ज़बरदस्ती": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "ज़बाने": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "ज़ब्ह": {
       "note": "translator variance",
+      "status": "rejected"
+    },
+    "ज़माना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "ज़रार": {
@@ -425,8 +1285,12 @@
       "status": "rejected"
     },
     "ज़री": {
-      "note": "99:7-8 — likely ज़र्रा (atom's weight), not जारी; needs a different fix mechanism",
-      "status": "ambiguous"
+      "note": "99:7-8 — likely ज़र्रा (atom's weight), not जारी; needs a different fix mechanism — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "ज़लिमों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "ज़िन्दे": {
       "note": "correct parallel plural (living/dead)",
@@ -440,17 +1304,45 @@
       "note": "proper noun (Zayd ibn Harithah)",
       "status": "rejected"
     },
+    "ज़ोहर": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "ज़्याद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "जाएँगी": {
       "note": "fem agreement",
+      "status": "rejected"
+    },
+    "जाऐँ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "जाऐँं": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "जागते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "जाति": {
       "note": "nation, gloss",
       "status": "rejected"
     },
+    "जातीं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "जादा": {
       "note": "idiom हराम-जादा",
       "status": "rejected"
+    },
+    "जादूगरो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "जादे": {
       "note": "idiom, provisions",
@@ -468,6 +1360,10 @@
       "note": "souls (oblique)/imperative 'consider', both correct",
       "status": "rejected"
     },
+    "जाल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "जिएगा": {
       "note": "will live, correct",
       "status": "rejected"
@@ -476,8 +1372,20 @@
       "note": "object marker, correct",
       "status": "rejected"
     },
+    "जिनन": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "जिसको": {
       "note": "object marker, correct",
+      "status": "rejected"
+    },
+    "जीड़": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "जीत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "जीना": {
@@ -488,12 +1396,20 @@
       "note": "living, correct (tree of eternal life)",
       "status": "rejected"
     },
+    "जीव": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "जुए": {
       "note": "gambling, correct",
       "status": "rejected"
     },
     "जुड़े": {
       "note": "connected, correct",
+      "status": "rejected"
+    },
+    "जुमा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "जू": {
@@ -516,8 +1432,28 @@
       "note": "ploughed, correct verb",
       "status": "rejected"
     },
+    "जोश": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ज्ञानी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "झगड़ता": {
       "note": "singular agreement, correct",
+      "status": "rejected"
+    },
+    "झगड़े": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "झुको": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "झुठलाता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "झुठलाना": {
@@ -529,8 +1465,36 @@
       "status": "rejected"
     },
     "झुठे": {
-      "note": "systemic short/long ऊ ambiguity, recurs on both sides",
-      "status": "ambiguous"
+      "note": "owner confirmed: झूठे is correct",
+      "status": "resolved"
+    },
+    "झूठें": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "टलेगा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "टुकड़": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "टुकड़ा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "ठहरता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ठहराए": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "ठहराऐ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "ठहराता": {
       "note": "singular agreement, correct",
@@ -538,6 +1502,10 @@
     },
     "ठहरी": {
       "note": "fem agreement, correct",
+      "status": "rejected"
+    },
+    "ठहरें": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
       "status": "rejected"
     },
     "ठहरो": {
@@ -556,6 +1524,10 @@
       "note": "fem plural",
       "status": "rejected"
     },
+    "डरया": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "डराना": {
       "note": "warning, gerund",
       "status": "rejected"
@@ -564,8 +1536,20 @@
       "note": "subjunctive, correct",
       "status": "rejected"
     },
+    "डरों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "डाराने": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "डालती": {
       "note": "fem agreement (हवा), correct",
+      "status": "rejected"
+    },
+    "डालना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "डालो": {
@@ -576,29 +1560,101 @@
       "note": "bucket/idiom",
       "status": "rejected"
     },
+    "ढल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "ढाल": {
       "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "तअज़ीम": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तअन": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "तक़वा": {
       "note": "valid spelling variant of तक्वा",
       "status": "rejected"
     },
+    "तकिया": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "तक्वे": {
       "note": "oblique case, correct",
+      "status": "rejected"
+    },
+    "तनूर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "तपाया": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "तफ़सील": {
       "note": "nukta spelling variant",
       "status": "rejected"
     },
+    "तरस": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तरीकें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तलबी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तलाशी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तस्दीक़ु": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तस्दीक॒": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तस्वबीह": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तहत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तहूर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "ता": {
       "note": "muqattaʿat letter-names (Ta-Seen), correct",
+      "status": "rejected"
+    },
+    "ताकत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "ताक़": {
       "note": "niche/yoke, real word, distinct senses",
       "status": "rejected"
+    },
+    "ताक़त": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "ताक॒त": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "तान": {
       "note": "stretch, correct verb",
@@ -624,29 +1680,133 @@
       "note": "see word fix",
       "status": "rejected"
     },
+    "तुमनें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तुममे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तुम्हरा": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "तुम्हािरे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "तुम्हीं": {
       "note": "emphatic 'you yourselves', correct",
       "status": "rejected"
     },
     "ते": {
-      "note": "6:139/19:21/+1 — same तय-शुदा idiom, likely तय not तो",
-      "status": "ambiguous"
+      "note": "6:139/19:21/+1 — same तय-शुदा idiom, likely तय not तो — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "तेज़ी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तेजी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "तेरने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "तै": {
-      "note": "20:129 — likely तय (decided), not तो; needs missing-य fix, not matra",
-      "status": "ambiguous"
+      "note": "20:129 — likely तय (decided), not तो; needs missing-य fix, not matra — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "तोड़ा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तोड़ो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तोल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "तोौरात": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "थमे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "थाल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "थीं": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "थें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "दंगा": {
       "note": "riot, real word",
       "status": "rejected"
     },
+    "दगा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "दबी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दबे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "दरबारियो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दरम्यानी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दरवाज़ा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "दरियां": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "दर्जा": {
       "note": "rank (singular), correct with वाला",
+      "status": "rejected"
+    },
+    "दलीले": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "दाँये": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दाँयें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "दांया": {
       "note": "right (adjective), correct",
       "status": "rejected"
+    },
+    "दादाओ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "दाना": {
       "note": "grain, real word",
@@ -654,6 +1814,10 @@
     },
     "दार": {
       "note": "Persian suffix",
+      "status": "rejected"
+    },
+    "दिखला": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "दिये": {
@@ -672,6 +1836,10 @@
       "note": "religions, correct (famous verse)",
       "status": "rejected"
     },
+    "दीवाना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "दुखी": {
       "note": "sad, matches gloss",
       "status": "rejected"
@@ -684,6 +1852,18 @@
     "दुबारा": {
       "note": "valid spelling variant",
       "status": "rejected"
+    },
+    "दूत": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "दूब": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "देंखेंगे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "देखती": {
       "note": "fem agreement, correct",
@@ -705,8 +1885,56 @@
       "note": "idiom/noun, correct",
       "status": "rejected"
     },
+    "देनें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "देवता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दोंनों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "दोनो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "दोष": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दौड़ा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "दौड़े": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "दौर": {
       "note": "idiom दौर चलना (trays passed around)",
+      "status": "rejected"
+    },
+    "धन": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "धिक्कारा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "नज़ीर": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "नदी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "नपा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "नफ़ीस": {
@@ -717,6 +1945,10 @@
       "note": "oblique, correct",
       "status": "rejected"
     },
+    "नफ़्से": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "नफीस": {
       "note": "fine, adjective",
       "status": "rejected"
@@ -724,6 +1956,42 @@
     "नफे": {
       "note": "oblique case before व, correct",
       "status": "rejected"
+    },
+    "नमाज़ी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "नमाज़े": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "नये": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "नरकी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "नलाते": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "नशुक्रा": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "नशुक्री": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "नसबी": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "नहरे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "नहरों": {
       "note": "oblique, correct",
@@ -737,9 +2005,13 @@
       "note": "nose, real word",
       "status": "rejected"
     },
+    "नामे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "नाहकु": {
-      "note": "systemic Perso-Arabic transliteration family, no dominant form",
-      "status": "ambiguous"
+      "note": "owner confirmed: नाहक़ is correct",
+      "status": "resolved"
     },
     "निअमत": {
       "note": "valid spelling variant of नेअमत",
@@ -753,13 +2025,33 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "निकलो": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "निकालना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "निकालो": {
       "note": "imperative, correct",
       "status": "rejected"
     },
+    "निशनियां": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "निशाना": {
       "note": "idiom",
       "status": "rejected"
+    },
+    "निहठायत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "निह्ायत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "नीचा": {
       "note": "idiom नीचा दिखाना",
@@ -769,9 +2061,21 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "नुकसान": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "नुक़सान": {
       "note": "spelling variant, correct",
       "status": "rejected"
+    },
+    "नुत्फा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "नें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "नेकोकारों": {
       "note": "izafat-style compound variant",
@@ -785,8 +2089,40 @@
       "note": "idiom नोक-पलक",
       "status": "rejected"
     },
+    "पकड़ता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "पकड़ना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "पकड़ी": {
       "note": "fem agreement",
+      "status": "rejected"
+    },
+    "पकड़ेगी": {
+      "note": "legitimate feminine verb agreeing with the blast/cry context in 36:49; not पकड़ेगा",
+      "status": "rejected"
+    },
+    "पकने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "पकी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पचास": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पड़ती": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "पड़ने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "पड़ो": {
@@ -801,6 +2137,18 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "पथरा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पद": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "परखने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "परिन्दो": {
       "note": "vocative plural, correct",
       "status": "rejected"
@@ -809,21 +2157,73 @@
       "note": "correct spelling, परिक्षा is translator shorthand",
       "status": "rejected"
     },
+    "परो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पर्दाथ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "पलक": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पले": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पशे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पहचाना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पहचानो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "पहला": {
       "note": "first, correct ordinal agreement",
+      "status": "rejected"
+    },
+    "पहुँचता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "पहुँचना": {
       "note": "infinitive-as-noun, correct",
       "status": "rejected"
     },
+    "पहुँचाओ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पहुँचाना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "पहुँचू": {
       "note": "ambiguous, flagged separately",
+      "status": "rejected"
+    },
+    "पहुँचें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "पहुँचो": {
       "note": "ambiguous, see separate entry",
       "status": "rejected"
+    },
+    "पाएँगें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "पाओं": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "पाठ": {
       "note": "recitation, distinct word",
@@ -833,8 +2233,16 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "पापो": {
+      "note": "probable-ocr candidate: confirmed real error, fixed round 23 final batch",
+      "status": "resolved"
+    },
     "पारा": {
       "note": "idiom पारा-पारा (torn to shreds), unrelated to पूरा",
+      "status": "rejected"
+    },
+    "पालक": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
       "status": "rejected"
     },
     "पिता": {
@@ -869,12 +2277,32 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "पुकारना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पुकारे": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
     "पूछता": {
       "note": "singular agreement, correct",
       "status": "rejected"
     },
+    "पूछने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "पूर": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
     "पे": {
       "note": "idiom पे-दर-पे",
+      "status": "rejected"
+    },
+    "पैदल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "पैरा": {
@@ -893,21 +2321,85 @@
       "note": "useless, real word",
       "status": "rejected"
     },
+    "फटक": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "फरिश्तें": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
     "फरिश्तो": {
       "note": "vocative",
+      "status": "rejected"
+    },
+    "फसादी": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "फ़रमाए": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "फ़रमाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "फ़रमान": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "फ़रमाबरदार": {
       "note": "legitimate co-existing spelling",
       "status": "rejected"
     },
+    "फ़रिश्तो": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "फ़सादी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "फ़िरओऔन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "फ़िरऔनी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "फ़िरिऔन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "फासला": {
       "note": "distance, real word",
       "status": "rejected"
     },
+    "फिक्रे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "फिरता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "फिरती": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "फिला": {
-      "note": "translator's own consistent transliteration, no clean form exists",
-      "status": "ambiguous"
+      "note": "8:73, 60:5 — owner confirmed फ़ितना (fitnah), not फलाह",
+      "status": "resolved"
+    },
+    "फिल्ने": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "फुज़्ल": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "फुसला": {
       "note": "entice, correct verb",
@@ -917,12 +2409,24 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "फूज़ल": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "फूल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "फूला": {
       "note": "real word, distinct",
       "status": "rejected"
     },
     "फूले": {
       "note": "idiom फलना-फूलना",
+      "status": "rejected"
+    },
+    "फूलों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "फेंका": {
@@ -949,6 +2453,50 @@
       "note": "closed, real word",
       "status": "rejected"
     },
+    "बअल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बइज्ज़त": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "बकरी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "बकिया": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बख़ुशी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बख्छशिश": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बगुला": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बगोला": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "बचना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बचाई": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बचाव": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "बचे": {
       "note": "plural subjunctive, correct",
       "status": "rejected"
@@ -957,13 +2505,45 @@
       "note": "girl child, correct (matches gloss)",
       "status": "rejected"
     },
+    "बज़ाहिर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "बजा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बजाए": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बजाने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "बढ़ना": {
       "note": "infinitive, correct",
       "status": "rejected"
     },
     "बढ़ी": {
-      "note": "5:48 — likely बढ़ो, neither offered twin fits",
-      "status": "ambiguous"
+      "note": "5:48 — likely बढ़ो, neither offered twin fits — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "बतलाते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बताआ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बद": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "बदलते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "बदलना": {
       "note": "infinitive, correct",
@@ -975,6 +2555,10 @@
     },
     "बदलो": {
       "note": "exchange!, imperative",
+      "status": "rejected"
+    },
+    "बदी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "बनाना": {
@@ -989,6 +2573,10 @@
       "note": "made, correct",
       "status": "rejected"
     },
+    "बनाव": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
     "बने": {
       "note": "correct plural verb agreement",
       "status": "rejected"
@@ -1001,20 +2589,76 @@
       "note": "compound दरजा-बन्दी, legitimate",
       "status": "rejected"
     },
+    "बरती": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बरतें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बरहकु": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "बराबरी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "बर्बादी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बलि": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बशीर": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
     "बस्ता": {
       "note": "idiom",
+      "status": "rejected"
+    },
+    "बस्तियाँ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "बहकी": {
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "बहके": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बहतरीन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "बहते": {
       "note": "masc agreement, correct",
       "status": "rejected"
     },
+    "बहने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बहरा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "बहरो": {
       "note": "izafat compound बहरो-बर्र",
+      "status": "rejected"
+    },
+    "बहुतो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बाग़ाते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "बागी": {
@@ -1031,6 +2675,22 @@
     },
     "बाजू": {
       "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "बाढ़": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बातिला": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "बादलो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बादशाहत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "बारी": {
@@ -1061,12 +2721,48 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "बीनी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बीवियो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बीस": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बुराईयों": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "बुलंदी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बुलाई": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बुलाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "बुलाती": {
       "note": "fem plural agreement, correct",
       "status": "rejected"
     },
+    "बुलाये": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "बेख़बर": {
       "note": "unaware, correct (negation), not the opposite बाख़बर",
+      "status": "rejected"
+    },
+    "बेचा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "बेटी": {
@@ -1074,15 +2770,47 @@
       "status": "rejected"
     },
     "बेटें": {
-      "note": "52:39 — likely बेटे (plain plural), not बेटों",
-      "status": "ambiguous"
+      "note": "52:39 — likely बेटे (plain plural), not बेटों — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "बेटो": {
       "note": "vocative plural, correct",
       "status": "rejected"
     },
+    "बेपरवाही": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बेहरतर": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "बैठ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बैठते": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "बैठने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
     "बैठा": {
       "note": "gender agreement, correct",
+      "status": "rejected"
+    },
+    "बैठी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बैठें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बैठो": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "बैत": {
@@ -1093,8 +2821,32 @@
       "note": "sack, real word",
       "status": "rejected"
     },
+    "बोलता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बोलती": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बोलना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "बोली": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "बोहताने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "भटके": {
       "note": "plural agreement, correct",
+      "status": "rejected"
+    },
+    "भरण": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "भली": {
@@ -1105,41 +2857,157 @@
       "note": "plural/adverbial, correct",
       "status": "rejected"
     },
+    "भागना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "भागा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "भाल": {
       "note": "idiom देख-भाल",
+      "status": "rejected"
+    },
+    "भुर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "भुलाए": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "भूली": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "भूले": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "भूलो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "भेजती": {
       "note": "1st-person fem, correct",
       "status": "rejected"
     },
+    "भेजीं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "भेजो": {
       "note": "correct set",
+      "status": "rejected"
+    },
+    "मआमला": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मआमले": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मकानों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "मज़े": {
       "note": "idiom, correct",
       "status": "rejected"
     },
+    "मजाल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मझे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मनात": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "मनी": {
       "note": "real word, distinct",
+      "status": "rejected"
+    },
+    "मरना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "मरोड़": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मलिया": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "मशवरे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "मसूर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "महलो": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "महलों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "महीना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "माँग": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "मांगती": {
       "note": "fem agreement",
       "status": "rejected"
     },
+    "माअबूद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मानो": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
     "माफी": {
       "note": "pardon (noun), correct",
+      "status": "rejected"
+    },
+    "मामलों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
       "status": "rejected"
     },
     "मारती": {
       "note": "fem plural agreement, correct",
       "status": "rejected"
     },
+    "मारना": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
     "मारी": {
       "note": "'was blown' (trumpet), correct verb, not मेरी",
       "status": "rejected"
+    },
+    "मारें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मार्गद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "माली": {
       "note": "financial, correct adjective",
@@ -1153,6 +3021,18 @@
       "note": "proper noun (Mina)",
       "status": "rejected"
     },
+    "मिलाए": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "मिलाप": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मिलें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "मिलो": {
       "note": "subjunctive, correct",
       "status": "rejected"
@@ -1161,13 +3041,37 @@
       "note": "like/similar to, real word",
       "status": "rejected"
     },
+    "मीमू": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मुंह": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मुकरर": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "मुक़ाबला": {
       "note": "contest, real word",
       "status": "rejected"
     },
+    "मुक़ुरर": {
+      "note": "same verse 16:61 has both मुक़ुरर and मुक़्रर for \"appointed\" — one of ~12 competing OCR spellings of मुक़र्रर, needs a dedicated normalization pass — normalized round 21",
+      "status": "resolved"
+    },
+    "मुक़्र॑र": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "मुकीम": {
       "note": "distinct word, resident",
       "status": "rejected"
+    },
+    "मुजरिमि": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "मुझी": {
       "note": "myself, emphatic",
@@ -1177,6 +3081,10 @@
       "note": "intransitive, legitimate",
       "status": "rejected"
     },
+    "मुताबिक़ु": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "मुताबिक्": {
       "correct": "मुताबिक़",
       "note": "dangling halant instead of nukta; according to",
@@ -1185,6 +3093,26 @@
     "मुर्दो": {
       "note": "oblique plural, correct",
       "status": "rejected"
+    },
+    "मुश्रिका": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मुश्रिकि": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मुश्रिकीने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मुसीबते": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मुह्ँ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "मूंगे": {
       "note": "coral, distinct word",
@@ -1198,12 +3126,48 @@
       "note": "dead, correct standalone gloss",
       "status": "rejected"
     },
+    "मे": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मेंह": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मेग": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "मेट": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "मेने": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "मेश": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "मेहं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "मैल": {
       "note": "dirt, real word",
       "status": "rejected"
     },
     "मोजिजा": {
       "note": "grammatical form variant",
+      "status": "rejected"
+    },
+    "मोड़ना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "मोड़ो": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "मोल": {
@@ -1222,6 +3186,10 @@
       "note": "valid spelling variant",
       "status": "rejected"
     },
+    "मौजूदा": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
     "मौला": {
       "note": "protector/lord, distinct word",
       "status": "rejected"
@@ -1229,6 +3197,10 @@
     "यहूदे": {
       "note": "izafat compound, correct",
       "status": "rejected"
+    },
+    "यातन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "ये": {
       "note": "demonstrative 'this/these', correct",
@@ -1241,6 +3213,22 @@
     "रखीं": {
       "note": "past tense, correct",
       "status": "rejected"
+    },
+    "रग": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "रजी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "रब्बलआलमीन": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "रससूलों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "रहती": {
       "note": "fem agreement, correct",
@@ -1258,13 +3246,53 @@
       "note": "fem agreement",
       "status": "rejected"
     },
+    "रहेंगें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "राख": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "राजा": {
       "note": "real word, distinct",
       "status": "rejected"
     },
     "रिज़्क़": {
-      "note": "19:62 — see रिज़्क् fix; this specific instance flagged separately, needs check",
-      "status": "ambiguous"
+      "note": "19:62 — see रिज़्क् fix; this specific instance flagged separately, needs check — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "रिज़्क़ु": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "रिज़्क़्": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "रिज्क॒": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "रिश्ता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "रिश्तेदारी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "रुजू": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "रुहें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "रू": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
     },
     "रूकते": {
       "note": "different verb, correct",
@@ -1286,6 +3314,10 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "रूहें": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
     "रेत": {
       "note": "sand, real word",
       "status": "rejected"
@@ -1302,8 +3334,56 @@
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "लगाएं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लगाएंगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लगाता": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "लगाना": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "लगाव": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लगेंगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "लगो": {
       "note": "correct set",
+      "status": "rejected"
+    },
+    "लड़को": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "लड़ों": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "लदा": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "लपट": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लम्बा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "लहर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "लाख": {
@@ -1326,8 +3406,24 @@
       "note": "brought, correct",
       "status": "rejected"
     },
+    "लाल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लिएं": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
     "लिखना": {
       "note": "infinitive+चाहिए, correct",
+      "status": "rejected"
+    },
+    "लिखवा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "लिखे": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "लिये": {
@@ -1343,32 +3439,60 @@
       "status": "rejected"
     },
     "लू": {
-      "note": "6:14 — likely लूं, missing nasal, neither offered twin fits",
-      "status": "ambiguous"
+      "note": "6:14 — likely लूं, missing nasal, neither offered twin fits — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "लूं": {
       "note": "correct subjunctive",
       "status": "rejected"
+    },
+    "लेंते": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "लेगी": {
       "note": "fem agreement, correct",
       "status": "rejected"
     },
     "लेट": {
-      "note": "9:106 — unclear, may need a different word entirely",
-      "status": "ambiguous"
+      "note": "9:106 — owner confirmed correct as printed, no fix needed",
+      "status": "resolved"
     },
     "लेती": {
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "लेतें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "लों": {
-      "note": "10:23 — likely लो (enjoy!), not लें",
-      "status": "ambiguous"
+      "note": "10:23 — likely लो (enjoy!), not लें — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "लोग़": {
-      "note": "31:6 — likely लोगों, not लोगो",
-      "status": "ambiguous"
+      "note": "31:6 — likely लोगों, not लोगो — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "लोटा": {
+      "note": "matra-twin candidate, confirmed OCR error, fixed as KNOWN_VERSE_FIXES round 20",
+      "status": "resolved"
+    },
+    "लोह": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "लोहा": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "लौटाऐ": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "लौटाओ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "लौटो": {
       "note": "imperative plural, correct",
@@ -1378,25 +3502,121 @@
       "note": "लौहे महफ़ूज़ fixed term",
       "status": "rejected"
     },
+    "वकषत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "वक़ू्त": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "वकृत": {
       "note": "translator's own transliteration convention, not corruption",
+      "status": "rejected"
+    },
+    "वचल्यी": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "वल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "वश": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "वहद्यी": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "वहशी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "वहा": {
       "note": "see word fix 36:57 only",
       "status": "rejected"
     },
+    "वहीं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "वह्मयी": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "वह्यमी": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "वांले": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "वालीं": {
       "note": "correct fem plural (houris)",
       "status": "rejected"
+    },
+    "वि": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
     },
     "विदा": {
       "note": "farewell/release, correct",
       "status": "rejected"
     },
+    "वे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "वो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "शहरग": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "शामत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "शिक": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "शिकारी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "शिक्र": {
-      "note": "36:64/9:37 — likely कुफ़्र not शुक्र, needs closer look",
-      "status": "ambiguous"
+      "note": "36:64/9:37 — likely कुफ़्र not शुक्र, needs closer look — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "शेतानी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "शौहर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "शौहरों": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "सक़ता": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "सक़ती": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "सका": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
     },
     "सकी": {
       "note": "fem agreement, correct",
@@ -1414,40 +3634,164 @@
       "note": "fem agreement, correct",
       "status": "rejected"
     },
+    "सगे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
     "सच्चो": {
-      "note": "7:106/24:6 — likely सच्चों (oblique), neither offered twin fits",
-      "status": "ambiguous"
+      "note": "7:106/24:6 — likely सच्चों (oblique), neither offered twin fits — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
+    },
+    "सता": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सदके": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "सफरे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सबकत": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
     },
     "सबका": {
       "note": "genitive, correct",
       "status": "rejected"
     },
+    "सबकी": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "सबके": {
+      "note": "legitimate: सबके सब and (सबके) वारिस contexts; not सबको",
+      "status": "rejected"
+    },
+    "सब्रे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सभाल": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "समझाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "समा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "समान": {
+      "note": "probable-ocr candidate needing per-verse fix (not blanket), resolved round 23",
+      "status": "resolved"
+    },
+    "सलल्लल्लाहु": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "सलीम": {
       "note": "idiom सलीम दिल",
+      "status": "rejected"
+    },
+    "सहरी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "साईल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "साग": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "साठ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "साथियो": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "साद": {
       "note": "Quranic disjointed letter",
       "status": "rejected"
     },
+    "सामत": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "सामना": {
       "note": "idiom",
       "status": "rejected"
     },
+    "सालन": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "साली": {
-      "note": "12:49 — unclear intended word, needs source access",
-      "status": "ambiguous"
+      "note": "12:49 — owner confirmed क़हत-साली (compound word split by OCR)",
+      "status": "resolved"
+    },
+    "सिफ़रिश": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "सिरे": {
       "note": "real word, distinct",
       "status": "rejected"
     },
+    "सिले": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "सिवाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सीख": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "सीन": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
+      "status": "rejected"
+    },
+    "सीम": {
+      "note": "probable-ocr candidate: confirmed real error, fixed round 23 final batch",
+      "status": "resolved"
+    },
     "सीरत": {
       "note": "character, real word",
       "status": "rejected"
     },
+    "सुनवा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सुनाए": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "सुनाऐ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "सुने": {
       "note": "correct verb form",
+      "status": "rejected"
+    },
+    "सुलाह": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "सुलेमानी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "सूत": {
@@ -1459,11 +3803,15 @@
       "status": "rejected"
     },
     "सेन": {
-      "note": "16:120 — looks like a word-merge, not a matra swap",
-      "status": "ambiguous"
+      "note": "16:120 — looks like a word-merge, not a matra swap — fixed as KNOWN_VERSE_FIXES round 19",
+      "status": "resolved"
     },
     "सेर": {
       "note": "satiated, real word",
+      "status": "rejected"
+    },
+    "सों": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "सोना": {
@@ -1478,33 +3826,129 @@
       "note": "proper noun (Cave of Thawr)",
       "status": "rejected"
     },
+    "सौज़ा": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हंसली": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "हंसे": {
       "note": "subjunctive parallel to रोए, correct",
       "status": "rejected"
     },
+    "हक़ृदार": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "हक़॒": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "हकृदार": {
       "note": "translator's transliteration convention",
+      "status": "rejected"
+    },
+    "हक॒": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
+    "हटना": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हटने": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
       "status": "rejected"
     },
     "हटो": {
       "note": "negative imperative, correct",
       "status": "rejected"
     },
+    "हथोड़े": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हमसर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
     "हमीं": {
       "note": "we ourselves, emphatic",
+      "status": "rejected"
+    },
+    "हया": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हलक": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हलका": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हल्की": {
+      "note": "matra-twin candidate: real distinct Hindi grammar (gender/number/case/tense agreement), not an OCR error",
       "status": "rejected"
     },
     "हल्के": {
       "note": "plural agreement, correct",
       "status": "rejected"
     },
+    "हाईल": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "हाथी": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "हालाँकि": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "हिदायात": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "हिल": {
       "note": "idiom पहाड़ हिल",
       "status": "rejected"
     },
+    "हुईं": {
+      "note": "probable-ocr candidate: legitimate word/grammar, round 23 final batch",
+      "status": "rejected"
+    },
+    "हुक्मे": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review, batch 1)",
+      "status": "rejected"
+    },
+    "हृद": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
+    },
     "हे": {
       "note": "see word fix 62:2 only",
       "status": "rejected"
+    },
+    "हेर": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "होंठ": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "होतीं": {
+      "note": "probable-ocr self-consistency candidate: legitimate distinct word/grammar, not an OCR error (round 23 review)",
+      "status": "rejected"
+    },
+    "होतें": {
+      "note": "probable-ocr self-consistency candidate, confirmed real error against verse meaning, fixed round 23",
+      "status": "resolved"
     },
     "होनी": {
       "note": "infinitive+चाहिए construction, correct",

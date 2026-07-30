@@ -425,6 +425,100 @@ as parts 1-4; if `build_pilot.py` hasn't changed, skip straight to `verify`.
   decide a vowel** for that lexicon — every entry needs a named human
   reviewer. Don't try to replicate this session's approach there.
 
+## Part 6 (2026-07-30) — review_state.json's ambiguous queue cleared to zero
+
+**Start here next, in order of what's actually left (see bottom of this
+section):**
+
+* **All 25 candidates ambiguous as of Part 5 are now resolved** — 20 checked
+  against actual verse meaning and inline translator glosses (अन्ध् गपन→
+  अंधापन at 41:44, काफ़र→कुफ़्र at 36:64/9:37, सेन→"से न" word-merge at
+  16:120, ज़री→ज़र्रा at 99:7-8, etc.), plus साली→"क़हत-साली" and फिला→
+  फ़ितना confirmed directly by the owner after I flagged my initial guesses
+  (फलाह) as wrong on inspection — the owner corrected both to फ़ितना, cross-
+  checking against the translator's own gloss "(आज़माईश)" = "trial" at 60:5,
+  which फलाह ("success") cannot mean.
+
+* **The 88 previously-unreviewed matra-twin candidates from
+  `review_candidates.py` are now all reviewed** — split across 3 parallel
+  background agents (each reading the FULL verse text from
+  `dist/pilot/ahsanul-kalam/surah-NNN.json`, not just the scan's truncated
+  excerpt), then hand-verified by re-fetching every "CONFIRMED" verse myself
+  before applying. ~80% were REJECTED as legitimate Hindi grammar (matras
+  carry gender/number/case/tense — this has been true every round). 17 real
+  fixes landed (झूठें→झूठे, लोटा→लौटा, फ़रिश्तो→फ़रिश्तों, फिल्ने→फ़ितने,
+  बरहकु→बरहक़, the पूर→पुर/पूरा split, etc.). `review_candidates.py scan` on
+  every one of its four classes (matra-twin, digit-glyph, halant-fragment,
+  stray-punct) now returns **zero unreviewed candidates**.
+
+* **A real, confirmable subset of the मैं/में ("I" vs "in") suspicions was
+  found and fixed, not just flagged.** `verify_pilot.py`'s own bigram check
+  already auto-repairs the DECISIVE cases and leaves the rest as a soft
+  `main_suspect` flag — 32 of those flagged verses (मैं-evidence exceeding
+  में-evidence, but below the auto-repair threshold) were read individually
+  against full verse text. 22 were real errors — nearly all the pattern
+  "बस/बिलाशुब्ह/ऐ...! + में + तो...हूँ", where में cannot grammatically
+  follow an adverb or vocative address, so it has to be मैं. 9 were correctly
+  left alone: genuine locative में where a preceding NOUN takes the
+  postposition and तो starts an unrelated next clause (2:61 "शहर में, तो...",
+  9:40 "दो में दूसरा", etc. — a real, confirmed grammatical difference from
+  the error pattern, not a coin flip). `main_suspect` count: 32 → 9, all 9
+  now verified-correct rather than merely unexamined.
+
+* **Three multi-spelling "normalization family" issues Part 5 explicitly
+  deferred are now resolved**, each checked properly rather than guessed:
+  - **मुक़र्रर** ("fixed/appointed") had 6 competing OCR spellings across 51
+    occurrences. Counted exactly (word-boundary, not overlapping substrings):
+    मुक़्रर is dominant at 27 vs the next-highest's 8, and every non-dominant
+    occurrence's actual grammatical construction (predicate "है/था", modifies
+    a masculine noun, or sits before a gender-carrying participle "किए हुए")
+    confirmed all four bare-form variants are the same invariant word, not a
+    grammatical distinction — merged into मुक़्रर. The ा-ending form
+    (मुक़्ररा/मुकुर्ररा, which directly modifies feminine nouns like मुद्दत
+    with no supporting participle) was kept separate and merged to its own
+    dominant spelling — a real agreement pattern, not noise.
+  - **क़ृसमें/क़ृसमों** ("oaths") — the corpus itself has TWO legitimate
+    camps (क़ुसमें/क़ुसमों, 16 occurrences; क़समें/क़समों, 9 occurrences)
+    with no dominant form, left untouched. Only the clearly-spurious ऋ-
+    insertion variant was fixed, and 9:12 settles which camp it belongs to:
+    it has BOTH क़ृसमों and क़ुसमों in the same sentence referring to the
+    same oaths.
+  - **इस्हाक़ू** (Isaac) — a one-off long-ऊ spelling; इस्हाक़ु is this
+    edition's own dominant spelling (6 vs 1), fixed to match.
+
+* **`publish_pilot.sh` now loops `verify_pilot.py` to convergence
+  automatically** (up to 4 passes, stopping when two consecutive runs
+  produce identical output) instead of calling it once — closing the gap
+  Part 4/5 both flagged and worked around by hand. Tested against the real
+  `dist/pilot/` output: converges after 2 passes.
+
+* **Current totals**: 144 word-level fixes (`KNOWN_WORD_FIXES`), 128
+  verse-specific fixes (`KNOWN_VERSE_FIXES`), 493 candidates recorded in
+  `review_state.json` (428 rejected, 61 resolved, 4 confirmed-pending-
+  export, **0 ambiguous** — first time this count has been zero). 114/114
+  surahs, 6,236/6,236 verses published, 0 quarantined, zero doubled-
+  diacritic stacking, republished to `al-quran-web` and confirmed byte-
+  identical to `dist/pilot/ahsanul-kalam/`.
+
+* **What's genuinely left, in order of tractability**:
+  1. The `confirmed: 4` in `review_candidates.py stats` is stale bookkeeping,
+     not outstanding work — `review_candidates.py export` prints nothing,
+     meaning all 4 are already reflected in `verify_pilot.py`.
+  2. `self_inconsistent: 788` and `unknown: 11602` (soft flags, don't block
+     publish) — every review-candidates.py detector that can isolate real
+     errors from this pile now returns zero unreviewed, so what's left is
+     the pile itself: mostly genuine Ahsanul Kalam vocabulary the reference
+     edition doesn't share (per every prior round's finding). There is no
+     known safe automated way to make further progress here without
+     repeating the corpus-wide-fallback mistake (34,606 false "fixes",
+     see below) — it needs either a new detector class nobody has designed
+     yet, or slow manual/native-speaker review with no shortcut.
+  3. `length_outlier: 50` — already owner-demoted to soft-flag (Part 2);
+     not a to-do.
+  4. Still uncommitted in both repos as of this writing — the owner has
+     been holding commits deliberately across several rounds this session,
+     reviewing incrementally rather than after each round.
+
 ## Hard-won lesson
 
 Four attempts regressed the corpus (110 → 101 → 99 → 110) and each time the cause

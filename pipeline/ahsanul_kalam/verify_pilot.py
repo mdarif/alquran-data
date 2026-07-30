@@ -207,6 +207,59 @@ KNOWN_WORD_FIXES = {
     "जेसा": "जैसा",       "कुफ्": "कुफ़",
     "हकु": "हक़",          "पेरवी": "पैरवी",
     "फेसला": "फैसला",     "अवतरीत": "अवतरित",
+
+    # 2026-07-30 round 19 — owner-confirmed blanket fixes for two word
+    # families flagged ambiguous in review_state.json (each has substantial
+    # legitimate spread across surahs with no dominant form, but the owner,
+    # who reads Hindi natively, settled on one correct spelling for both):
+    "झुठे": "झूठे",       # "liars/false" — long ऊ, not short उ (12:74,
+                          # 30:58, 40:78, 40:83)
+    "नाहकु": "नाहक़",      # "wrongfully/unjustly" (5:32, 38:64)
+    "नाहक़्": "नाहक़",      # same word, dangling-halant variant (5:77,
+                          # 10:23, 22:40, 28:39, 40:75, 46:20); 4:161 already
+                          # has its own more specific KNOWN_VERSE_FIXES entry
+                          # that runs first, so this never double-fires there
+
+    # 2026-07-30 round 21 (REVISED 2026-07-30, owner correction against
+    # source pages) — मुक़र्रर ("fixed/appointed/prescribed", from Arabic
+    # مقرر) had SIX competing spellings across 51+ occurrences. Round 21
+    # picked मुक़्रर as the merge target because it was the most FREQUENT
+    # spelling in the corpus (27 occurrences) — exactly the "volume is not
+    # evidence" trap this file's own hard-won lesson warns about. The owner
+    # checked actual source pages and confirmed the correct spelling is
+    # मुक़र्रर (क़-र-halant-र-र, matching the Arabic root's doubled ر): OCR
+    # was consistently DROPPING the middle र across most instances, which is
+    # exactly what made the wrong spelling look dominant by count. मुक़्रर
+    # (missing that र) is not a lesser-but-valid variant, it is the error.
+    # मुक्रर (missing the nukta on क entirely, 19 further occurrences) is
+    # the same underlying error, found while re-auditing this family.
+    "मुक़्रर": "मुक़र्रर",
+    "मुक़ुरर": "मुक़र्रर",
+    "मुक़रर": "मुक़र्रर",
+    "मुकुर्रर": "मुक़र्रर",
+    "मुक्रर": "मुक़र्रर",
+    "मुक्र्रर": "मुक़र्रर",
+    # मुक़्ररा/मुकुर्ररा (the ा-ending form modifying a feminine noun
+    # directly — मुद्दत, अन्दाज़ा — with no supporting participle) stays a
+    # separate, real agreement pattern, not merged into the invariant form
+    # above; same correction applies to its own target.
+    "मुक़्ररा": "मुक़र्ररा",
+    "मुकुर्ररा": "मुक़र्ररा",
+
+    # क़समें ("oaths") has a genuine two-way split in this edition — क़ुसमें/
+    # क़ुसमों (16 occurrences) vs क़समें/क़समों (9 occurrences) — with no
+    # overwhelming dominant form, so that split is left untouched. But the
+    # spurious-ऋ variants (क़ृसमें/क़ृसमों, same insertion-of-ऋ pattern
+    # already fixed elsewhere for क़त्ल/कान/गरज) are unambiguous OCR
+    # damage: 9:12 has both क़ृसमों and क़ुसमों in the SAME sentence
+    # referring to the same oaths, which settles which of the two
+    # legitimate camps the corrupted spelling belongs to.
+    "क़ृसमें": "क़ुसमें",
+    "क़ृसमों": "क़ुसमों",
+
+    # इस्हाक़ू (Isaac) — a one-off long-ऊ variant; इस्हाक़ु is this edition's
+    # own dominant spelling of the name (6 occurrences vs इस्हाक़ू's 1).
+    "इस्हाक़ू": "इस्हाक़ु",
     "लोट": "लौट",         "कूसम": "क़सम",
     "क्सम": "क़सम",        "मुश्रीकीन": "मुश्रिकीन",
     "रुस्वा": "रूस्वा",    "इब्राहिम": "इब्राहीम",
@@ -350,6 +403,192 @@ KNOWN_WORD_FIXES = {
                           # not the ऋ-inserted spelling
     "क़ामों": "कामों",     # plural of क़ाम, same non-word — all 4 occurrences
                           # gloss as "deeds/works" (कार्यों, कारसाज़)
+
+    # 2026-07-30 round 23 — the 489 previously-unreviewed "probable-ocr"
+    # self-consistency candidates (the broader single-character-edit check,
+    # a superset of the matra-twin subset review_candidates.py already
+    # covers), cleared by 8 parallel background agents (each reading every
+    # listed verse in full) and spot-checked by hand afterward. As with
+    # every prior round, most (roughly 80%) were REJECTED as legitimate
+    # distinct words — Perso-Arabic izafat constructions (कलामे, हुक्मे,
+    # नमाज़े...), this translator's own consistent spelling conventions
+    # (जहन्नुम, हालाँकि, सिवाऐ/जाऐँ-class ऐ-endings), or genuine antonym/
+    # homonym pairs (पवित्र/अपवित्र, गला/गला-घोंटना). These ~150 are the
+    # ones with no legitimate reading — each confirmed against the verse's
+    # actual Quranic meaning, several against the translator's own inline
+    # parenthetical gloss. Dominant-spelling counts checked by hand for
+    # every pair with more than a couple of occurrences before merging.
+    "ज़लिमों": "ज़ालिमों", "मुक़्र॑र": "मुक़्रर", "तुम्हािरे": "तुम्हारे",
+    "निह्ायत": "निहायत",   "हक॒": "हक़",         "थें": "थे",
+    "रिज़्क़्": "रिज़्क़",    "हृद": "हूद",         "फ़िरिऔन": "फ़िरऔन",
+    "बख्छशिश": "बख्शिश",   "मुजरिमि": "मुजरिम",  "डरों": "डरो",
+    "तुम्हरा": "तुम्हारा",
+    "फुज़्ल": "फ़ज़्ल",     "खरूजू": "रुजू",      "रिज़्क़ु": "रिज़्क़",
+    "दादाओ": "दादाओं",     "ख़बरे": "ख़बरें",     "फ़िरओऔन": "फ़िरऔन",
+    "तस्दीक॒": "तस्दीक़",   "बीवियो": "बीवियों",  "हक़॒": "हक़",
+    "नहरे": "नहरें",       "पर्दाथ": "पदार्थ",   "आज्ञाकरी": "आज्ञाकारी",
+    "मुह्ँ": "मुँह",       "मार्गद": "मार्गदर्शन", "खाओं": "खाओ",
+    "सुलाह": "सुलह",       "हक़ृदार": "हक़दार",   "तस्दीक़ु": "तस्दीक़",
+    "ताक॒त": "ताक़त",      "देंखेंगे": "देखेंगे", "क़ृुसमों": "क़ुसमों",
+    "ज़्याद": "ज़्यादा",   "दरियां": "दरिया",    "हिदायात": "हिदायत",
+    "ओऔलाद": "औलाद",      "अहट": "आहट",        "वहद्यी": "वह्यी",
+    "ग़्मगीन": "ग़मगीन",   "चौपाएऐ": "चौपाए",   "कुृव्वत": "कुव्वत",
+    "कामयबी": "कामयाबी",  "उम्म्त": "उम्मत",    "ख्वाहिशत": "ख्वाहिशात",
+    "बेहरतर": "बेहतर",    "तुममे": "तुममें",
+    "अन्धें": "अन्धे",     "पाओं": "पाओ",        "महलो": "महलों",
+    "सलल्लल्लाहु": "सल्लल्लाहु", "वह्मयी": "वह्यी", "बहतरीन": "बेहतरीन",
+    "तुमनें": "तुमने",     "चखों": "चखो",        "लड़ों": "लड़ो",
+    "ठहराऐ": "ठहराए",     "औरो": "औरों",        "माअबूद": "मअबूद",
+    "काूफ़्र": "कुफ़्र",    "केद": "क़ैद",
+    "रहेंगें": "रहेंगे",   "जड़ो": "जड़ों",       "रब्बलआलमीन": "रब्बुलआलमीन",
+    "मे": "में",           "मुताबिक़ु": "मुताबिक़", "सभाल": "संभाल",
+    "बहुतो": "बहुतों",     "क्रीबन": "क़रीबन",    "अन्दज़ा": "अन्दाज़ा",
+    "जीड़": "जोड़",        "नशुक्रा": "नाशुक्रा",  "ग़षाफिल": "ग़ाफ़िल",
+    "इसानों": "इंसानों",  "रससूलों": "रसूलों",   "वांले": "वाले",
+    "बगुला": "बगोला",     "अत्यचार": "अत्याचार", "मेने": "मैंने",
+    "मुकरर": "मुक़्रर",    "कफिरों": "काफ़िरों",  "फूज़ल": "फ़ज़ल",
+    "लेंते": "लेते",       "लेतें": "लेते",       "कृतल्ल": "क़त्ल",
+    "जाऐँं": "जाऐं",       "यातन": "यातना",       "मुसीबते": "मुसीबत",
+    "तोौरात": "तौरात",    "सक़ता": "सकता",       "दलीले": "दलील",
+    "चुकीं": "चुकी",       "उनसें": "उनसे",
+    "तस्वबीह": "तस्बीह",  "लौटाऐ": "लौटाए",     "जादूगरो": "जादूगरों",
+    "जमाअते": "जमाअतें",  "डरया": "डराया",       "आयहतें": "आयतें",
+    "मझे": "मुझे",         "नशुक्री": "नाशुक्री", "आँखो": "आँखों",
+    "रिज्क॒": "रिज़्क़",    "देनें": "देने",       "टुकड़": "टुकड़े",
+    "आसमनों": "आसमानों", "मआमले": "मुआमले",    "ज़बाने": "ज़बानें",
+    "तरीकें": "तरीके",    "निहठायत": "निहायत",  "पाएँगें": "पाएँगे",
+    "मुश्रिकि": "मुश्रिक", "ऐे": "ऐ",             "बताआ": "बताओ",
+    "थमे": "थामे",         "दूब": "डूब",
+    "उगए": "उठाए",         "नें": "ने",           "सिफ़रिश": "सिफ़ारिश",
+    "निशनियां": "निशानियां", "वक़ू्त": "वक़्त",   "चौोपायों": "चौपायों",
+    "वह्यमी": "वह्यी",     "मीमू": "मीम",         "जहाँनों": "जहानों",
+    "दोनो": "दोनों",       "उम्मते": "उम्मतें",  "बादलो": "बादलों",
+    "वकषत": "वक़्त",       "डाराने": "डराने",     "दोंनों": "दोनों",
+    "आँखे": "आँखें",       "अत": "अंत",
+    "गुनहों": "गुनाहों",  "होतें": "होते",
+    "जड़ा": "जोड़ा",
+    "शिक": "शिर्क",  # 2:191, 20:111 — owner-confirmed: both parenthetical
+                    # glosses of ज़ुल्म/फ़ित्ना refer to associating
+                    # partners with Allah (shirk), the classical "greatest
+                    # zulm"
+    "सामत": "सामित",  # 58:1 — owner-confirmed closer transliteration of
+                     # the companion's name "as-Samit"
+
+    # round 23, final tail — 3 candidates that only surfaced as rare-word
+    # signals after the frequency landscape shifted from the fixes above
+    # (43 remaining self-consistency candidates, last batch of this sweep).
+    "अल्लह": "अल्लाह",   # 19:36 — missing आ; not a valid spelling of Allah
+    "पापो": "पापों",     # missing anusvara on oblique plural "sins"
+                        # (2:95, 20:73, 71:25)
+    "सीम": "सीन",       # 28:1 — Surah al-Qasas opens with the disjointed
+                       # letters Ta-Seen-Meem; only two of three print
+                       # correctly (ता, मीम), सीम is a corrupted सीन
+
+    # 2026-07-30 round 24 — the two new review_candidates.py detector
+    # classes added after the मुक़र्रर incident (spurious-ऋ and stray-mark,
+    # scanned corpus-wide rather than by frequency comparison, so they
+    # catch single-occurrence errors matra-twin never could). Each checked
+    # against the corpus's own established spelling for that word family
+    # where one exists, not assumed — क़र्ज़ (9x) beats कर्ज़ (2x), मख्लूक
+    # (8x) and मख़्लूक़ (5x) are BOTH legitimate camps left alone, फरीक
+    # (6x) beats फ़रीक़ (2x), so the majority camp is followed only where
+    # there's real evidence, exactly the lesson from the मुक़र्रर mistake.
+    "फ़ज़्ऋल": "फ़ज़्ल",     # 8:29 — spurious ऋ, same family as क़ृत्ल/
+                           # क़ुसमें/मिक़दार
+    "तख़्॒फ़ीफ़": "तख़्फ़ीफ़",  # 2:178 — "concession/relief"
+    "मुक़॒रर": "मुक़र्रर",   # 2:236
+    "मुक॒रर": "मुक़र्रर",    # 2:247 — also missing nukta on क़ entirely
+    "क॒र्जदार": "क़र्ज़दार", # 2:280 — matches क़र्ज़'s established nukta,
+                           # not the bare कर्ज़ minority spelling
+    "मुक॒र्रर": "मुक़र्रर",  # 2:282
+    "नाक़॒द्री": "नाक़द्री",  # 3:115 — "disregard/disrespect"
+    "तौक़॒": "तौक़",        # 3:180 — "collar/necklace", matches this
+                           # edition's own 3 correctly-spelled occurrences
+    "क़॒यामत": "क़यामत",     # 4:159
+    "फरीक॒": "फरीक",       # 7:30 — matches the majority camp (6x vs
+                           # फ़रीक़'s 2x, both real, left alone)
+    "मुक॒ररा": "मुक़र्ररा",  # 9:4 — the ा-ending feminine form, modifies
+                           # मुद्दत directly like the round-21 examples
+    "क॒र्ज़": "क़र्ज़",      # 9:60
+    "मख्लूक॒": "मख्लूक",    # 10:4 — matches its own established 8x camp
+                           # (मख़्लूक़ is a separate, also-legitimate camp
+                           # at 5x, left alone)
+    "मुताल्लिक॒": "मुताल्लिक", # 10:94 — matches this edition's own 4x
+    "मिक़॒दार": "मिक़दार",   # 12:47 — same word/fix as 15:19's मिक़ृदार
+    "इत्तेफाक॒": "इत्तेफाक", # 12:102 — "agreement/consensus"
+    "ख़ालिक़॒": "ख़ालिक़",    # 13:16 — "creator"
+    "मख़्लूक़्": "मख़्लूक़",  # 13:16, same verse — dangling halant on a
+                           # second occurrence of the creation-word
+    "मख़्लूक़ु": "मख़्लूक़",  # 13:16, same verse — trailing stray vowel on
+                           # a third occurrence; all three now read मख़्लूक़
+                           # consistently within this one verse
+    "तख्लीक॒": "तख्लीक",    # 15:28 — matches this edition's own 7x camp
+    "मखलूक॒": "मख्लूक",     # 17:51 — missing both the halant AND carrying
+                           # the stray mark; matches the established camp
+    "वाक॒या": "वाक़िया",     # 18:91 — matches this edition's own established
+                           # वाक़िया (12:110, "the matter/event"), not a bare
+                           # mark-strip target
+    "मुक॒दूदर": "मुक़द्दर",  # 21:101 — a DIFFERENT word than मुक़र्रर above:
+                           # "goodness has already been DESTINED" needs
+                           # मुक़द्दर ("decreed/destined"), not "appointed"
+    "शिक॑": "शिर्क",        # 22:31 — same owner-confirmed shirk gloss as
+                           # round 23's bare "शिक", just carrying the stray
+                           # mark too
+    "मुक़॒र्र": "मुक़र्रर",   # 56:50
+    "तस्दीक़॒": "तस्दीक़",  # 2:97, 3:115(sic check), 39:xx, 92:xx — nukta
+                        # already present, only the stray mark needs
+                        # stripping (distinct from the bare "तस्दीक॒"
+                        # fix above, which lacks the nukta entirely)
+    "मख़्लूक़॒": "मख़्लूक़",  # 27:64, 36:xx — both nuktas already present
+    "खालिक॒": "खालिक",    # 52:35, 56:xx — matches this edition's own
+                        # bare spelling elsewhere, no nukta invented
+    "क़॒ब्रों": "क़ब्रों",    # 54:7
+    "सबक॒त": "सबकत",       # 56:10 — confirmed by the SAME verse's own
+                           # second, correctly-spelled "सबकत"
+    "क॒र्ज़े": "क़र्ज़े",     # 64:17 — matches क़र्ज़'s established nukta
+    "झाड़फूक॑": "झाड़फूक",   # 75:27 — "charms/incantations", plain Hindi
+                           # compound, no nukta involved
+    "ग॒र्कु": "ग़र्क़",      # 37:82 — matches this edition's own 2
+                           # occurrences of ग़र्क़ ("drowned/submerged"),
+                           # dropping the stray trailing उ too
+    "क॒ब्ज़": "कब्ज़",       # 39:42 — matches this edition's own 2
+                           # occurrences of कब्ज़ ("seize [a soul]"), no
+                           # nukta on क in either
+    "क॒द्र": "कद्र",        # 51:24 — no cross-reference elsewhere in this
+                           # corpus; minimal fix (strip the stray mark
+                           # only), not inventing a nukta without evidence
+    "क॒द्रदाँ": "कद्रदाँ",   # 35:30 — same word family, same reasoning
+    "क॒ल्बे": "कल्बे",      # 37:84 — same reasoning; "heart"
+
+    # 2026-07-30 — owner spot-check of surah 15 against source pages, same
+    # session as the मुक़र्रर correction above.
+    "मिक़ृदार": "मिक़दार",  # 15:19 "quantity/measure" — spurious ऋ, same
+                          # insertion pattern already fixed for क़त्ल/कान/
+                          # गरज/क़ुसमें
+    "रोजियाँ": "रोज़ियाँ",  # 15:20 "sustenance" (plural) — missing nukta
+    "रिज्क": "रिज़्क़",     # bare form with no nuktas at all; same word as
+                          # the already-fixed रिज़्क्/रिज्क॒/रिज़्क़ु variants
+    "रिज्क्": "रिज़्क़",    # trailing halant instead of nukta, same word
+
+    # 2026-07-30 — owner spot-checked a rendered page against the actual
+    # source scan of 15:3 and found two real OCR errors (खाएऐं->खाऐं is
+    # verse-anchored below), plus a third that turned out to need the
+    # opposite direction from the owner's first read: ग़फ़लत (BOTH nuktas)
+    # is correct and is this edition's own dominant spelling (5 occurrences
+    # elsewhere) — 15:3's bare OCR and the automatic nukta system's partial
+    # ग़फलत (only one nukta) were both incomplete, not the system
+    # over-restoring.
+    "मजे": "मज़े",   # missing nukta; "enjoyment/pleasure" — checked all 6
+                    # occurrences (15:3, 21:111, 29:66, 52:19, 69:24, 77:43),
+                    # all the same word/sense, matching this edition's own
+                    # 4 correctly-nuktaed occurrences elsewhere (6:141,
+                    # 46:34, +2)
+    "ग़फलत": "ग़फ़लत",  # missing the second nukta (on फ़); checked all 4
+                       # occurrences (21:1, 21:97, 23:63, 107:5) — same word,
+                       # matches this edition's own 5 occurrences of the
+                       # fully-nuktaed spelling elsewhere
+    "गफलत": "ग़फ़लत",   # 15:3's OCR read with no nukta at all; same word,
+                       # same fix
 }
 
 # KNOWN VERSE FIXES — same idea, but the error only shows up in specific
@@ -602,6 +841,223 @@ KNOWN_VERSE_FIXES: dict[tuple[int, int], tuple[str, str]] = {
     (28, 79): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "क़ौम"),
     (19, 27): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
     (14, 31): (WORD_BEFORE + "क़ाम" + WORD_AFTER, "काम"),
+
+    # 2026-07-30 batch, round 19 — resolving review_state.json's 25
+    # "ambiguous" candidates, each read against its actual verse meaning
+    # (Quran text + the translator's own inline parenthetical glosses,
+    # which frequently spell out the intended sense directly).
+    (41, 44): (r"अन्ध् गपन", "अंधापन"),  # "it is BLINDNESS for them" — a
+        # strip-boundary split of the plain noun, not a real word as printed
+    (6, 102): (r"इबादत करों", "इबादत करो"),  # "worship HIM" — direct
+        # imperative addressed to "तुम", not the oblique noun करों
+    (7, 3): (r"पैरवी न करों", "पैरवी न करो"),  # "do NOT follow" — same
+        # imperative pattern as 6:102
+    (61, 3): (r"बात कहों जो", "बात कहो जो"),  # "that you SAY what you do
+        # not do" — same करो/कहो imperative family
+    (36, 64): (r"तुम काफ़र किया", "तुम कुफ़्र किया"),  # "you used to
+        # DISBELIEVE" — कुफ़्र (disbelief, abstract noun) is what किया करना
+        # takes, not काफ़िर/काफ़र (a disbeliever, a person)
+    (9, 37): (r"पीछे कर देना काफ़र है", "पीछे कर देना कुफ़्र है"),  # "[postponing
+        # a month] IS DISBELIEF" — same reasoning; काफ़िर correctly stays a
+        # person-word later in the same verse ("काफ़िर गुमराह किए जाते है")
+    (16, 32): (r"कुफ़ व शिक्र से", "कुफ़ व शिर्क से"),  # "purified of
+        # DISBELIEF AND SHIRK (idolatry)" — the classic kufr-wa-shirk pair;
+        # review_state.json's note for this candidate was mislabeled to
+        # 36:64/9:37 (both already resolved above as कुफ़्र, not शिक्र) —
+        # this is the actual, single occurrence of the word
+    (18, 19): (r"कितना बर्सा", "कितना अर्सा"),  # "how much TIME (duration)
+        # did you stay" — the translator's own gloss "(समय)" confirms
+        # duration; अर्सा is the real Urdu/Hindi loanword, बर्सा is not
+    (56, 7): (r"तीन किसमें हो", "तीन क़िस्में हो"),  # "you will become of
+        # three KINDS" — direct plural (no postposition follows, so the
+        # oblique क़िस्मों offered by the scan doesn't fit either)
+    (20, 129): (r"पहले ही से \(तै\)", "पहले ही से (तय)"),  # "had a word not
+        # already been DECIDED" — तय (decided), missing its final य
+    (6, 139): (r"हराम\) ते करने", "हराम) तय करने"),  # "for arbitrarily
+        # DECIDING halal/haram themselves" — same तय-शुदा idiom
+    (19, 21): (r"यह अग्न \(बात\) ते शुदा है", "यह अम्र (बात) तय शुदा है"),  # "this
+        # MATTER is DECIDED" — same तय idiom, plus अग्न is itself a misread
+        # of अम्र ("matter"), confirmed by the translator's own gloss "(बात)"
+    (5, 48): (r"एक दूसरे से आगे बढ़ी", "एक दूसरे से आगे बढ़ो"),  # "RACE (बढ़ो!)
+        # one another in good deeds" — plural imperative
+    (52, 39): (r"तुम्हारे लिए बेटें", "तुम्हारे लिए बेटे"),  # "and for you,
+        # SONS?" — plain direct plural, parallel to "उसके लिए बेटियां"
+        # (daughters, also direct plural) earlier in the same verse
+    (6, 14): (r"मअबूद बना लू जो", "मअबूद बना लूं जो"),  # "should I TAKE...
+        # as a god" — first-person subjunctive, missing its final anusvara
+    (31, 6): (r"और लोग़ों में बअज़(.+)यही लोग़ हैं", r"और लोगों में बअज़\1यही लोग हैं"),  # "among the PEOPLE... those PEOPLE" — लोग़ has a
+        # spurious nukta on ग (ग़ is a different consonant entirely);
+        # लोगों/लोग are the plain, correct words
+    (7, 106): (r"अगर तू सच्चो में", "अगर तू सच्चों में"),  # "if you are among
+        # the TRUTHFUL" — oblique plural required before में
+    (24, 6): (r"बेशक वह सच्चो में", "बेशक वह सच्चों में"),  # same phrase,
+        # different verse
+    (16, 120): (r"मुश्रिकों में सेन था", "मुश्रिकों में से न था"),  # "and he
+        # was NOT among the polytheists" (16:120) — सेन is a word-merge of
+        # "से न" (from + not), not a matra-twin of any single word; the
+        # verse needs a negation, which the scan's offered twins couldn't
+        # supply since they're both single words
+    (99, 7): (r"जिसने ज़री भर भलाई", "जिसने ज़र्रा भर भलाई"),  # "an ATOM'S
+        # weight of good" — ज़र्रा (atom), not ज़री, which is not a word
+    (99, 8): (r"जिसने ज़री भर बुराई", "जिसने ज़र्रा भर बुराई"),  # same idiom,
+        # the parallel verse about an atom's weight of evil
+    (21, 46): (r"झोंका भी छु जाए", "झोंका भी छू जाए"),  # "if even a light
+        # gust TOUCHES (them)" — missing the long vowel matra
+    (10, 23): (r"फायदा \(उठा लों\)", "फायदा (उठा लो)"),  # "ENJOY (उठा लो!)
+        # the benefit of worldly life" — plural imperative, not लें/लों
+
+    # 2026-07-30, owner follow-up — साली (12:49) and फिला (8:73, 60:5),
+    # confirmed against the actual verse meaning rather than guessed.
+    (12, 49): (r"\(क॒हत साली\)", "(क़हत-साली)"),  # "famine period" — one
+        # compound word split by OCR into two, with a stray combining
+        # character on the क
+    (8, 73): (WORD_BEFORE + "फिला" + WORD_AFTER, "फ़ितना"),  # "there will be
+        # FITNAH (tribulation) and great corruption" — classic Qur'anic
+        # fitnah-wa-fasad pairing; owner confirmed फ़ितना, not फलाह
+        # ("success", which doesn't fit next to "corruption")
+    (60, 5): (WORD_BEFORE + "फिला" + WORD_AFTER, "फ़ितना"),  # "do not make us
+        # a FITNAH (trial)" — the translator's own inline gloss "(आज़माईश)" =
+        # "trial/test" is exactly what fitnah means; owner-confirmed
+
+    # 2026-07-30 batch, round 20 — the 88 unreviewed matra-twin candidates
+    # from review_candidates.py, cleared by three parallel background
+    # agents (each reading the FULL verse, not just the scan's excerpt) and
+    # spot-checked by hand afterward. The large majority (~80) were
+    # REJECTED as legitimate Hindi grammar — matras carry gender/number/
+    # case/tense, and most candidate pairs turned out to agree correctly
+    # with their own verse's subject once actually read (झूठे vs झूठी vs
+    # झूठों, बैठा vs बैठी vs बैठे, etc.) — consistent with every prior
+    # round's finding that this class is mostly noise, not errors. These
+    # ~14 are the ones that survived: no legitimate reading of the printed
+    # word exists at that verse.
+    (24, 13): ("झूठें", "झूठे"),  # "those [people, masc. pl.] are LIARS" —
+        # झूठें is feminine, mismatches the masc. pl. subject वही लोग
+    (38, 73): (WORD_BEFORE + "फ़रिश्तो" + WORD_AFTER, "फ़रिश्तों"),  # "ALL
+        # THE ANGELS prostrated" — needs the oblique plural before नें
+        # (the ergative marker), not the direct-case फ़रिश्तो
+    (2, 228): (WORD_BEFORE + "लोटा" + WORD_AFTER, "लौटा"),  # "RETURN them"
+        # (लौटाना) — लोटा (a water pot) is an unrelated noun
+    (28, 13): (WORD_BEFORE + "लोटा" + WORD_AFTER, "लौटा"),  # same verb,
+        # "so We RETURNED him to his mother"
+    (34, 36): (r"जिसके लिएं चाहे", "जिसके लिए चाहे"),  # "for whomever He
+        # wills" — must match the same idiom earlier in the same verse
+        # ("जिसके लिए चाहे...कुशादा करता है"); लिएं is not a word
+    (24, 31): (WORD_BEFORE + "लड़को" + WORD_AFTER, "लड़कों"),  # "or those
+        # BOYS/SERVANTS" — oblique plural required before पर, missing
+        # anusvara
+    (24, 58): (WORD_BEFORE + "लड़को" + WORD_AFTER, "लड़कों"),  # "those BOYS
+        # and girls" — same missing-anusvara pattern, before को
+    (39, 35): (r"अल्लाह उनसे वह बुराईयों दूर कर दे", "अल्लाह उनसे वह बुराइयां दूर कर दे"),  # "so that Allah removes from them the EVIL
+        # DEEDS they did" — direct object of दूर करना needs the nominative/
+        # direct plural, not the oblique बुराईयों (correct at 25:70 and
+        # 42:25, both of which take an oblique postposition afterward —
+        # this is the one place the case actually differs)
+    (4, 97): (WORD_BEFORE + "फरिश्तें" + WORD_AFTER, "फरिश्ते"),  # "the
+        # ANGELS ask" — फ़रिश्ता is masculine, so the plural is फरिश्ते
+        # (this edition's own dominant spelling, 76 occurrences, without
+        # the nukta — matched for consistency, not फ़रिश्ते); फरिश्तें
+        # wrongly inflects it as feminine
+    (6, 158): (WORD_BEFORE + "फरिश्तें" + WORD_AFTER, "फरिश्ते"),  # same
+        # word, same fix, different verse
+    (10, 83): (WORD_BEFORE + "फिल्ने" + WORD_AFTER, "फ़ितने"),  # "lest he
+        # throw them into FITNAH (persecution)" — फिल्ने is not a word;
+        # same fitnah root as the फिला fixes above, different inflection
+    (33, 14): (WORD_BEFORE + "फिल्ने" + WORD_AFTER, "फ़ितने"),  # "invited to
+        # FITNAH" — glossed right there as "(खानाजंगी)" = civil war
+    (95, 3): (WORD_BEFORE + "पूर" + WORD_AFTER, "पुर"),  # "this PEACEFUL
+        # city (Makkah)" — पुर-अमन is the standard Persian-loan compound
+        # ("full of peace"); पूर is not a word on its own
+    (3, 57): (r"पूर पूरा अज्र", "पूरा पूरा अज्र"),  # "their reward IN FULL"
+        # — a duplicated-for-emphasis "पूरा पूरा", the first copy dropped
+        # its final vowel
+    (7, 158): (WORD_BEFORE + "बरहकु" + WORD_AFTER, "बरहक़"),  # "no god IN
+        # TRUTH (بالحق) besides Him" — बरहकु is not a word; missing nukta
+        # plus a stray उ
+    (46, 3): (WORD_BEFORE + "बरहकु" + WORD_AFTER, "बरहक़"),  # same phrase,
+        # same fix
+    (25, 14): (r"मत पुकारे बल्कि", "मत पुकारो बल्कि"),  # "do NOT call for
+        # one death, but (call: पुकारो) for many" — the negative imperative
+        # must match the second half's पुकारो, not stay पुकारे
+
+    # 2026-07-30 round 22 — the 32 मैं/में findings the bigram check flagged
+    # as suspicious (मैं-evidence > में-evidence) but not decisive enough to
+    # auto-repair (main_suspect in the report). This is the ONE error class
+    # that changes meaning ("I" vs "in"), so each of the 32 was read in full
+    # against its verse. 9 were FALSE positives — genuine locative में,
+    # where a noun before it takes the postposition and तो starts a new
+    # clause right after (2:61 "शहर में, तो...", 2:137 "विरोध में, तो...",
+    # 4:65, 8:43, 9:40, 17:67, 28:36, 28:78, 79:16) — left untouched. The 22
+    # below are real: every one is a first-person clause ("मैं तो...हूँ" /
+    # "मैं...करता हूँ"), usually following बिलाशुब्ह/बस/a vocative "ऐ...!",
+    # none of which can take a postposition — में cannot follow them
+    # grammatically, which is exactly the tool's own "postposition
+    # impossible" signal, just short of its decisive threshold here.
+    (5, 29): (r"में तो चाहता हूँ", "मैं तो चाहता हूँ"),
+    (7, 61): (r"में गुमराह नहीं हूँ", "मैं गुमराह नहीं हूँ"),
+    (7, 62): (r"में तुम्हें अपने रब के पैग़ामात", "मैं तुम्हें अपने रब के पैग़ामात"),
+    (11, 72): (r"हालांकि में बुढ़िया हूँ", "हालांकि मैं बुढ़िया हूँ"),
+    (14, 22): (r"बिलाशुब्ह में तो उसका इन्कार", "बिलाशुब्ह मैं तो उसका इन्कार"),
+    (17, 102): (r"फ़िरऔन! में तो तुझे", "फ़िरऔन! मैं तो तुझे"),
+    (19, 4): (r"में तुझसे दुआ करके", "मैं तुझसे दुआ करके"),
+    (21, 45): (r"बस में तो तुम्हें वह्यी", "बस मैं तो तुम्हें वह्यी"),
+    (23, 111): (r"बिलाशुब्ह में ने आज", "बिलाशुब्ह मैंने आज"),  # में ने is a
+        # split of मैंने ("I have"), not मैं + में; one word, one fix
+    (26, 115): (r"में तो खुल्लम खुल्ला", "मैं तो खुल्लम खुल्ला"),
+    (27, 40): (r"वह तख्त में आपको ला देता हूँ", "वह तख्त मैं आपको ला देता हूँ"),
+    (28, 34): (r"बिलाशुब्ह में डरता हूँ", "बिलाशुब्ह मैं डरता हूँ"),
+    (28, 38): (r"दरबारियों ! में तो(.+)बिलाशुब्ह में उसे झूठा",
+               r"दरबारियों ! मैं तो\1बिलाशुब्ह मैं उसे झूठा"),  # two
+        # first-person clauses in the same verse (Pharaoh's speech)
+    (34, 46): (r"बस में तो तुम्हें एक बात", "बस मैं तो तुम्हें एक बात"),
+    (38, 70): (r"बस में तो सिर्फ", "बस मैं तो सिर्फ"),
+    (38, 85): (r"में तुझसे और उन सब से", "मैं तुझसे और उन सब से"),
+    (40, 26): (r"बिलाशुब्ह में तो डरता हूँ", "बिलाशुब्ह मैं तो डरता हूँ"),
+    (41, 6): (r"बस में तो तुम्हारे जैसा", "बस मैं तो तुम्हारे जैसा"),
+    (51, 50): (r"बिलाशुब्ह में तुम्हें उससे खुला", "बिलाशुब्ह मैं तुम्हें उससे खुला"),
+    (51, 51): (r"बिलाशुब्ह में तुम्हें उससे खुला", "बिलाशुब्ह मैं तुम्हें उससे खुला"),
+    (67, 26): (r"बस में तो वाज़ेह", "बस मैं तो वाज़ेह"),
+    (74, 17): (r"में उसे जल्द मुश्किल", "मैं उसे जल्द मुश्किल"),
+
+    # 2026-07-30 round 23, continued — the self-consistency candidates that
+    # needed a per-verse fix rather than a blanket one, because the correct
+    # target differs by instance or the surrounding words needed fixing too.
+    (5, 29): (r"तू मेश और अपना गुनाह", "तू मेरा और अपना गुनाह"),  # "bear
+        # MY sin and your own" (Cain speaking to Abel) — मेश is not में
+        # here, it's मेरा; the parallel with "अपना" (your own) confirms it
+    (20, 39): (r"जिसे मेश और उसका दुश्मन", "जिसे मेरा और उसका दुश्मन"),
+        # "an enemy to ME and to him" — same मेश->मेरा correction
+    (6, 111): (r"और बात थीं", "और बात थी"),  # "और बात" (the matter) is
+        # singular feminine — थीं wrongly pluralizes it; 22:48's थीं is
+        # correct as-is (agrees with plural बस्तियां) and stays untouched
+    (28, 60): (r"जो कुछ तुम्हें दिया गया वह दुनिया की ज़िन्दगी का समान",
+               r"जो कुछ तुम्हें दिया गया वह दुनिया की ज़िन्दगी का सामान"),
+        # "the PROVISIONS of worldly life" — सामान (goods/provisions), not
+        # समान (equal); 3:64's समान is a different, correct word (equal)
+    (31, 23): (r"उसका काफ़्र आपको गरम में न डाले", "उसका काफ़्र आपको ग़म में न डाले"),
+        # "let not his disbelief GRIEVE you" — ग़म (grief), not गरम (hot);
+        # 38:57's गरम ("hot boiling water") is a different, correct word
+    (9, 107): (r"वह ज़रूर क़॒समें खाऐंगे", "वह ज़रूर क़समें खाऐंगे"),  # stray
+        # combining mark (same family as हक़॒/तस्दीक॒ above); this occurrence
+        # simply drops the mark, landing in the क़समें camp (see round 21's
+        # note on the genuine क़ुसमें/क़समें split — this is not that, just
+        # OCR noise on top of one already-legitimate spelling)
+    (10, 71): (r"अगर तुम्हें मेग कृयाम और", "अगर तुम्हें मेरा क़ियाम और"),
+        # "if MY STANDING (क़ियाम, my presence among you) ... is distasteful
+        # to you" — Nuh's speech; both words were garbled
+    (28, 46): (r"यह \(वचल्यी तो\) आपके रब", "यह (वह्यी तो) आपके रब"),  # "this
+        # REVELATION, indeed, is a mercy from your Lord" — same वह्यी
+        # misread family as वद्यी/वह्मयी/वहद्यी elsewhere in this file
+    (2, 249): (r"यक़ीन \(वि क वास\) रखते", "यक़ीन (विश्वास) रखते"),  # a
+        # strip-boundary split of विश्वास ("faith/certainty") into three
+        # fragments with stray spaces — same family as 2:159/46:15's splits
+    (26, 199): (WORD_BEFORE + "नलाते" + WORD_AFTER, "न लाते"),  # "they would
+        # NOT have believed" — a word-merge of न (not) + लाते, not a real
+        # word on its own
+
+    # 2026-07-30 — 15:3's खाएऐं->खाऐं, found by the owner comparing a
+    # rendered page against the actual source scan (the verse's other break,
+    # गफलत->ग़फ़लत, turned out to be corpus-wide — see KNOWN_WORD_FIXES).
+    (15, 3): (r"खाएऐं", "खाऐं"),  # extra ए is a plain OCR duplication
 }
 
 
@@ -691,6 +1147,17 @@ URDU_TO_DEVA = {
 # their missing nuktas.
 URDU_DROP = set('ًٌٍَُِّْٰٓٔۖۗۘ۔،؟')
 CONSONANT = re.compile(r"[क-ह]़?")
+
+# NUKTA_EXCEPTIONS — (surah, ayah, bare-word) triples where the Urdu-decides
+# rule (1a below) is confirmed wrong for that specific verse against actual
+# page evidence. Empty right now: the one candidate for this (15:3's
+# "ग़फलत") turned out to be the automatic system UNDER-restoring, not
+# over-restoring — ग़फ़लत (both nuktas) is correct and is this edition's
+# own dominant spelling elsewhere (5 occurrences); see KNOWN_WORD_FIXES.
+# Kept as infrastructure since a genuine over-restoration case may turn up
+# with a future page check — add entries here only against actual page
+# evidence, the same standard as every other fix in this file.
+NUKTA_EXCEPTIONS: set[tuple[int, int, str]] = set()
 
 
 def urdu_skeletons(word: str) -> set[str]:
@@ -968,6 +1435,8 @@ def main() -> None:
             for w in set(ws):
                 if NUKTA in w:
                     continue
+                if (surah, int(num), w) in NUKTA_EXCEPTIONS:
+                    continue
                 skel = deva_skeleton(w)
                 # Two consonants minimum: a one-consonant skeleton matches far too
                 # much (की against any ق word) and carries no information.
@@ -989,6 +1458,8 @@ def main() -> None:
             # 1b. fall back to the reference edition where the Urdu is silent.
             for w in set(ws):
                 if NUKTA in w:
+                    continue
+                if (surah, int(num), w) in NUKTA_EXCEPTIONS:
                     continue
                 target = restore.get(w)
                 if target:

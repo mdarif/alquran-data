@@ -188,11 +188,68 @@ def detect_stray_punct(corpus: dict[tuple[int, int], str]):
             yield span, "stray-punct", None, [(s, a, span)]
 
 
+# 2026-07-30 — two detectors added after the मुक़र्रर incident: round 21
+# normalized that word's six competing spellings by picking whichever was
+# most FREQUENT in the corpus, which turned out to be exactly backwards —
+# OCR was consistently dropping a doubled र, so the wrong spelling was also
+# the common one. Frequency-vs-frequency comparison (matra-twin above)
+# structurally cannot catch a failure mode that is itself systematic across
+# most occurrences of a word. These two instead scan for a SPECIFIC known
+# OCR failure signature, corpus-wide, independent of how common the result
+# looks — closer to how मिक़ृदार/क़ृसमें/क़ृत्ल/क़ान/गरज़ were actually found
+# and fixed this session.
+
+# Genuine Sanskrit/Hindi words that legitimately carry ऋ — everything else
+# with ऋ in this Perso-Arabic-loanword-heavy corpus is the spurious-vowel-
+# insertion OCR artifact already confirmed for क़ृत्ल->क़त्ल, कान (न as
+# क़ान), गरज (as ग़रज़), क़ृसमें->क़ुसमें, मिक़ृदार->मिक़दार. Extend this set
+# by hand if a genuine new ऋ-word surfaces as a false positive — do not
+# widen it to "any word ending in a common suffix" or similar, the same
+# over-broad-rule mistake documented elsewhere in this file's history.
+GENUINE_RI_WORDS = {
+    "कृपा", "कृत", "कृति", "कृतज्ञ", "कृतघ्न", "दृष्टि", "दृश्य", "वृद्धि",
+    "वृक्ष", "मृत", "मृत्यु", "ऋषि", "ऋण", "गृह", "हृदय", "पृथ्वी", "तृप्त",
+    "स्मृति", "कृषि", "कृपया", "अमृत", "नृत्य", "गृहस्थ", "वृत्तांत",
+}
+
+
+def detect_spurious_ri(corpus: dict[tuple[int, int], str]):
+    """A word containing ऋ that is not a known genuine Sanskrit ऋ-word —
+    the corpus-wide version of the spurious-vowel-insertion pattern, found
+    independent of how common the corrupted spelling itself is."""
+    for (s, a), text in corpus.items():
+        for w in tokens(text):
+            if "ऋ" not in w:
+                continue
+            if w in GENUINE_RI_WORDS or any(g in w for g in GENUINE_RI_WORDS):
+                continue
+            yield w, "spurious-ri", w.replace("ऋ", ""), [(s, a, context(text, w))]
+
+
+# Combining marks that have no place in standard Hindi/Urdu-loan Devanagari
+# orthography for this corpus — Vedic accent marks (udatta ॑ U+0951, anudatta
+# ॒ U+0952) that tesseract emits as noise at strip boundaries. Confirmed
+# artifact class: हक़॒->हक़, तस्दीक॒->तस्दीक़, मुक़्र॑र (now मुक़र्रर), क़॒समें.
+STRAY_MARKS = "॒॑"
+
+
+def detect_stray_marks(corpus: dict[tuple[int, int], str]):
+    """A word carrying a Vedic accent mark — never legitimate in this
+    corpus's register, always OCR noise from a strip-boundary artifact."""
+    for (s, a), text in corpus.items():
+        for w in tokens(text):
+            if any(m in w for m in STRAY_MARKS):
+                cleaned = "".join(ch for ch in w if ch not in STRAY_MARKS)
+                yield w, "stray-mark", cleaned, [(s, a, context(text, w))]
+
+
 DETECTORS = {
     "matra-twin": detect_matra_twins,
     "digit-glyph": detect_digit_glyphs,
     "halant-fragment": detect_halant_fragments,
     "stray-punct": detect_stray_punct,
+    "spurious-ri": detect_spurious_ri,
+    "stray-mark": detect_stray_marks,
 }
 
 

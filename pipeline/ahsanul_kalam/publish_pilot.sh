@@ -32,8 +32,27 @@ fi
 # --apply performs the repairs the evidence decides (nukta restoration, मैं/में by
 # bigram) and writes per-verse flags. It exits non-zero while anything is
 # unresolved, so `set -e` stops the publish here rather than shipping it.
-echo "==> verify + repair"
-python3 pipeline/ahsanul_kalam/verify_pilot.py --pilot "$DIST" --apply --quarantine
+#
+# A single pass does not reach a stable state: some KNOWN_*_FIXES entries only
+# become applicable AFTER nukta restoration or मैं/में repair runs later in the
+# same per-verse pass (the fixed-point loop inside verify_pilot.py only covers
+# its own early steps, not those). Confirmed repeatedly by hand this session —
+# a fresh build needs 2-3 re-runs before two consecutive runs report identical
+# fix counts. Looping here closes that gap instead of relying on a human to
+# remember to re-run it (see HANDOFF.md).
+echo "==> verify + repair (looping to convergence)"
+VERIFY_LOG=$(mktemp)
+for i in 1 2 3 4; do
+  echo "  -- pass $i --"
+  python3 pipeline/ahsanul_kalam/verify_pilot.py --pilot "$DIST" --apply --quarantine \
+    | tee "$VERIFY_LOG"
+  if [[ $i -gt 1 ]] && diff -q "$VERIFY_LOG" "$VERIFY_LOG.prev" > /dev/null 2>&1; then
+    echo "  -- converged after pass $i --"
+    break
+  fi
+  cp "$VERIFY_LOG" "$VERIFY_LOG.prev"
+done
+rm -f "$VERIFY_LOG" "$VERIFY_LOG.prev"
 
 echo "==> publish to $WEB"
 if [[ ! -d "$WEB" ]]; then
