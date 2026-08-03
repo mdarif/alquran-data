@@ -152,21 +152,45 @@ download. Licence terms still need verification before release.**
 - **Release gate:** confirm QUL/resource-specific license terms and any
   commercial-use caveat before public release.
 
-## Roman Urdu (upcoming — not yet a resource in this repo)
+## Roman Urdu — Al Marfa (Abu Rayyan) — DOWNLOADABLE, UNVERIFIED
 
-The Roman Urdu transliteration project lives in `../alquran-roman-urdu` and is
-not yet ingested here (see `TRANSLATIONS-ROADMAP.md`, "Other deferred items").
-Recording the licensing position now so it doesn't need re-deriving once it
-ships: the Junagarhi Urdu source is public domain (§2) and stays that way —
-nobody, including us, can restrict the underlying words. But the vowelized
-Roman transliteration itself (the phonemic-store rendering built in that
-project, per its ADR 0003) is original creative and editorial labor, not a
-mechanical 1:1 transcription, and is Al Marfa Technologies' own protectable
-expression once it lands as a `resources.type = "transliteration"` row here.
-The same "we own the rendering, not the source" claim as above applies, and
-the parallel copyright/licensing language needs to be added to
-`alquran-roman-urdu`'s own `ATTRIBUTION.md`/`LICENSE` — not done as part of
-this pass.
+**Ingested 2026-08-03** as `resources.type = "transliteration"`, slug
+`ur-roman-almarfa`. The project lives in `../alquran-roman-urdu`; see
+`TRANSLATIONS-ROADMAP.md`'s Roman Urdu entry for the full pipeline/kill-switch
+detail. One correction to what this section used to say: the text is **not** a
+phonemic-store rendering (that description belonged to the *Devanagari* track,
+ADR 0003, a different project within that repo) — Roman Urdu is hand- and
+assistant-transliterated directly against the Junagarhi Urdu source, per that
+repo's ADR 0004, with no shared renderer between the two scripts.
+
+- **Source:** `../alquran-roman-urdu/data/roman-urdu/`, all 6,236 verses / 114
+  surahs, transliterated by **Abu Rayyan** (Mohammad Arif) in the popular
+  register.
+- **Underlying words:** the Junagarhi Urdu translation, public domain (§2) —
+  nobody, including us, can restrict those. The transliteration itself
+  (vowelization choices, house style per ADR 0004, izafat/homograph
+  judgment calls) is original creative and editorial labor, not a mechanical
+  1:1 transcription, and is Al Marfa Technologies' own protectable expression,
+  same "we own the rendering, not the source" claim as the Devanagari section
+  above. The parallel copyright/licensing language still needs adding to
+  `alquran-roman-urdu`'s own `ATTRIBUTION.md`/`LICENSE` — not done as part of
+  this pass.
+- **Required credit draft:** "Muhammad Junagarhi; transliterated by Abu
+  Rayyan. Junagarhi translation is public domain. Transliteration ©
+  Abu Rayyan." (matches `config/sources.yaml`'s `author`/`license` fields and
+  `al-quran-web/scripts/export-quran.mjs`'s overlay verbatim.)
+- **Review status:** every verse is `status: beta-unverified` in the source
+  repo — nothing has been human-reviewed. Shipped installable
+  (`enabled: true`) but not default-on (`default_on: false`), same posture as
+  the third-party edition it replaces before it, matching that project's own
+  AGENTS.md non-negotiable ("nothing ships unreviewed" means unreviewed text
+  stays opt-in and visibly unverified, not that it can never be distributed as
+  a labelled beta).
+- **Supersedes, does not delete:** `ur-roman-junagarhi-experimental`
+  (Al-QuranJino / Muhammad Kazim) — rejected on quality (see
+  `config/sources.yaml`), now `enabled: false`, kept only as a reproducible
+  comparison artifact. That row's attribution is to Muhammad Kazim /
+  Al-QuranJino, never to Abu Rayyan or Al Marfa.
 
 ## 6. Hindi translation — Maulana Azizul Haque al-Umari — DOWNLOADABLE
 

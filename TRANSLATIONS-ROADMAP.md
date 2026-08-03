@@ -447,12 +447,62 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
 
 ## Other deferred items (carried over from `HANDOFF.md`)
 
-- Roman Urdu — has its own dedicated project now: `../alquran-roman-urdu`
-  (lexicon) + a hand-transliterated pilot already live on the web (see
-  `al-quran-web/docs/roman-urdu-pilot.md`). Not yet a DB resource; folds into
-  this pipeline once the lexicon is reviewed. **Shares its whole pipeline with
-  the Hindi/Devanagari item above** — same phonemic store, two renderers — so
-  reviewing that lexicon delivers both, and neither ships before it does.
+- Roman Urdu — has its own dedicated project: `../alquran-roman-urdu`.
+  **Updated 2026-08-03: ingested. Read this before touching `ur-roman-*` rows.**
+
+  **Status:** `ur-roman-almarfa` is a live `resources` row (`type:
+  transliteration`, `enabled: true`, `default_on: false`), built via
+  `pipeline/roman_urdu/export_simple_db.py` from
+  `../alquran-roman-urdu/data/roman-urdu/` — **all 6,236 verses, all 114
+  surahs**, hand- and assistant-transliterated by **Abu Rayyan** (Mohammad
+  Arif) in the popular register, per that repo's ADR 0004. Every verse is
+  still `status: beta-unverified` in the source repo — nothing there has been
+  human-reviewed yet, which is why `default_on` stays `false`: installable and
+  visible in the app's Translations screen (it's a normal catalogue entry, no
+  app code change needed — see `lib/features/translations/presentation/cubit/
+  translations_cubit.dart`, which iterates the catalogue generically), but not
+  switched on for a new reader. Name/author/license strings mirror
+  `al-quran-web/scripts/export-quran.mjs`'s overlay exactly, so the credit
+  reads identically on web, app, and the CDN catalogue:
+  `name: "Abu Rayyan"`, `author: "Muhammad Junagarhi; transliterated by Abu
+  Rayyan"`.
+
+  **The row it replaces, `ur-roman-junagarhi-experimental` (Al-QuranJino /
+  Muhammad Kazim), is now `enabled: false`** in `config/sources.yaml` — still
+  built into `assets/quran.db` for reproducibility (see that config block for
+  the full defect list: خ→q, dropped nasalisation, footnote markers fused into
+  309 verses, 2:6 typo), but as of this ingestion it is also excluded from
+  `dist/editions` and `catalogue.json` entirely by the new `enabled` column
+  (`pipeline/build_editions.py` filters on it) — not just the pre-existing
+  client-side flags (`alquran-app` `FeatureFlags.romanUrdu`, `al-quran-web`
+  `EDITION_FLAGS`). **Do not delete this row or "fix" its text** — it stays as
+  a reproducible rejected-comparison artifact. Owner ruling that led here:
+  **Al Quran ships our own Roman Urdu, or none.**
+
+  **To ship a review update:** re-run
+  `python3 pipeline/roman_urdu/export_simple_db.py` (picks up whatever text is
+  currently in `../alquran-roman-urdu/data/roman-urdu/` unconditionally — no
+  review-status gate duplicated here), then the normal build →
+  `build_editions.py` → `pipeline/publish_editions.sh` sequence. **To ship a
+  kill switch** if something is wrong with any edition (not just this one):
+  flip its `enabled: false` in `config/sources.yaml`, rebuild, republish — it
+  disappears from `catalogue.json` and the app stops offering it, no app
+  release required. (This does not remove an already-installed copy from a
+  device that downloaded it before the flip — see the "Kill switch" note in
+  `pipeline/build_editions.py`'s module docstring.)
+
+  Bundling into the app's shipped `assets/db/quran.db` (the `make
+  seed-version` / "propagate to app" path in `alquran-app`) is **deliberately
+  not done for this edition** — same "keep installable, not bundled" pattern
+  as Ahsanul Kalam and the other CDN-only editions, so native app size stays
+  lean and Roman Urdu reaches readers without an app store release at all.
+
+  The shared-pipeline argument still holds for **Devanagari**: same phonemic
+  store, two renderers, so reviewing that lexicon delivers that track. Roman
+  Urdu was always independent of it (hand-written, not rendered from the
+  phonemic store) — that distinction, and the "not yet a DB resource" claim
+  this section corrected on 2026-08-02, are now moot; recorded here only so a
+  reader following old links understands what changed.
 - IndoPak/Asian Arabic script — Phase-2 beta per the original MVP scope.
 - Audio recitation, bookmarks, tafsir, word-by-word — app-side features, not
   translation data; tracked in `alquran-app/docs/quality-backlog.md`, not here.
