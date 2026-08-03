@@ -3,6 +3,110 @@
 This file is the briefing for an agent (Claude Cowork or Claude Code) picking up
 this project locally. Read it fully, then continue from **Next Steps**.
 
+---
+
+## SESSION HANDOFF — 2026-08-03: Roman Urdu ingested, kill switch built, nothing committed or published yet
+
+**Read this block first if you're a fresh session.** Everything below it is
+older context; this block is the current state and the concrete next actions.
+
+### What happened this session
+
+1. **Roman Urdu is now a real edition.** `../alquran-roman-urdu` reached full
+   coverage (6,236/6,236 verses, all 114 surahs, transliterated by **Abu
+   Rayyan** / Mohammad Arif). It's ingested here as `resources.slug =
+   ur-roman-almarfa`, `type: transliteration`, via a new importer:
+   `pipeline/roman_urdu/export_simple_db.py` (modeled on
+   `pipeline/ahsanul_kalam/export_simple_db.py` — same "per-surah JSON with an
+   `ayahs` dict" shape). It also refuses to ingest any verse containing a
+   digit (the fused-footnote-marker defect class), as an extra safety net.
+   Full detail + the exact credit strings: `TRANSLATIONS-ROADMAP.md`'s Roman
+   Urdu entry and `ATTRIBUTION.md`'s Roman Urdu section — read those before
+   touching this edition again, don't re-derive from scratch.
+2. **The retired third-party Roman Urdu (`ur-roman-junagarhi-experimental`,
+   Al-QuranJino/Muhammad Kazim) is now `enabled: false`** in
+   `config/sources.yaml` — kept in the repo (do not delete it, do not "fix"
+   its text) purely as a reproducible rejected-comparison artifact.
+3. **Built a per-edition kill switch, end to end.** New `resources.enabled`
+   column (`pipeline/schema.sql`), threaded through `build_db.py`'s insert +
+   a new config validation check, and enforced in `build_editions.py`: any
+   resource with `enabled: false` is skipped entirely — not built, not in
+   `catalogue.json`. Confirmed this needs **zero app-side code changes** by
+   reading `alquran-app/lib/features/translations/presentation/cubit/
+   translations_cubit.dart` directly — it already iterates whatever
+   `catalogue().editions` returns, no hardcoded slug allowlist. **Every
+   edition in `config/sources.yaml` now has an explicit `enabled: true` or
+   `enabled: false`** (11 lines — nothing relies on the column's implicit
+   default anymore), so the config file alone answers "what's live."
+4. **Rebuilt and verified locally, three times, after each round of changes:**
+   `python3 pipeline/build_db.py --config config/sources.yaml` →
+   `python3 pipeline/verify_db.py --db assets/quran.db` (clean, `OK`) →
+   `python3 pipeline/build_editions.py --db assets/quran.db --out
+   dist/editions`. Also re-ran the smoke test
+   (`tests/make_fixtures.py` + `build_db.py --config
+   tests/fixtures/sources.yaml`) after adding an `enabled: false` fixture
+   case — passes, logs `[DISABLED — not published]` for it as expected.
+5. **Updated four docs** that would otherwise be stale: `AGENTS.md` (new
+   "Kill switch" paragraph under "Editions on R2"), `TRANSLATIONS-ROADMAP.md`
+   (full rewrite of the Roman Urdu section — it previously said "325 of 6,236
+   verses" and "not yet a DB resource"), `ATTRIBUTION.md` (same — previously
+   headed "Roman Urdu (upcoming — not yet a resource in this repo)", and
+   wrongly described it as a phonemic-store rendering, which is the
+   *Devanagari* track's method, not this one), and this file's now-corrected
+   "catalogue lists exactly the three bundled editions" claim further down
+   (search for "Stale as of 2026-08-03").
+
+### Exact current state — check this yourself, don't trust prose that ages
+
+```bash
+git status --short          # 9 modified + 1 new untracked dir (pipeline/roman_urdu/), NOTHING committed
+git diff --stat              # ~235 insertions across config/sources.yaml, pipeline/*.py, pipeline/schema.sql, 4 docs, tests/make_fixtures.py
+```
+
+**Local** `dist/editions/catalogue.json`: 10 editions, includes
+`ur-roman-almarfa` (428 KB gzipped). **Live** at
+`https://editions.alquranreader.com/catalogue.json` (checked this session):
+**9 editions, `generatedAt: 2026-07-30`, does NOT include Roman Urdu** —
+publishing now would add exactly one new edition to what's already live,
+nothing else changes. Note the other 9 apparently got published live at some
+point after this file's stale "exactly three bundled editions" line was
+written — don't trust that number either; always check the live URL directly.
+
+`assets/quran.db` and `sources/ur-roman-almarfa-simple.db` are both
+git-ignored, already built locally, present on disk — no re-run needed unless
+you change something.
+
+### What is NOT done — pick up here
+
+1. **Nothing is committed.** There's also a **pre-existing uncommitted
+   scaffolding diff from a session before this one** (the `type:
+   transliteration` support in `build_db.py`/`build_editions.py`/
+   `tests/make_fixtures.py`, and the original dormant
+   `ur-roman-junagarhi-experimental` config block) that this session built on
+   top of rather than committing separately — so whatever you commit will
+   bundle both. One commit or several is your/the owner's call; nothing here
+   demands a particular split.
+2. **Nothing is published.** `pipeline/publish_editions.sh` then
+   `pipeline/verify_editions.py` — not run this session. Read the "Editions on
+   R2" section below first (four traps, all fail quietly — `--remote` is
+   mandatory, never set `Content-Encoding: gzip`, artifacts before catalogue).
+3. **`alquran-app` and `al-quran-web` were deliberately left untouched** —
+   confirmed neither needs code changes for `ur-roman-almarfa` to appear
+   (app: generic catalogue consumption, verified directly; web: has its own
+   separate Roman Urdu overlay mechanism in `al-quran-web/scripts/
+   export-quran.mjs`, not this pipeline, already pointed at the same
+   `ur-roman-almarfa` slug and the same Abu Rayyan credit strings — nothing to
+   reconcile). Re-verify this claim rather than assuming it still holds if
+   time has passed and either repo has changed.
+4. **Not decided:** whether/when `ur-roman-almarfa`'s `default_on` should ever
+   flip to `true`. Currently `false` because every verse in
+   `../alquran-roman-urdu` is still `status: beta-unverified` (nothing
+   reviewed). That's a content-review decision belonging to the
+   `alquran-roman-urdu` repo, not a pipeline one — don't flip it here without
+   checking that repo's review state first.
+
+---
+
 ## What this project is
 
 `alquran-data` is the **data-compilation pipeline** for the Al Quran
@@ -59,8 +163,15 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
   first, catalogue last), checked live by `verify_editions.py`. The publish
   traps — `--remote` is mandatory, never set `Content-Encoding: gzip` — are
   documented in `CLAUDE.md`; both fail silently.
-- The catalogue lists exactly the three bundled editions today, so the app offers
-  nothing to download. Expected, not a bug — see `TRANSLATIONS-ROADMAP.md`.
+- **Stale as of 2026-08-03 — do not trust this bullet's edition count.** The
+  locally-built `dist/editions/catalogue.json` now lists **10** editions
+  (Urdu, Hindi ×3, English ×2, Bengali, Indonesian, Swahili, and the new Roman
+  Urdu `ur-roman-almarfa` — see `TRANSLATIONS-ROADMAP.md`'s Roman Urdu entry),
+  not the "exactly three" this line used to claim. **Not yet republished to
+  R2** as of this edit — `dist/editions/catalogue.json`'s `generatedAt` is the
+  source of truth for what's actually live; check it, don't trust this prose.
+  Run `pipeline/publish_editions.sh` + `pipeline/verify_editions.py` to bring
+  the live catalogue in sync, then update this bullet.
 
 ### What changed during the real build (read this)
 
@@ -215,6 +326,9 @@ recent enough that no public-domain argument is available.
    catalogue, verified end to end.
 9. **Decide on the QPC end-of-ayah number glyph** in the Arabic text (kept as-is
    now, e.g. the `١` after 1:1). Strip it in `prepare_sources.py` if unwanted.
+10. **Roman Urdu ingested + per-edition kill switch built, 2026-08-03 — not
+    committed, not published.** See "SESSION HANDOFF" at the top of this file
+    for the full state and exact next commands.
 
 Owner-only, still open:
 - ~~**Repo visibility vs. the licence.**~~ **SETTLED 2026-07-28 (owner): repos
