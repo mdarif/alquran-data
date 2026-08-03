@@ -450,7 +450,7 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
 - Roman Urdu — has its own dedicated project: `../alquran-roman-urdu`.
   **Updated 2026-08-03: ingested. Read this before touching `ur-roman-*` rows.**
 
-  **Status:** `ur-roman-almarfa` is a live `resources` row (`type:
+  **Status:** `ur-roman-abu-rayyan` is a live `resources` row (`type:
   transliteration`, `enabled: true`, `default_on: false`), built via
   `pipeline/roman_urdu/export_simple_db.py` from
   `../alquran-roman-urdu/data/roman-urdu/` — **all 6,236 verses, all 114

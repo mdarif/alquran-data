@@ -93,7 +93,7 @@ Hindi deferred).
 - **CAVEAT:** monetizing the app later requires re-clearing — Tanzil's
   translation terms are non-commercial only.
 
-## 4. Hindi translation — Ahsanul Kalam (Muhammad Rais Qureshi Salafi) — EXPERIMENTAL
+## 4. Hindi translation — Ahsanul Kalam (Shaikh Muhammad Rais Qureshi) — EXPERIMENTAL
 
 **Status: permission granted; ship as an experimental/pilot edition
 (2026-07-30), pending OCR quality review.** Distinct from the two other Hindi-ish editions on the site: §3 above
@@ -117,7 +117,7 @@ Hindi register, publisher Alkhair (Indore).
   "Suggest a correction" affordance visible so readers aren't misled into
   treating it as a reviewed text. Do not promote it out of the experimental
   lane without an actual text review against the print.
-- **Required credit:** "Hindi translation by Muhammad Rais Qureshi Salafi.
+- **Required credit:** "Hindi translation by Shaikh Muhammad Rais Qureshi.
   Publisher: Alkhair, Indore."
 - **Plan:** owner intends this to eventually **replace** §3 (Suhel Farooq Khan)
   as the primary Hindi edition once reviewed. Until then both ship
@@ -155,7 +155,7 @@ download. Licence terms still need verification before release.**
 ## Roman Urdu — Al Marfa (Abu Rayyan) — DOWNLOADABLE, UNVERIFIED
 
 **Ingested 2026-08-03** as `resources.type = "transliteration"`, slug
-`ur-roman-almarfa`. The project lives in `../alquran-roman-urdu`; see
+`ur-roman-abu-rayyan`. The project lives in `../alquran-roman-urdu`; see
 `TRANSLATIONS-ROADMAP.md`'s Roman Urdu entry for the full pipeline/kill-switch
 detail. One correction to what this section used to say: the text is **not** a
 phonemic-store rendering (that description belonged to the *Devanagari* track,

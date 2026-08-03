@@ -5,7 +5,7 @@ this project locally. Read it fully, then continue from **Next Steps**.
 
 ---
 
-## SESSION HANDOFF — 2026-08-03: Roman Urdu ingested, kill switch built, nothing committed or published yet
+## SESSION HANDOFF — 2026-08-03: Roman Urdu ingested, kill switch built, committed and published
 
 **Read this block first if you're a fresh session.** Everything below it is
 older context; this block is the current state and the concrete next actions.
@@ -15,7 +15,7 @@ older context; this block is the current state and the concrete next actions.
 1. **Roman Urdu is now a real edition.** `../alquran-roman-urdu` reached full
    coverage (6,236/6,236 verses, all 114 surahs, transliterated by **Abu
    Rayyan** / Mohammad Arif). It's ingested here as `resources.slug =
-   ur-roman-almarfa`, `type: transliteration`, via a new importer:
+   ur-roman-abu-rayyan`, `type: transliteration`, via a new importer:
    `pipeline/roman_urdu/export_simple_db.py` (modeled on
    `pipeline/ahsanul_kalam/export_simple_db.py` — same "per-surah JSON with an
    `ayahs` dict" shape). It also refuses to ingest any verse containing a
@@ -59,46 +59,58 @@ older context; this block is the current state and the concrete next actions.
 ### Exact current state — check this yourself, don't trust prose that ages
 
 ```bash
-git status --short          # 9 modified + 1 new untracked dir (pipeline/roman_urdu/), NOTHING committed
-git diff --stat              # ~235 insertions across config/sources.yaml, pipeline/*.py, pipeline/schema.sql, 4 docs, tests/make_fixtures.py
+git status --short          # clean — committed as 30d6e7a, 7d28a00, 945ab7b
+git log --oneline -3         # 945ab7b HANDOFF.md: record Roman Urdu ingestion + kill switch session
+                             # 7d28a00 Ingest Roman Urdu (Abu Rayyan) as ur-roman-abu-rayyan edition
+                             # 30d6e7a Add per-edition kill switch and transliteration edition type
 ```
 
-**Local** `dist/editions/catalogue.json`: 10 editions, includes
-`ur-roman-almarfa` (428 KB gzipped). **Live** at
-`https://editions.alquranreader.com/catalogue.json` (checked this session):
-**9 editions, `generatedAt: 2026-07-30`, does NOT include Roman Urdu** —
-publishing now would add exactly one new edition to what's already live,
-nothing else changes. Note the other 9 apparently got published live at some
-point after this file's stale "exactly three bundled editions" line was
-written — don't trust that number either; always check the live URL directly.
+**Published this session** (after a regression check confirmed adding an
+edition + dropping a never-selectable disabled one is safe for existing
+installs — see below): `pipeline/publish_editions.sh` uploaded all 10 `.db.gz`
+artifacts + `catalogue.json` to `al-quran-editions` (`--remote`), then both the
+script's own post-publish check and a standalone `pipeline/verify_editions.py`
+run confirmed **live** `https://editions.alquranreader.com/catalogue.json` now
+serves **10 editions**, `dbVersion 1.1.0`, including `ur-roman-abu-rayyan`
+(428 KB), every artifact's SHA-256 matching its catalogue digest. Always
+re-check the live URL directly rather than trusting this count as time passes.
 
-`assets/quran.db` and `sources/ur-roman-almarfa-simple.db` are both
+**Regression check performed before publishing:** confirmed `db_seeder.dart`'s
+reseed decision is purely the bundled `quran.db.version` marker (untouched by
+a catalogue-only publish); confirmed the app's catalogue reconciliation
+(`edition_repository_impl.dart`, `translations_cubit.dart`) never diffs
+"catalogue entry disappeared" against already-installed editions — an
+existing install of the retired `ur-roman-junagarhi-experimental` (if any)
+just stays installed, unaffected; confirmed that edition was already excluded
+from the reader via `FeatureFlags.romanUrdu=false` on the app side, so no
+installed user could have had it as an active reader language regardless;
+confirmed `editions_config.dart` explicitly treats catalogue-vs-bundled-DB
+divergence as the expected steady state, not an error condition.
+
+`assets/quran.db` and `sources/ur-roman-abu-rayyan-simple.db` are both
 git-ignored, already built locally, present on disk — no re-run needed unless
 you change something.
 
 ### What is NOT done — pick up here
 
-1. **Nothing is committed.** There's also a **pre-existing uncommitted
-   scaffolding diff from a session before this one** (the `type:
-   transliteration` support in `build_db.py`/`build_editions.py`/
-   `tests/make_fixtures.py`, and the original dormant
-   `ur-roman-junagarhi-experimental` config block) that this session built on
-   top of rather than committing separately — so whatever you commit will
-   bundle both. One commit or several is your/the owner's call; nothing here
-   demands a particular split.
-2. **Nothing is published.** `pipeline/publish_editions.sh` then
-   `pipeline/verify_editions.py` — not run this session. Read the "Editions on
-   R2" section below first (four traps, all fail quietly — `--remote` is
-   mandatory, never set `Content-Encoding: gzip`, artifacts before catalogue).
-3. **`alquran-app` and `al-quran-web` were deliberately left untouched** —
-   confirmed neither needs code changes for `ur-roman-almarfa` to appear
-   (app: generic catalogue consumption, verified directly; web: has its own
-   separate Roman Urdu overlay mechanism in `al-quran-web/scripts/
-   export-quran.mjs`, not this pipeline, already pointed at the same
-   `ur-roman-almarfa` slug and the same Abu Rayyan credit strings — nothing to
-   reconcile). Re-verify this claim rather than assuming it still holds if
-   time has passed and either repo has changed.
-4. **Not decided:** whether/when `ur-roman-almarfa`'s `default_on` should ever
+1. **Committed** (30d6e7a, 7d28a00, 945ab7b) — the earlier "nothing is
+   committed" note in this section is stale.
+2. **Published.** `pipeline/publish_editions.sh` then `pipeline/verify_editions.py`
+   both run and passed — live catalogue now has 10 editions including
+   `ur-roman-abu-rayyan`. The earlier "nothing is published" note is stale.
+3. **`alquran-app` needed no code changes for `ur-roman-abu-rayyan` to appear**
+   (generic catalogue consumption — confirmed directly in
+   `translations_cubit.dart`), but a follow-up app-side change *was* made in a
+   later session: `ur-roman-abu-rayyan` was added to
+   `TranslationMetadataOverrides.experimentalSlugs`
+   (`lib/core/translations/translation_metadata_overrides.dart`) so the picker
+   shows the "Experimental" pill on it, same as it does for `hi-ahsanul-kalam`
+   and the retired Junagarhi slug — matching its `beta-unverified` status.
+   `al-quran-web` already has its own separate Roman Urdu overlay mechanism in
+   `al-quran-web/scripts/export-quran.mjs`, not this pipeline, pointed at the
+   same `ur-roman-abu-rayyan` slug and Abu Rayyan credit strings, and already
+   renders its own "Experimental" badge — nothing to reconcile there.
+4. **Not decided:** whether/when `ur-roman-abu-rayyan`'s `default_on` should ever
    flip to `true`. Currently `false` because every verse in
    `../alquran-roman-urdu` is still `status: beta-unverified` (nothing
    reviewed). That's a content-review decision belonging to the
@@ -166,7 +178,7 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 - **Stale as of 2026-08-03 — do not trust this bullet's edition count.** The
   locally-built `dist/editions/catalogue.json` now lists **10** editions
   (Urdu, Hindi ×3, English ×2, Bengali, Indonesian, Swahili, and the new Roman
-  Urdu `ur-roman-almarfa` — see `TRANSLATIONS-ROADMAP.md`'s Roman Urdu entry),
+  Urdu `ur-roman-abu-rayyan` — see `TRANSLATIONS-ROADMAP.md`'s Roman Urdu entry),
   not the "exactly three" this line used to claim. **Not yet republished to
   R2** as of this edit — `dist/editions/catalogue.json`'s `generatedAt` is the
   source of truth for what's actually live; check it, don't trust this prose.

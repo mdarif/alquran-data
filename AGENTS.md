@@ -81,7 +81,7 @@ and the app stops offering it, no app release needed (the reader already
 treats "not in the catalogue" as "not offered," no per-slug allowlist on that
 side). Does not remove an already-installed copy from a device. Currently used
 to keep `ur-roman-junagarhi-experimental` (rejected third-party Roman Urdu,
-replaced by `ur-roman-almarfa`) out of the catalogue while still built into
+replaced by `ur-roman-abu-rayyan`) out of the catalogue while still built into
 `assets/quran.db` for reproducibility.
 
 ## State & open items

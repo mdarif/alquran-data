@@ -115,7 +115,7 @@ sources:
       source_url: "https://qul.tarteel.ai/resources/translation/305"
 
     # --- Roman Urdu: experimental Junagarhi edition (RETIRED) ---------------
-    # SUPERSEDED 2026-08-03 by ur-roman-almarfa below, and now `enabled: false`
+    # SUPERSEDED 2026-08-03 by ur-roman-abu-rayyan below, and now `enabled: false`
     # — excluded from dist/editions + catalogue.json entirely, on top of the
     # existing client-side gates:
     #   alquran-app  FeatureFlags.romanUrdu = false  (lib/core/feature_flags.dart)
@@ -163,9 +163,9 @@ sources:
     # Naming mirrors al-quran-web's scripts/export-quran.mjs overlay exactly
     # (name/author/license strings), so the credit reads identically on web,
     # app, and CDN catalogue.
-    - file: sources/ur-roman-almarfa-simple.db
+    - file: sources/ur-roman-abu-rayyan-simple.db
       type: transliteration
-      slug: ur-roman-almarfa
+      slug: ur-roman-abu-rayyan
       language_code: ur
       name: "Abu Rayyan"
       native_name: "Roman Urdu"
@@ -198,7 +198,7 @@ sources:
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://tanzil.net/trans/hi.hindi"
 
-    # --- Hindi: Ahsanul Kalam (Muhammad Rais Qureshi Salafi) ----------------
+    # --- Hindi: Ahsanul Kalam (Shaikh Muhammad Rais Qureshi) ----------------
     # Intended as the Ahle Hadith / Salafi-manhaj Hindi replacement path.
     # Keep installable, not bundled, so the native app size stays lean. Generated
     # from the reviewed OCR pilot via:
@@ -215,7 +215,7 @@ sources:
       direction: ltr
       sort_order: 21
       enabled: true
-      author: "Muhammad Rais Qureshi Salafi"
+      author: "Shaikh Muhammad Rais Qureshi"
       license: "Used with permission from Alkhair, Indore. Attribution required."
       source_url: "Ahsanul Kalam publisher master PDF"
 

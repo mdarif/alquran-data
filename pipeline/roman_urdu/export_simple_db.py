@@ -8,10 +8,10 @@ translation sources. This script is the narrow bridge from:
 
 to:
 
-    sources/ur-roman-almarfa-simple.db
+    sources/ur-roman-abu-rayyan-simple.db
 
 It does not publish anything by itself. The resulting DB is then listed in
-config/sources.yaml (slug `ur-roman-almarfa`, type `transliteration`) and
+config/sources.yaml (slug `ur-roman-abu-rayyan`, type `transliteration`) and
 emitted as a downloadable edition by pipeline/build_editions.py.
 
 Every source verse currently carries `"status": "beta-unverified"` — nothing
@@ -20,7 +20,7 @@ repo's AGENTS.md non-negotiable #2: "nothing ships unreviewed"). This script
 does not block ingestion on that status — the third-party
 ur-roman-junagarhi-experimental edition it replaces was ingested and shipped
 in the same unreviewed state, labelled "(Experimental)" so consumers never
-mistake it for approved text. `ur-roman-almarfa`'s `name`/`license` fields in
+mistake it for approved text. `ur-roman-abu-rayyan`'s `name`/`license` fields in
 config/sources.yaml carry the same kind of explicit label; review-gating is
 this project's own AGENTS.md concern, not something to duplicate here as a
 second source of truth. Re-running this export after a review pass simply
@@ -41,7 +41,7 @@ EXPECTED_AYAHS = 6236
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="../alquran-roman-urdu/data/roman-urdu")
-    ap.add_argument("--out", default="sources/ur-roman-almarfa-simple.db")
+    ap.add_argument("--out", default="sources/ur-roman-abu-rayyan-simple.db")
     args = ap.parse_args()
 
     src = Path(args.src)
