@@ -68,7 +68,14 @@ CREATE TABLE IF NOT EXISTS resources (
                                                    -- Still built into quran.db, so
                                                    -- re-enabling needs no re-import.
     license       TEXT,                           -- record the QUL/source license here
-    source_url    TEXT
+    source_url    TEXT,
+    credit_name   TEXT,                           -- short one-line display name for the
+                                                   -- reader credit + picker subtitle. NULL
+                                                   -- means "use author, else name" — only
+                                                   -- set this when author is a multi-person
+                                                   -- licensing credit too long to show inline.
+    experimental  INTEGER NOT NULL DEFAULT 0       -- 1 = show the "Experimental" pill
+                                                   -- (unreviewed/pilot content)
 );
 
 CREATE TABLE IF NOT EXISTS translations (

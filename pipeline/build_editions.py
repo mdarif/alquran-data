@@ -209,6 +209,8 @@ def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
         "sortOrder": res["sort_order"],
         "license": res["license"],
         "sourceUrl": res["source_url"],
+        "creditName": res["credit_name"],
+        "experimental": bool(res["experimental"]),
         "ayahCount": len(rows),
         "file": final_path.name,
         # What you download, and the hash to check it by.

@@ -176,6 +176,13 @@ sources:
       author: "Muhammad Junagarhi; transliterated by Abu Rayyan"
       license: "Junagarhi translation is public domain. Transliteration © Abu Rayyan."
       source_url:
+      # Short one-line display name for the reader credit + picker subtitle —
+      # `author` above is a two-person licensing credit, correct for a full
+      # attribution view but too long to repeat per-verse/per-row.
+      credit_name: "Abu Rayyan"
+      # Unreviewed per ../alquran-roman-urdu's `status: beta-unverified` (0
+      # verses reviewed/approved) — drives the "Experimental" pill.
+      experimental: true
 
     # --- Hindi: Suhel Farooq Khan & Saifur Rahman Nadwi ---------------------
     # Tanzil edition `hi.hindi`. NOT available on QUL (which only carries the
@@ -218,6 +225,9 @@ sources:
       author: "Shaikh Muhammad Rais Qureshi"
       license: "Used with permission from Alkhair, Indore. Attribution required."
       source_url: "Ahsanul Kalam publisher master PDF"
+      # OCR pilot, not yet through full manual review — drives the
+      # "Experimental" pill.
+      experimental: true
 
     # --- English: Sahih International --------------------------------------
     # QUL resource 193. Installable/downloadable alternative to Hilali & Khan,

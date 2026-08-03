@@ -654,8 +654,9 @@ def build(config: dict, graft: bool = True, output: str | None = None,
         record_checksum(tr)
         cur = conn.execute(
             "INSERT INTO resources(slug,type,language_code,name,native_name,author,"
-            "direction,sort_order,default_on,enabled,license,source_url)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            "direction,sort_order,default_on,enabled,license,source_url,"
+            "credit_name,experimental)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 tr["slug"], tr.get("type", "translation"), tr["language_code"],
                 tr["name"], tr.get("native_name"),
@@ -665,6 +666,8 @@ def build(config: dict, graft: bool = True, output: str | None = None,
                 # itself, so every pre-existing config entry is unaffected.
                 0 if tr.get("enabled") is False else 1,
                 tr.get("license"), tr.get("source_url"),
+                tr.get("credit_name"),
+                1 if tr.get("experimental") else 0,
             ),
         )
         resource_id = cur.lastrowid
