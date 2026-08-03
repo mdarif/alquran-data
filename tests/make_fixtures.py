@@ -114,11 +114,13 @@ sources:
       direction: rtl
       default_on: true
     - file: {FX}/translation-hindi.sqlite
+      type: transliteration
       slug: test-hi
       language_code: hi
       name: "Test Hindi"
       native_name: "हिन्दी"
       direction: ltr
+      enabled: false
 """, encoding="utf-8")
 
 

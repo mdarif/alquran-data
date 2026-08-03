@@ -45,6 +45,15 @@ The catalogue records a **sha256 of the downloaded (gzipped) file** and a second
 one for the expanded DB. The app must verify the first before expanding and the
 second before installing: a truncated download is otherwise indistinguishable
 from a short edition, and it would render partial scripture with no error.
+
+**Kill switch:** a resource with `resources.enabled = 0` (set via `enabled: false`
+in config/sources.yaml, then a rebuild) is skipped entirely here — no `.db.gz`
+is written and it never appears in `catalogue.json`. This needs no app change:
+the reader already treats "not in the catalogue" as "not offered"
+(translations_cubit.dart iterates whatever `catalogue().editions` returns, with
+no hardcoded slug list). Disabling an edition that is already installed on a
+device does not remove it — this is a forward-looking kill switch ("stop
+recommending this"), not a remote uninstall.
 """
 
 from __future__ import annotations
@@ -239,9 +248,16 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     resources = conn.execute(
-        "SELECT * FROM resources WHERE type = 'translation'"
+        "SELECT * FROM resources WHERE type IN ('translation', 'transliteration')"
+        " AND enabled = 1"
         " ORDER BY sort_order, language_code, id"
     ).fetchall()
+    disabled = conn.execute(
+        "SELECT slug FROM resources WHERE type IN ('translation', 'transliteration')"
+        " AND enabled = 0"
+    ).fetchall()
+    for row in disabled:
+        log(f"{row['slug']}: enabled=0, skipped — not built, not in catalogue.json")
     if not resources:
         sys.exit("no translation resources in the DB")
 

@@ -74,6 +74,16 @@ Four traps, all of which fail quietly:
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
 
+**Kill switch, added 2026-08-03:** `resources.enabled` (default 1). Set
+`enabled: false` on an edition in `config/sources.yaml`, rebuild, republish —
+`build_editions.py` skips it entirely, so it disappears from `catalogue.json`
+and the app stops offering it, no app release needed (the reader already
+treats "not in the catalogue" as "not offered," no per-slug allowlist on that
+side). Does not remove an already-installed copy from a device. Currently used
+to keep `ur-roman-junagarhi-experimental` (rejected third-party Roman Urdu,
+replaced by `ur-roman-almarfa`) out of the catalogue while still built into
+`assets/quran.db` for reproducibility.
+
 ## State & open items
 
 - **Editions carry a stable `slug`** (schema_version 2). Consumers select and

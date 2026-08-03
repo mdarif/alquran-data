@@ -62,6 +62,11 @@ CREATE TABLE IF NOT EXISTS resources (
     direction     TEXT,                           -- "rtl" | "ltr"; drives layout without a hardcoded lang list
     sort_order    INTEGER NOT NULL DEFAULT 0,     -- display order within a language group
     default_on    INTEGER NOT NULL DEFAULT 0,     -- 1 = shown by default to a new reader
+    enabled       INTEGER NOT NULL DEFAULT 1,     -- 0 = kill switch: excluded from
+                                                   -- dist/editions + catalogue.json
+                                                   -- entirely (build_editions.py).
+                                                   -- Still built into quran.db, so
+                                                   -- re-enabling needs no re-import.
     license       TEXT,                           -- record the QUL/source license here
     source_url    TEXT
 );

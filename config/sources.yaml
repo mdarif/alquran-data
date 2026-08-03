@@ -100,6 +100,7 @@ sources:
       # opt-in. Replaces the "Urdu defaults on" rule previously hardcoded in the
       # web toolbar.
       default_on: true
+      enabled: true
       author: "Muhammad Junagarhi"
       # PUBLIC DOMAIN (owner determination 2026-07-27; supersedes the Tanzil-terms
       # framing this block previously carried). Translator d. 1941; India/Pakistan
@@ -112,6 +113,69 @@ sources:
       # re-clearing. Credit the translator; see ATTRIBUTION.md.
       license: "Public domain (translator d. 1941). Credit: Muhammad Junagarhi; Tanzil Project by courtesy. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/305"
+
+    # --- Roman Urdu: experimental Junagarhi edition (RETIRED) ---------------
+    # SUPERSEDED 2026-08-03 by ur-roman-almarfa below, and now `enabled: false`
+    # — excluded from dist/editions + catalogue.json entirely, on top of the
+    # existing client-side gates:
+    #   alquran-app  FeatureFlags.romanUrdu = false  (lib/core/feature_flags.dart)
+    #   al-quran-web EDITION_FLAGS['ur-roman-junagarhi-experimental'] = false
+    #
+    # Owner ruling: "ours is a lot better" — Al Quran ships OUR Roman Urdu or
+    # none. Compared against our own pilot on Al-Baqarah 1-7 this text renders خ
+    # as `q` (qarch, aaqirath), final ت as `th` (hidaayath, najaath), drops
+    # nasalisation (hai for ہیں, dilo for دلوں), typos 2:6 as `darsana`, and
+    # fuses its own footnote markers into words in 309 verses (parhezgaaro1 —
+    # check with: text_content GLOB '*[0-9]*'). The register is Deccani, not the
+    # Karachi/Lahore popular register we target. Attribution below is to the
+    # THIRD PARTY that made this text (Muhammad Kazim / Al-QuranJino) — it is
+    # not Al Marfa's own work and must never be credited to Abu Rayyan.
+    #
+    # DO NOT "fix" this text here, and do not delete this row — kept dormant
+    # (enabled: false) so the comparison stays reproducible and the gates stay
+    # one-line flips. See ../alquran-roman-urdu/docs/TRANSLITERATION-GUIDE.md.
+    - file: sources/ur-roman-junagarhi-experimental.sqlite
+      type: transliteration
+      slug: ur-roman-junagarhi-experimental
+      language_code: ur
+      name: "Roman Urdu (Experimental)"
+      native_name: "Roman Urdu"
+      direction: ltr
+      sort_order: 11
+      default_on: false
+      enabled: false
+      author: "Muhammad Junagarhi; Romanization credited to Muhammad Kazim / Al-QuranJino"
+      license: "Experimental third-party rendering; source: Al-QuranJino. Preserve attribution and verify reuse terms before commercial distribution."
+      source_url: "https://cdn.jsdelivr.net/gh/jinosh05/quran-api@1/editions/urd-muhammadjunagar1.json"
+
+    # --- Roman Urdu: Al Marfa (Abu Rayyan) -----------------------------------
+    # Replaces the retired third-party row above. Own work, own slug — this is
+    # NOT the Al-QuranJino text. Source: ../alquran-roman-urdu/data/roman-urdu/,
+    # all 6,236 verses across all 114 surahs as of 2026-08-03, hand- and
+    # assistant-transliterated by Abu Rayyan (Mohammad Arif) in the popular
+    # register per that repo's ADR 0004. Generated via:
+    #   python3 pipeline/roman_urdu/export_simple_db.py
+    #
+    # `enabled: true` but `default_on: false`: every verse there is still
+    # `status: beta-unverified` (that repo's own AGENTS.md: nothing ships
+    # unreviewed) — installable and visible, opt-in, not switched on for a new
+    # reader, exactly like the third-party row was before it was retired.
+    # Naming mirrors al-quran-web's scripts/export-quran.mjs overlay exactly
+    # (name/author/license strings), so the credit reads identically on web,
+    # app, and CDN catalogue.
+    - file: sources/ur-roman-almarfa-simple.db
+      type: transliteration
+      slug: ur-roman-almarfa
+      language_code: ur
+      name: "Abu Rayyan"
+      native_name: "Roman Urdu"
+      direction: ltr
+      sort_order: 11
+      default_on: false
+      enabled: true
+      author: "Muhammad Junagarhi; transliterated by Abu Rayyan"
+      license: "Junagarhi translation is public domain. Transliteration © Abu Rayyan."
+      source_url:
 
     # --- Hindi: Suhel Farooq Khan & Saifur Rahman Nadwi ---------------------
     # Tanzil edition `hi.hindi`. NOT available on QUL (which only carries the
@@ -129,6 +193,7 @@ sources:
       native_name: "हिन्दी"
       direction: ltr
       sort_order: 20
+      enabled: true
       author: "Suhel Farooq Khan/Saifur Rahman Nadwi"
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
       source_url: "https://tanzil.net/trans/hi.hindi"
@@ -149,6 +214,7 @@ sources:
       native_name: "हिन्दी"
       direction: ltr
       sort_order: 21
+      enabled: true
       author: "Muhammad Rais Qureshi Salafi"
       license: "Used with permission from Alkhair, Indore. Attribution required."
       source_url: "Ahsanul Kalam publisher master PDF"
@@ -166,6 +232,7 @@ sources:
       direction: ltr
       sort_order: 30
       default_on: false
+      enabled: true
       author: "Sahih International"
       license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/193"
@@ -186,6 +253,7 @@ sources:
       native_name: "English"
       direction: ltr
       sort_order: 40
+      enabled: true
       # Reader attribution label (owner-preferred short form, 2026-07-06).
       author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
       license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
@@ -216,6 +284,7 @@ sources:
       direction: ltr
       sort_order: 50
       default_on: false
+      enabled: true
       author: "Abu Bakr Muhammad Zakaria"
       license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/200"
@@ -234,6 +303,7 @@ sources:
       direction: ltr
       sort_order: 60
       default_on: false
+      enabled: true
       author: "King Fahd Quran Complex"
       license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/173"
@@ -253,6 +323,7 @@ sources:
       direction: ltr
       sort_order: 61
       default_on: false
+      enabled: true
       author: "Rowwad Translation Center"
       license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/466"
@@ -275,6 +346,7 @@ sources:
     #   direction: ltr
     #   sort_order: 62
     #   default_on: false
+    #   enabled: true
     #   author: "Rowwad Translation Center"
     #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
     #   source_url: "https://qul.tarteel.ai/resources/translation/298"
@@ -297,6 +369,7 @@ sources:
     #   direction: ltr
     #   sort_order: 63
     #   default_on: false
+    #   enabled: true
     #   author: "Rowwad Translation Center"
     #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
     #   source_url: "https://qul.tarteel.ai/resources/translation/467"
@@ -311,6 +384,7 @@ sources:
       direction: ltr
       sort_order: 22
       default_on: false
+      enabled: true
       name: "Maulana Azizul Haque al-Umari"
       author: "Azizul Haque al-Umari"
       license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"

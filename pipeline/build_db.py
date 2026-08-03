@@ -466,14 +466,28 @@ def validate_editions(config: dict) -> None:
     cur.lastrowid and shift whenever this list is reordered.
     """
     seen: dict[str, str] = {}
+    allowed_types = {"translation", "tafsir", "transliteration"}
     for tr in config["sources"].get("translations", []):
         slug = (tr.get("slug") or "").strip()
         name = tr.get("name", "?")
+        resource_type = (tr.get("type") or "translation").strip()
+        if resource_type not in allowed_types:
+            raise SystemExit(
+                f"config: edition '{name}' has unsupported type '{resource_type}'. "
+                f"Expected one of: {', '.join(sorted(allowed_types))}."
+            )
         if not slug:
             raise SystemExit(
                 f"config: translation '{name}' has no `slug`. Every edition needs a "
                 "stable slug — consumers persist it, and row ids shift whenever "
                 "this list is reordered."
+            )
+        if "enabled" in tr and not isinstance(tr["enabled"], bool):
+            raise SystemExit(
+                f"config: edition '{name}' has non-boolean `enabled: "
+                f"{tr['enabled']!r}`. Use `true`/`false` — anything else is "
+                "probably a YAML typo (e.g. a quoted string) that would "
+                "silently be treated as enabled."
             )
         if slug in seen:
             raise SystemExit(
@@ -640,12 +654,16 @@ def build(config: dict, graft: bool = True, output: str | None = None,
         record_checksum(tr)
         cur = conn.execute(
             "INSERT INTO resources(slug,type,language_code,name,native_name,author,"
-            "direction,sort_order,default_on,license,source_url)"
-            " VALUES (?,'translation',?,?,?,?,?,?,?,?,?)",
+            "direction,sort_order,default_on,enabled,license,source_url)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
             (
-                tr["slug"], tr["language_code"], tr["name"], tr.get("native_name"),
+                tr["slug"], tr.get("type", "translation"), tr["language_code"],
+                tr["name"], tr.get("native_name"),
                 tr.get("author"), tr.get("direction"), int(tr.get("sort_order", 0)),
                 1 if tr.get("default_on") else 0,
+                # Kill switch: absent means enabled, same default as the column
+                # itself, so every pre-existing config entry is unaffected.
+                0 if tr.get("enabled") is False else 1,
                 tr.get("license"), tr.get("source_url"),
             ),
         )
@@ -678,7 +696,8 @@ def build(config: dict, graft: bool = True, output: str | None = None,
                 (aid, resource_id, text),
             )
             inserted += 1
-        log(f"translation [{tr['slug']}] {tr['name']}: {inserted} ayahs")
+        enabled_note = "" if tr.get("enabled") is not False else " [DISABLED — not published]"
+        log(f"edition [{tr['slug']}] {tr['name']} ({tr.get('type', 'translation')}): {inserted} ayahs{enabled_note}")
 
     # 5) hijri_anchor_points ---------------------------------------------------
     load_hijri_anchors(conn, Path(__file__).parent.parent / "config" / "hijri_anchors.yaml")
