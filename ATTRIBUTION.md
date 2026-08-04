@@ -172,9 +172,9 @@ repo's ADR 0004, with no shared renderer between the two scripts.
   judgment calls) is original creative and editorial labor, not a mechanical
   1:1 transcription, and is Al Marfa Technologies' own protectable expression,
   same "we own the rendering, not the source" claim as the Devanagari section
-  above. The parallel copyright/licensing language still needs adding to
-  `alquran-roman-urdu`'s own `ATTRIBUTION.md`/`LICENSE` — not done as part of
-  this pass.
+  above. The parallel copyright/licensing language was added to
+  `alquran-roman-urdu`'s own `LICENSE`/`ATTRIBUTION.md` on 2026-08-04 — keep
+  both in sync if either changes.
 - **Required credit draft:** "Muhammad Junagarhi; transliterated by Abu
   Rayyan. Junagarhi translation is public domain. Transliteration ©
   Abu Rayyan." (matches `config/sources.yaml`'s `author`/`license` fields and
