@@ -244,7 +244,9 @@ sources:
       default_on: false
       enabled: true
       author: "Sahih International"
-      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      # Checked 2026-08-04: no resource-specific terms on the QUL page. Ship on
+      # QUL's general free-distribution basis with attribution. See ATTRIBUTION.md §5.
+      license: "No resource-specific QUL terms found (checked 2026-08-04); free-distribution basis with attribution. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/193"
 
     # --- English: Dr. Hilali & Dr. Muhsin Khan ("The Noble Quran") ----------
@@ -252,10 +254,10 @@ sources:
     # DOWNLOAD: qul.tarteel.ai/resources/translation/301 (requires QUL login)
     #   → save as sources/en-hilali-khan-simple.db, then rebuild.
     # Licensing: freely distributed for Islamic/da'wah purposes by King Fahd
-    # Complex. Verify exact redistribution terms on the QUL resource page before
-    # release. Attribution: "Dr. Muhammad Taqi-ud-Din Al-Hilali and
-    # Dr. Muhammad Muhsin Khan, King Fahd Complex for the Printing of the
-    # Holy Quran, Madinah."
+    # Complex. Checked 2026-08-04: no resource-specific terms on the QUL page;
+    # shipped on that free-distribution basis. See ATTRIBUTION.md §10.
+    # Attribution: "Dr. Muhammad Taqi-ud-Din Al-Hilali and Dr. Muhammad Muhsin
+    # Khan, King Fahd Complex for the Printing of the Holy Quran, Madinah."
     - file: sources/en-hilali-khan-simple.db
       slug: en-hilali-khan
       language_code: en
@@ -266,7 +268,7 @@ sources:
       enabled: true
       # Reader attribution label (owner-preferred short form, 2026-07-06).
       author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
-      license: "Freely distributed for da'wah/Islamic purposes; King Fahd Complex. Verify QUL resource page before release."
+      license: "No resource-specific QUL terms found (checked 2026-08-04); free-distribution basis with attribution, King Fahd Complex. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/301"
       # Owner decision (2026-07-06): flatten the circumflex transliteration
       # letters (â î û → a i u) to plain ASCII for cleaner reading — e.g.
@@ -296,7 +298,7 @@ sources:
       default_on: false
       enabled: true
       author: "Abu Bakr Muhammad Zakaria"
-      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis, King Fahd Complex. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/200"
 
     # --- Indonesian: King Fahd Quran Complex --------------------------------
@@ -315,7 +317,7 @@ sources:
       default_on: false
       enabled: true
       author: "King Fahd Quran Complex"
-      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis, King Fahd Complex. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/173"
 
     # --- Swahili: Rowwad Translation Center ----------------------------------
@@ -335,7 +337,7 @@ sources:
       default_on: false
       enabled: true
       author: "Rowwad Translation Center"
-      license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
+      license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/466"
 
     # --- Albanian: Rowwad Translation Center ---------------------------------

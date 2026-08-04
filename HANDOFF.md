@@ -313,7 +313,9 @@ the summary).
   never the blocker. See `TRANSLATIONS-ROADMAP.md`.
 
 Still open: confirm KFGQPC **V2 604-page layout** redistribution terms (we store
-only page numbers, low risk); pick a pipeline-code license (`LICENSE` TODO).
+only page numbers, low risk). Pipeline-code license is **RESOLVED** (proprietary,
+all rights reserved, 2026-07-28 — see `ATTRIBUTION.md`'s "Still open" section);
+this paragraph used to say "TODO," which was stale.
 Junagarhi no longer needs re-clearing on monetization — that caveat was tied to
 Tanzil's terms and is withdrawn. **Hindi (`hi.hindi`) still does**: it is Tanzil
 non-commercial + attribution + verbatim, and unlike the Urdu its translators are
@@ -338,9 +340,9 @@ recent enough that no public-domain argument is available.
    catalogue, verified end to end.
 9. **Decide on the QPC end-of-ayah number glyph** in the Arabic text (kept as-is
    now, e.g. the `١` after 1:1). Strip it in `prepare_sources.py` if unwanted.
-10. **Roman Urdu ingested + per-edition kill switch built, 2026-08-03 — not
-    committed, not published.** See "SESSION HANDOFF" at the top of this file
-    for the full state and exact next commands.
+10. ~~Roman Urdu ingested + per-edition kill switch built.~~ ✅ done 2026-08-03
+    — committed (`30d6e7a`, `7d28a00`, `945ab7b`) and published to R2. See
+    "SESSION HANDOFF" at the top of this file for the full state.
 
 Owner-only, still open:
 - ~~**Repo visibility vs. the licence.**~~ **SETTLED 2026-07-28 (owner): repos

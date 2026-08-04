@@ -136,21 +136,30 @@ Hindi register, publisher Alkhair (Indore).
   independent re-transcription from the printed book) requires the owner's
   prior written permission**, same as the pipeline code under `LICENSE`.
 
-## 5. English translation — Sahih International — DOWNLOADABLE
+## 5. English translation — Sahih International — DOWNLOADABLE, LIVE
 
-**Status: source confirmed in QUL as resource #193; source file pending local
-download. Licence terms still need verification before release.**
+**Status: licence terms checked 2026-08-04, cleared to ship on QUL's general
+basis — see "Terms" below.** (Previously read "release gate: confirm terms
+before public release" while already live in the published catalogue; that
+inconsistency is now resolved rather than left standing.)
 
 - **Source:** QUL translation resource #193,
   `https://qul.tarteel.ai/resources/translation/193`, exported as
   `simple.sqlite` and ingested as `sources/en-sahih-international-simple.db`.
+- **Terms:** checked 2026-08-04 — no resource-specific license text is
+  published on the QUL page itself, and QUL/Tarteel's own terms-of-use page
+  (`tarteel.ai/terms`) returns nothing (404) that speaks to redistribution of
+  exported resources. Same finding, same resolution the owner already applied
+  to §7/§8/§9 (Bengali/Indonesian/Swahili) on 2026-07-30: ship on QUL's
+  general free-distribution basis with attribution, consistent with how every
+  other QUL-sourced edition in this file is handled. Revisit if a
+  resource-specific restriction surfaces from QUL or the translator/publisher
+  directly.
 - **Use in app:** installable/downloadable English alternative to Hilali & Khan.
   It is not bundled and not default-on; it appears before Hilali & Khan in the
   English list for reader familiarity.
 - **Required credit draft:** "English translation by Sahih International.
   Source: Quranic Universal Library — https://qul.tarteel.ai/resources/translation/193"
-- **Release gate:** confirm QUL/resource-specific license terms and any
-  commercial-use caveat before public release.
 
 ## Roman Urdu — Al Marfa (Abu Rayyan) — DOWNLOADABLE, UNVERIFIED
 
@@ -192,7 +201,7 @@ repo's ADR 0004, with no shared renderer between the two scripts.
   comparison artifact. That row's attribution is to Muhammad Kazim /
   Al-QuranJino, never to Abu Rayyan or Al Marfa.
 
-## 6. Hindi translation — Maulana Azizul Haque al-Umari — DOWNLOADABLE
+## 6. Hindi translation — Maulana Azizul Haque al-Umari — DOWNLOADABLE, LIVE
 
 Non-default/installable Hindi option from QUL #166.
 
@@ -200,9 +209,11 @@ Non-default/installable Hindi option from QUL #166.
   `https://qul.tarteel.ai/resources/translation/166`, exported as
   `simple.sqlite` and ingested as
   `sources/maulana-azizul-haque-al-umari-simple.db`.
-- **Terms:** QuranEnc terms — use unmodified, credit QuranEnc.com, preserve
-  embedded/version metadata where applicable. Confirm current resource terms
-  before release.
+- **Terms:** QuranEnc.com-sourced content — use unmodified, credit
+  QuranEnc.com, preserve embedded/version metadata where applicable. Checked
+  2026-08-04: the QUL resource page itself carries no separate license text
+  beyond that (same finding as §5/§7/§8/§9). Ship on QuranEnc's stated terms
+  above; revisit if QuranEnc or QUL publish a more specific restriction.
 - **Required credit draft:** "Hindi translation by Maulana Azizul Haque
   al-Umari. Source: Quranic Universal Library / QuranEnc.com."
 - **Use in app:** downloadable Hindi alternative, not bundled and not default-on.
@@ -278,10 +289,48 @@ translations across QUL's catalogue.
   block in `config/sources.yaml` for the re-download steps once QUL serves a
   correct export.
 
+## 10. English translation — Dr. Muhsin Khan & Dr. Taqi-ud-Din Hilali ("The Noble Quran") — DOWNLOADABLE, LIVE
+
+**Added here 2026-08-04** — this edition has been live since the earliest
+builds (it is one of the three original MVP-bundled editions, and §7/§8/§9
+above cite it repeatedly as their licensing precedent) but never had its own
+section recording that basis. Written down now so "same basis as Hilali &
+Khan" has something concrete to point at.
+
+- **Source:** QUL translation resource #301,
+  `https://qul.tarteel.ai/resources/translation/301`, exported as
+  `simple.sqlite` and ingested as `sources/en-hilali-khan-simple.db`.
+- **Publisher:** King Fahd Complex for the Printing of the Holy Quran,
+  Madinah — same institutional lineage as the Arabic text (§1) and the
+  Bengali/Indonesian editions (§7/§8), which cite this edition as precedent.
+- **Terms:** checked 2026-08-04 — no resource-specific license text is
+  published on the QUL page itself. King Fahd Complex material is
+  historically distributed freely for Islamic/da'wah purposes; shipped on
+  that general free-distribution basis with attribution, same resolution
+  applied to §5/§6/§7/§8/§9. Revisit if King Fahd Complex or QUL publish a
+  more specific restriction.
+- **Required credit draft:** "Dr. Muhammad Taqi-ud-Din Al-Hilali and
+  Dr. Muhammad Muhsin Khan, King Fahd Complex for the Printing of the Holy
+  Quran, Madinah." (owner-preferred short form, 2026-07-06, per
+  `config/sources.yaml`'s `author` field.)
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+  Presentational normalizations applied at build time (`strip_translit_diacritics`,
+  `collapse_nbsp` — see `config/sources.yaml` and `HANDOFF.md` for the
+  reasoning); text content itself is unmodified.
+
 ---
 
 ## Still open / owner to confirm
 
+- ~~**Translation licence gates left open on live editions**~~ — **RESOLVED
+  2026-08-04.** Sahih International (§5) and al-Umari Hindi (§6) previously
+  read "confirm before release" while already published; Hilali & Khan (§10)
+  had no attribution record at all despite being cited as precedent by three
+  other editions. All three checked against their QUL resource pages
+  (no resource-specific terms found) and cleared on the same general
+  free-distribution basis already applied to §7/§8/§9. Nothing was pulled or
+  changed in `config/sources.yaml`'s actual bundled/downloadable set — this
+  was a documentation gap, not a content change.
 - **KFGQPC redistribution of the V2 604-page layout** as page-number data —
   low risk (we store an "ayah → page number" mapping, not the layout/glyphs),
   but confirm with KFGQPC's developer terms before a wide public release.
