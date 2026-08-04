@@ -14,7 +14,13 @@ Design goals (from the PRD):
     explicit overrides in the config.
 
 Usage:
+    # Lean app seed: only editions marked `bundle: true` carry text.
     python pipeline/build_db.py --config config/sources.yaml
+
+    # Full publishing DB: includes downloadable edition text so build_editions.py
+    # can emit per-edition artifacts.
+    python pipeline/build_db.py --config config/sources.yaml \
+      --include-downloadable-text --output dist/quran.full.db
 
 Nothing here downloads from the network. You download the chosen resources from
 https://qul.tarteel.ai yourself and point the config at the local files.
@@ -489,6 +495,18 @@ def validate_editions(config: dict) -> None:
                 "probably a YAML typo (e.g. a quoted string) that would "
                 "silently be treated as enabled."
             )
+        if "bundle" in tr and not isinstance(tr["bundle"], bool):
+            raise SystemExit(
+                f"config: edition '{name}' has non-boolean `bundle: "
+                f"{tr['bundle']!r}`. Use `true`/`false` — anything else is "
+                "probably a YAML typo that would bloat the app seed."
+            )
+        if tr.get("default_on") and tr.get("bundle") is False:
+            raise SystemExit(
+                f"config: edition '{name}' is `default_on: true` but "
+                "`bundle: false`. A default reader edition must be present in "
+                "the app seed."
+            )
         if slug in seen:
             raise SystemExit(
                 f"config: duplicate slug '{slug}' ({seen[slug]} and {name}). "
@@ -527,7 +545,7 @@ def load_hijri_anchors(conn: sqlite3.Connection, anchors_path: Path) -> None:
 
 
 def build(config: dict, graft: bool = True, output: str | None = None,
-          surgical: bool = True) -> None:
+          surgical: bool = True, include_downloadable_text: bool = False) -> None:
     validate_editions(config)
 
     out_path = Path(output or config["output"])
@@ -652,6 +670,7 @@ def build(config: dict, graft: bool = True, output: str | None = None,
     # 4) Translations (slugs already validated by validate_editions) ----------
     for tr in config["sources"].get("translations", []):
         record_checksum(tr)
+        bundled = bool(tr.get("bundle", tr.get("default_on", False)))
         cur = conn.execute(
             "INSERT INTO resources(slug,type,language_code,name,native_name,author,"
             "direction,sort_order,default_on,enabled,license,source_url,"
@@ -671,6 +690,14 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             ),
         )
         resource_id = cur.lastrowid
+        if not bundled and not include_downloadable_text:
+            enabled_note = "" if tr.get("enabled") is not False else " [DISABLED — not published]"
+            log(
+                f"edition [{tr['slug']}] {tr['name']} "
+                f"({tr.get('type', 'translation')}): metadata only, 0 bundled ayahs"
+                f"{enabled_note}"
+            )
+            continue
         rows = read_ayah_text(tr)  # translation simple.sqlite is also ayah-keyed text
         strip_diacritics = bool(tr.get("strip_translit_diacritics"))
         fix_nbsp = bool(tr.get("collapse_nbsp"))
@@ -700,7 +727,12 @@ def build(config: dict, graft: bool = True, output: str | None = None,
             )
             inserted += 1
         enabled_note = "" if tr.get("enabled") is not False else " [DISABLED — not published]"
-        log(f"edition [{tr['slug']}] {tr['name']} ({tr.get('type', 'translation')}): {inserted} ayahs{enabled_note}")
+        bundle_note = "" if bundled else " [downloadable text included for publishing]"
+        log(
+            f"edition [{tr['slug']}] {tr['name']} "
+            f"({tr.get('type', 'translation')}): {inserted} ayahs"
+            f"{bundle_note}{enabled_note}"
+        )
 
     # 5) hijri_anchor_points ---------------------------------------------------
     load_hijri_anchors(conn, Path(__file__).parent.parent / "config" / "hijri_anchors.yaml")
@@ -732,6 +764,10 @@ def main() -> None:
                     help="restore the legacy over-graft (carry plain dagger-alef "
                          "too); the default is the surgical madd-only graft")
     ap.add_argument("--output", help="override the output path from the config")
+    ap.add_argument("--include-downloadable-text", action="store_true",
+                    help="include text for non-bundled editions too; use only "
+                         "for the temporary DB that build_editions.py reads, "
+                         "not for the app seed")
     args = ap.parse_args()
 
     cfg_path = Path(args.config)
@@ -739,7 +775,8 @@ def main() -> None:
         sys.exit(f"config not found: {cfg_path}\nCopy config/sources.example.yaml to {cfg_path} and edit it.")
     config = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
     build(config, graft=not args.no_tatweel_graft, output=args.output,
-          surgical=not args.full_graft)
+          surgical=not args.full_graft,
+          include_downloadable_text=args.include_downloadable_text)
 
 
 if __name__ == "__main__":

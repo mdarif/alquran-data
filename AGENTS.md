@@ -28,9 +28,10 @@ Build (use a normal local disk — SQLite writes fail on network/synced mounts):
 ```bash
 pip install -r requirements.txt
 python pipeline/prepare_sources.py
-python pipeline/build_db.py --config config/sources.yaml
+python pipeline/build_db.py --config config/sources.yaml              # lean app seed
 python pipeline/verify_db.py --db assets/quran.db
-python pipeline/build_editions.py --db assets/quran.db --out dist/editions   # only when publishing downloads
+python pipeline/build_db.py --config config/sources.yaml --include-downloadable-text --output dist/quran.full.db
+python pipeline/build_editions.py --db dist/quran.full.db --out dist/editions   # only when publishing downloads
 pipeline/publish_editions.sh                                                # then upload + verify
 ```
 
@@ -74,6 +75,15 @@ Four traps, all of which fail quietly:
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
 
+**Bundling split, added 2026-08-04:** `bundle: true` is the only way an edition's
+full text enters the native app seed (`assets/quran.db`). `bundle: false` keeps
+only the metadata row in the app seed; the text is served through the R2
+downloadable-editions catalogue. A `default_on: true` edition must be bundled.
+When publishing editions, build a temporary full DB with
+`build_db.py --include-downloadable-text --output dist/quran.full.db`, then run
+`build_editions.py` against that temporary DB. Never copy the full publishing DB
+into `../alquran-app/assets/db/quran.db`.
+
 **Kill switch, added 2026-08-03:** `resources.enabled` (default 1). Set
 `enabled: false` on an edition in `config/sources.yaml`, rebuild, republish —
 `build_editions.py` skips it entirely, so it disappears from `catalogue.json`
@@ -94,10 +104,11 @@ replaced by `ur-roman-abu-rayyan`) out of the catalogue while still built into
   consumer needs a hardcoded language list. Full rationale + the Ahsanul Kalam
   candidate: **`TRANSLATIONS-ROADMAP.md`**.
 
-- **Done:** real data downloaded, `quran.db` builds + verifies clean, pushed to GitHub.
+- **Done:** real data downloaded, lean `quran.db` builds + verifies clean, pushed to GitHub.
 - **Licensing** (see `ATTRIBUTION.md` — canonical). App ships **free /
-  non-commercial (da'wah)**. Shipping: Urdu (Junagarhi), Hindi (Suhel Farooq
-  Khan/Nadwi), English (Hilali & Khan).
+  non-commercial (da'wah)**. Bundled in the native app seed: Urdu (Junagarhi).
+  Additional translations/transliterations are published as downloadable
+  editions so install size stays lean.
   - **Urdu (Junagarhi) = PUBLIC DOMAIN** (owner determination 2026-07-27).
     Translator d. 1941; life+60 clears it ~2001. Tanzil is a *redistributor*, not
     a rights holder — credited by courtesy. **No verbatim-only clause and no

@@ -84,7 +84,14 @@ sources:
   #   direction     "rtl" | "ltr"
   #   sort_order    GLOBAL display order across all editions (leave gaps)
   #   default_on    true = shown by default to a new reader (usually false
-  #                 for anything but the one flagship edition per app)
+  #                 for anything but the one flagship edition per app). A
+  #                 default_on edition must also be bundled.
+  #   bundle        true = full text is included in the native app's bundled
+  #                 assets/quran.db seed. false = metadata only in the app seed;
+  #                 publish the text as a downloadable edition instead. Keep
+  #                 this false for catalogue editions so app installs stay lean.
+  #                 For publishing, build a temporary full DB with
+  #                 build_db.py --include-downloadable-text.
   #   enabled       true = built into dist/editions + catalogue.json.
   #                 false = kill switch: still built into quran.db (so
   #                 re-enabling needs no re-import) but excluded from the
@@ -103,6 +110,7 @@ sources:
       direction: rtl
       sort_order: 10
       default_on: true
+      bundle: true
       enabled: true
       author: "Muhammad Junagarhi"
       license: "VERIFY on QUL resource page before release"
@@ -116,6 +124,7 @@ sources:
       direction: ltr
       sort_order: 20
       default_on: false
+      bundle: false
       enabled: true
       author: "Translator Name"
       license: "VERIFY on QUL resource page before release"
@@ -131,6 +140,7 @@ sources:
     #   direction: ltr
     #   sort_order: 11
     #   default_on: false
+    #   bundle: false
     #   enabled: true
     #   author: "Translator; transliterated by Example"
     #   license: "..."

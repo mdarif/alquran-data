@@ -10,6 +10,31 @@ this project locally. Read it fully, then continue from **Next Steps**.
 **Read this block first if you're a fresh session.** Everything below it is
 older context; this block is the current state and the concrete next actions.
 
+### Patch note — 2026-08-04: keep downloadable editions out of the app seed
+
+The native app's release build accidentally grew because `build_db.py` inserted
+the full text for every configured translation into `assets/quran.db`, even
+though most of those editions are meant to be downloaded into the app's separate
+`editions.db`.
+
+The pipeline now has two explicit modes:
+
+```bash
+# Native app seed: only translations with `bundle: true` carry text.
+python3 pipeline/build_db.py --config config/sources.yaml
+
+# Temporary publishing DB: includes downloadable text so R2 artifacts can be built.
+python3 pipeline/build_db.py --config config/sources.yaml \
+  --include-downloadable-text --output dist/quran.full.db
+python3 pipeline/build_editions.py --db dist/quran.full.db --out dist/editions
+```
+
+`config/sources.yaml` must mark the default offline edition with `bundle: true`;
+downloadable catalogue editions should be `bundle: false`. `validate_editions()`
+rejects `default_on: true` combined with `bundle: false`, and
+`build_editions.py` fails loudly if pointed at a lean metadata-only seed.
+Do **not** copy `dist/quran.full.db` into `../alquran-app/assets/db/quran.db`.
+
 ### What happened this session
 
 1. **Roman Urdu is now a real edition.** `../alquran-roman-urdu` reached full
@@ -141,12 +166,11 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 
 - Arabic script: **Uthmani/Madani only** (KFGQPC Hafs primary, Kitab alternate).
   IndoPak/Asian script is a deferred Phase-2 beta.
-- Translations: **three editions ship bundled** — Urdu (Junagarhi), Hindi (Suhel
-  Farooq Khan/Nadwi), English (Hilali & Khan). (The earlier "Urdu-only MVP, Hindi
-  deferred" scope is superseded; see ATTRIBUTION.md §1.) Further
-  translation candidates (e.g. a second English edition, Roman Urdu) are
-  tracked in **`TRANSLATIONS-ROADMAP.md`**, not here — that file is the shared
-  backlog both `alquran-app` and `al-quran-web` read from.
+- Translations: **Urdu (Junagarhi) ships bundled** in the native app seed. Other
+  approved translations/transliterations are published as downloadable editions
+  so app installs stay lean. Further translation candidates are tracked in
+  **`TRANSLATIONS-ROADMAP.md`**, not here — that file is the shared backlog both
+  `alquran-app` and `al-quran-web` read from.
 - Navigation views: **Surah, Page, Juz, Hizb, Ruku** (Rub-al-Hizb + Sajda stored too).
 - **Pinch-to-zoom is a hard accessibility requirement** (low-vision users).
 - Deferred to backlog: audio recitation, bookmarks, last-read, dark mode, tajweed,
@@ -157,7 +181,7 @@ owner's Google Drive). This repo implements PRD Section 5.1 (schema), Section 6
 - Pipeline is written, smoke-tested, and now **run end-to-end on real QUL data**.
 - **Real QUL sources downloaded** (2026-06-19, into `sources/`, git-ignored) and
   the bundled `assets/quran.db` builds and verifies clean: 114 surahs / 6236
-  ayahs, Urdu + Hindi both complete, and page/juz/hizb/rub/ruku all fully
+  ayahs, Urdu complete, and page/juz/hizb/rub/ruku all fully
   populated (page 1–604, juz 1–30, hizb 1–60, rub 1–240, ruku 1–558, 15 sajdas).
   Spot-checked: Ayatul Kursi (2:255) → page 42, Juz 2 → 2:142, 2:1 = الٓمٓ.
 - SHA-256 of every input is recorded in the DB `db_meta` table (PRD Risk #1).

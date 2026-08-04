@@ -113,6 +113,7 @@ sources:
       native_name: "اردو"
       direction: rtl
       default_on: true
+      bundle: true
     - file: {FX}/translation-hindi.sqlite
       type: transliteration
       slug: test-hi
@@ -120,6 +121,8 @@ sources:
       name: "Test Hindi"
       native_name: "हिन्दी"
       direction: ltr
+      default_on: false
+      bundle: false
       enabled: false
 """, encoding="utf-8")
 

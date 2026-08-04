@@ -100,6 +100,10 @@ sources:
       # opt-in. Replaces the "Urdu defaults on" rule previously hardcoded in the
       # web toolbar.
       default_on: true
+      # Only bundle the small default offline edition in the native app seed.
+      # Other enabled editions are published as downloads and must not bloat
+      # assets/quran.db.
+      bundle: true
       enabled: true
       author: "Muhammad Junagarhi"
       # PUBLIC DOMAIN (owner determination 2026-07-27; supersedes the Tanzil-terms
@@ -143,6 +147,7 @@ sources:
       direction: ltr
       sort_order: 11
       default_on: false
+      bundle: false
       enabled: false
       author: "Muhammad Junagarhi; Romanization credited to Muhammad Kazim / Al-QuranJino"
       license: "Experimental third-party rendering; source: Al-QuranJino. Preserve attribution and verify reuse terms before commercial distribution."
@@ -172,6 +177,7 @@ sources:
       direction: ltr
       sort_order: 11
       default_on: false
+      bundle: false
       enabled: true
       author: "Muhammad Junagarhi; transliterated by Abu Rayyan"
       license: "Junagarhi translation is public domain. Transliteration © Abu Rayyan."
@@ -200,6 +206,8 @@ sources:
       native_name: "हिन्दी"
       direction: ltr
       sort_order: 20
+      default_on: false
+      bundle: false
       enabled: true
       author: "Suhel Farooq Khan/Saifur Rahman Nadwi"
       license: "Free/non-commercial use with attribution (Tanzil terms); verbatim only. See ATTRIBUTION.md"
@@ -221,6 +229,8 @@ sources:
       native_name: "हिन्दी"
       direction: ltr
       sort_order: 21
+      default_on: false
+      bundle: false
       enabled: true
       author: "Shaikh Muhammad Rais Qureshi"
       license: "Used with permission from Alkhair, Indore. Attribution required."
@@ -242,6 +252,7 @@ sources:
       direction: ltr
       sort_order: 30
       default_on: false
+      bundle: false
       enabled: true
       author: "Sahih International"
       # Checked 2026-08-04: no resource-specific terms on the QUL page. Ship on
@@ -265,6 +276,8 @@ sources:
       native_name: "English"
       direction: ltr
       sort_order: 40
+      default_on: false
+      bundle: false
       enabled: true
       # Reader attribution label (owner-preferred short form, 2026-07-06).
       author: "Dr. Muhsin Khan/Dr. Taqi-ud-Din Hilali"
@@ -296,6 +309,7 @@ sources:
       direction: ltr
       sort_order: 50
       default_on: false
+      bundle: false
       enabled: true
       author: "Abu Bakr Muhammad Zakaria"
       license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis, King Fahd Complex. See ATTRIBUTION.md"
@@ -315,6 +329,7 @@ sources:
       direction: ltr
       sort_order: 60
       default_on: false
+      bundle: false
       enabled: true
       author: "King Fahd Quran Complex"
       license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis, King Fahd Complex. See ATTRIBUTION.md"
@@ -335,6 +350,7 @@ sources:
       direction: ltr
       sort_order: 61
       default_on: false
+      bundle: false
       enabled: true
       author: "Rowwad Translation Center"
       license: "No resource-specific QUL terms found; owner-approved 2026-07-30 free-distribution basis. See ATTRIBUTION.md"
@@ -358,6 +374,7 @@ sources:
     #   direction: ltr
     #   sort_order: 62
     #   default_on: false
+    #   bundle: false
     #   enabled: true
     #   author: "Rowwad Translation Center"
     #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
@@ -381,6 +398,7 @@ sources:
     #   direction: ltr
     #   sort_order: 63
     #   default_on: false
+    #   bundle: false
     #   enabled: true
     #   author: "Rowwad Translation Center"
     #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
@@ -396,6 +414,7 @@ sources:
       direction: ltr
       sort_order: 22
       default_on: false
+      bundle: false
       enabled: true
       name: "Maulana Azizul Haque al-Umari"
       author: "Azizul Haque al-Umari"

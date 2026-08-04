@@ -236,9 +236,12 @@ def main() -> None:
         else:
             slug_seen[slug] = name
         cnt = conn.execute("SELECT COUNT(*) FROM translations WHERE resource_id=?", (rid,)).fetchone()[0]
-        status = "ok" if cnt == EXPECTED_AYAHS else f"GAP ({EXPECTED_AYAHS - cnt} missing)"
+        if cnt == 0:
+            status = "metadata-only"
+        else:
+            status = "ok" if cnt == EXPECTED_AYAHS else f"GAP ({EXPECTED_AYAHS - cnt} missing)"
         print(f"translation [{lang}] {slug or 'NO-SLUG'} ({name}): {cnt} ayahs -> {status}")
-        if cnt != EXPECTED_AYAHS:
+        if cnt not in (0, EXPECTED_AYAHS):
             warnings.append(f"translation '{name}' covers {cnt}/{EXPECTED_AYAHS} ayahs")
     print(f"editions: {len(resources)} across {len({r[3] for r in resources})} language(s)")
 

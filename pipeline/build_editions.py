@@ -138,7 +138,9 @@ def build_edition(conn: sqlite3.Connection, res: sqlite3.Row, out_dir: Path,
     if len(rows) != EXPECTED_AYAHS:
         raise SystemExit(
             f"edition '{slug}' covers {len(rows)}/{EXPECTED_AYAHS} ayahs — refusing "
-            "to publish a partial edition (it would render blank verses, not fail)."
+            "to publish a partial edition (it would render blank verses, not fail). "
+            "If this DB is the lean app seed, rebuild a temporary publishing DB "
+            "with `build_db.py --include-downloadable-text` and pass that here."
         )
 
     path = out_dir / f"{slug}.db"
