@@ -64,9 +64,11 @@ Do **not** copy `dist/quran.full.db` into `../alquran-app/assets/db/quran.db`.
    `enabled: false`** (11 lines — nothing relies on the column's implicit
    default anymore), so the config file alone answers "what's live."
 4. **Rebuilt and verified locally, three times, after each round of changes:**
-   `python3 pipeline/build_db.py --config config/sources.yaml` →
-   `python3 pipeline/verify_db.py --db assets/quran.db` (clean, `OK`) →
-   `python3 pipeline/build_editions.py --db assets/quran.db --out
+   lean seed: `python3 pipeline/build_db.py --config config/sources.yaml` →
+   `python3 pipeline/verify_db.py --db assets/quran.db` (clean, `OK`), then
+   publishing DB: `python3 pipeline/build_db.py --config config/sources.yaml
+   --include-downloadable-text --output dist/quran.full.db` →
+   `python3 pipeline/build_editions.py --db dist/quran.full.db --out
    dist/editions`. Also re-ran the smoke test
    (`tests/make_fixtures.py` + `build_db.py --config
    tests/fixtures/sources.yaml`) after adding an `enabled: false` fixture

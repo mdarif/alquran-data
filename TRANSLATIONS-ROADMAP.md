@@ -1,20 +1,20 @@
 # Translations roadmap — shared across app + web
 
-Living backlog of translations/editions to add to `assets/quran.db`. This repo
+Living backlog of translations/editions to add to Al Quran's data catalogue. This repo
 is the single source of truth for translation data (both
-`../alquran-app` and `../al-quran-web` consume the DB this pipeline builds —
+`../alquran-app` and `../al-quran-web` consume the data this pipeline builds —
 see `HANDOFF.md`), so a new edition is added **once, here**, then flows to both
-consumers on their next DB refresh. Don't duplicate this list in either
-consumer repo; link back to this file instead.
+consumers through either the lean bundled seed or the R2 downloadable catalogue.
+Don't duplicate this list in either consumer repo; link back to this file
+instead.
 
-Current lineup (shipped, all as downloadable/installable editions except
-Urdu/Hindi-Farooq-Khan/English-Hilali-Khan which are bundled): Urdu
-(Junagarhi), Hindi (Farooq Khan/Nadwi), English (Hilali & Khan), Hindi
-(Ahsanul Kalam), Hindi (al-Umari), Bengali (Zakaria), Indonesian (King Fahd
-Complex), Swahili (Rowwad Translation Center). Licensing basis for each:
-`ATTRIBUTION.md`. Configured but not yet downloaded/shipped: English (Sahih
-International); blocked on bad downloads: Albanian, German (Rowwad) — see
-the candidate sections below.
+Current lineup: Urdu (Junagarhi) is bundled in the native app seed. Hindi
+(Farooq Khan/Nadwi), English (Hilali & Khan), English (Sahih International),
+Hindi (Ahsanul Kalam), Hindi (al-Umari), Bengali (Zakaria), Indonesian (King
+Fahd Complex), Swahili (Rowwad Translation Center), and Roman Urdu (Abu Rayyan)
+are shipped as downloadable/installable editions. Licensing basis for each:
+`ATTRIBUTION.md`. Blocked on bad downloads: Albanian, German (Rowwad) — see the
+candidate sections below.
 
 ## The edition model (landed 2026-07-28) — read before adding any translation
 
@@ -51,14 +51,11 @@ list.
   publish with `pipeline/publish_editions.sh`, then `verify_editions.py`. See
   `CLAUDE.md` for the three traps that all fail quietly (`--remote`,
   `Content-Encoding`, cache TTLs).
-- **Bundled vs downloadable:** today's three editions stay bundled in
-  `quran.db`; everything new is a download. No first-run network requirement.
-  **Expected consequence:** the live catalogue currently lists exactly the three
-  bundled editions, so the app's Translations screen shows all three as
-  "Included" and offers nothing to download. That is correct, not a regression —
-  it stays that way until a non-bundled edition (Ahsanul Kalam) lands. To exercise
-  the download path before then, publish a throwaway edition under a staging
-  prefix and point a debug build at it with `--dart-define`.
+- **Bundled vs downloadable:** `bundle: true` is the only way an edition's full
+  text enters the native app seed (`assets/quran.db`). `bundle: false` keeps
+  only metadata in the seed and serves the text through the R2 catalogue. Do not
+  copy the temporary full publishing DB into the app repo; it bloats every new
+  install and defeats download-on-demand.
 - **App constraint:** downloaded editions must live in a separate `editions.db`.
   The app re-seeds `quran.db` from its asset whenever the version marker changes
   (`db_seeder.dart`), so anything written into it is destroyed on app update.

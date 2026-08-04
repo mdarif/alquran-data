@@ -30,7 +30,8 @@ pip install -r requirements.txt
 python pipeline/prepare_sources.py
 python pipeline/build_db.py --config config/sources.yaml
 python pipeline/verify_db.py --db assets/quran.db
-python pipeline/build_editions.py --db assets/quran.db --out dist/editions   # only when publishing downloads
+python pipeline/build_db.py --config config/sources.yaml --include-downloadable-text --output dist/quran.full.db
+python pipeline/build_editions.py --db dist/quran.full.db --out dist/editions   # only when publishing downloads
 pipeline/publish_editions.sh                                                # then upload + verify
 ```
 

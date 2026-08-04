@@ -29,7 +29,9 @@ GitHub: https://github.com/mdarif/alquran-data (owner: mdarif / Mohammad Arif).
    differences), so you rarely need manual overrides.
 3. Aggregates word-by-word scripts into ayah text *or* uses ayah-level text
    directly.
-4. Builds one normalized `quran.db` matching `pipeline/schema.sql`.
+4. Builds one normalized `quran.db` matching `pipeline/schema.sql`. By default
+   this is the **lean app seed**: only editions marked `bundle: true` carry
+   translation text; downloadable editions keep only metadata rows.
 5. Records a **SHA-256 of every input** in the `db_meta` table (PRD Risk #1
    integrity gate).
 6. Optionally packages every translation/transliteration as a standalone
@@ -42,13 +44,13 @@ GitHub: https://github.com/mdarif/alquran-data (owner: mdarif / Mohammad Arif).
 pipeline/
   schema.sql            target app schema (surahs, ayahs, resources, translations)
   prepare_sources.py    raw QUL files -> arabic-ayah.sqlite + structure.sqlite
-  build_db.py           the compiler: config/sources.yaml -> assets/quran.db
+  build_db.py           the compiler: config/sources.yaml -> lean assets/quran.db
   verify_db.py          post-build sanity checks (114 surahs / 6236 ayahs / coverage)
   build_hindi_source.py Hindi (Suhel Farooq Khan/Nadwi) via the AlQuran Cloud API (not on QUL)
   build_indopak_source.py  Arabic IndoPak script, normalised for the Noorehuda font
   ahsanul_kalam/         importer for the Ahsanul Kalam Hindi OCR pilot
   roman_urdu/             importer for the Al Marfa (Abu Rayyan) Roman Urdu edition
-  build_editions.py     assets/quran.db -> dist/editions (.db.gz per edition + catalogue.json)
+  build_editions.py     full publishing DB -> dist/editions (.db.gz per edition + catalogue.json)
   publish_editions.sh   uploads dist/editions -> Cloudflare R2 (al-quran-editions bucket)
   verify_editions.py    checks the LIVE published editions match their catalogue digests
 config/
@@ -132,13 +134,40 @@ python pipeline/verify_db.py --db assets/quran.db
 
 `assets/quran.db` is the file the Flutter app and web app bundle.
 
+### Bundled vs downloadable text
+
+`config/sources.yaml` has two separate publication flags:
+
+- `bundle: true` means the edition's full text is inserted into
+  `assets/quran.db` and ships inside the native app.
+- `bundle: false` means the app seed gets only the `resources` metadata row; the
+  text is served as a downloadable edition from R2 and installed by the app into
+  its separate `editions.db`.
+- `enabled: false` removes an edition from the downloadable catalogue; it does
+  not mean "bundle this into the app."
+
+The release-size invariant is simple: the app seed should stay lean. Do not copy
+`dist/quran.full.db` into `../alquran-app/assets/db/quran.db`.
+
+Before copying a seed DB into the app repo, check the row counts:
+
+```bash
+sqlite3 assets/quran.db \
+  "select r.slug, count(t.id) from resources r left join translations t on t.resource_id=r.id group by r.slug order by r.sort_order;"
+```
+
+Expected today: bundled/default offline editions have 6,236 rows; downloadable
+editions have `0` rows in `assets/quran.db`.
+
 ### Publishing downloadable editions
 
 Only needed when a translation/transliteration edition changed and needs to
 reach existing installs without an app-store release:
 
 ```bash
-python pipeline/build_editions.py --db assets/quran.db --out dist/editions
+python pipeline/build_db.py --config config/sources.yaml \
+  --include-downloadable-text --output dist/quran.full.db
+python pipeline/build_editions.py --db dist/quran.full.db --out dist/editions
 pipeline/publish_editions.sh
 python pipeline/verify_editions.py
 ```
@@ -167,17 +196,19 @@ python pipeline/build_db.py --config tests/fixtures/sources.yaml
    edition), `enabled: true`, `license`, `source_url`. Set `experimental:
    true` if the content hasn't been through full manual review yet, and
    `credit_name` only if `author` is a long multi-person licensing credit.
-3. Rebuild: `build_db.py` → `verify_db.py` (confirms 114/6236 coverage for
-   the new edition too).
+3. Rebuild the lean app seed: `build_db.py` → `verify_db.py`. For a
+   downloadable-only edition, `verify_db.py` should report the edition as
+   metadata-only in `assets/quran.db`.
 4. Record the edition in `ATTRIBUTION.md` (licensing is the canonical
    clearance record) and, if it started life as a roadmap candidate, update
    its status in `TRANSLATIONS-ROADMAP.md`.
-5. If it should reach existing installs without an app release: `build_editions.py`
-   → `publish_editions.sh` → `verify_editions.py`.
+5. If it should reach existing installs without an app release: build a
+   temporary full DB with `--include-downloadable-text`, then
+   `build_editions.py` → `publish_editions.sh` → `verify_editions.py`.
 6. To pull an edition back out without an app release (bad data, licensing
    issue), set `enabled: false` and republish — see the "Kill switch"
-   paragraph in `AGENTS.md`/`CLAUDE.md`. It stays built into `quran.db` for
-   reproducibility but disappears from `catalogue.json`.
+   paragraph in `AGENTS.md`/`CLAUDE.md`. If it is `bundle: false`, it stays as
+   metadata-only in the lean app seed and disappears from `catalogue.json`.
 
 ## Structural metadata: two modes
 
