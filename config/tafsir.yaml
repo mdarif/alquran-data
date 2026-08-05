@@ -9,6 +9,7 @@ tafsir:
     direction: ltr
     sort_order: 10
     enabled: true
+    visible: true
     abridged: true
     author: "Hafiz Ibn Kathir; abridged English edition"
     license: "VERIFY on QUL resource page before release"
@@ -21,6 +22,7 @@ tafsir:
     direction: rtl
     sort_order: 20
     enabled: true
+    visible: true
     abridged: false
     author: "Tafsir Ibn Kathir Urdu edition"
     license: "VERIFY on QUL resource page before release"

@@ -36,10 +36,20 @@ if [[ ! -f "$DIR/catalogue.json" ]]; then
   exit 1
 fi
 
-shopt -s nullglob
-artifacts=("$DIR"/*.db.gz)
+mapfile -t artifacts < <(
+  python3 - "$DIR/catalogue.json" "$DIR" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+catalogue = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+base = Path(sys.argv[2])
+for entry in catalogue.get("editions", []):
+    print(base / entry["file"])
+PY
+)
 if (( ${#artifacts[@]} == 0 )); then
-  echo "no .db.gz artifacts in $DIR" >&2
+  echo "no artifacts referenced in $DIR/catalogue.json" >&2
   exit 1
 fi
 
@@ -55,7 +65,7 @@ echo "→ catalogue.json (last)"
 npx --yes wrangler r2 object put "$BUCKET/catalogue.json" \
   --file "$DIR/catalogue.json" --remote \
   --content-type "application/json; charset=utf-8" \
-  --cache-control "public, max-age=300, must-revalidate"
+  --cache-control "no-cache, must-revalidate"
 
 echo
 echo "Verifying over the public domain…"

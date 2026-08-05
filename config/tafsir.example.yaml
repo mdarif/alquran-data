@@ -19,6 +19,10 @@ tafsir:
     direction: ltr
     sort_order: 10
     enabled: true
+    # Runtime visibility in the app's Tafsir Manager. Leave enabled=true to keep
+    # building/publishing the artifact, then flip this to false in catalogue.json
+    # on R2 when you need to hide it without an app release.
+    visible: true
     abridged: true
     author: "Hafiz Ibn Kathir; abridged English edition"
     license: "VERIFY on QUL resource page before release"

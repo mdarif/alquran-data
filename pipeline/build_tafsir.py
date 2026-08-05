@@ -222,6 +222,7 @@ def write_artifact(spec: dict, out_dir: Path, db_version: str, expected_ayahs: i
         "sourceUrl": spec.get("source_url"),
         "creditName": spec.get("credit_name"),
         "abridged": bool(spec.get("abridged")),
+        "visible": spec.get("visible", True) is not False,
         "ayahCount": len(rows),
         "textGroupCount": text_rows,
         "file": final_path.name,
