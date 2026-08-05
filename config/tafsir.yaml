@@ -13,3 +13,15 @@ tafsir:
     author: "Hafiz Ibn Kathir; abridged English edition"
     license: "VERIFY on QUL resource page before release"
     source_url: "https://qul.tarteel.ai/resources/tafsir/35"
+  - file: sources/tafsir-ibn-kathir-urdu.sqlite
+    slug: ur-ibn-kathir
+    language_code: ur
+    name: "Tafsir Ibn Kathir"
+    native_name: "اردو"
+    direction: rtl
+    sort_order: 20
+    enabled: true
+    abridged: false
+    author: "Tafsir Ibn Kathir Urdu edition"
+    license: "VERIFY on QUL resource page before release"
+    source_url: "https://qul.tarteel.ai/resources/tafsir/30"
