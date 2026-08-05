@@ -9,6 +9,7 @@ It creates, under tests/fixtures/:
   * quran-metadata.sqlite            (per-ayah page/juz/hizb/rub/ruku/sajda)
   * translation-urdu.sqlite          (ayah-keyed text)
   * translation-hindi.sqlite         (verse_key keyed text)
+  * tafsir-english.sqlite            (QUL-like tafsir rows with grouping)
 and a matching tests/fixtures/sources.yaml.
 
 Run:  python tests/make_fixtures.py && python pipeline/build_db.py --config tests/fixtures/sources.yaml
@@ -93,6 +94,32 @@ def make_hindi():
     conn.commit(); conn.close()
 
 
+def make_tafsir():
+    conn, _ = fresh("tafsir-english.sqlite")
+    conn.execute(
+        "CREATE TABLE tafsirs(ayah_key TEXT, group_ayah_key TEXT, from_ayah TEXT, "
+        "to_ayah TEXT, ayah_keys TEXT, text TEXT)"
+    )
+    rows = []
+    for (s, a) in sorted(AYAT.keys()):
+        key = f"{s}:{a}"
+        if key in {"2:2", "2:3"}:
+            rows.append(
+                (
+                    key,
+                    "2:2",
+                    "2:2",
+                    "2:3",
+                    "2:2,2:3",
+                    "Commentary for 2:2-2:3" if key == "2:2" else None,
+                )
+            )
+        else:
+            rows.append((key, key, key, key, key, f"Commentary for {key}"))
+    conn.executemany("INSERT INTO tafsirs VALUES (?,?,?,?,?,?)", rows)
+    conn.commit(); conn.close()
+
+
 def make_config():
     (FX / "sources.yaml").write_text(f"""output: {FX}/quran.test.db
 db_version: "0.0.1-test"
@@ -126,7 +153,23 @@ sources:
       enabled: false
 """, encoding="utf-8")
 
+    (FX / "tafsir.yaml").write_text(f"""db_version: "0.0.1-test"
+tafsir:
+  - file: {FX}/tafsir-english.sqlite
+    slug: en-ibn-kathir-abridged
+    language_code: en
+    name: "Tafsir Ibn Kathir (Abridged)"
+    native_name: "English"
+    direction: ltr
+    sort_order: 10
+    enabled: true
+    abridged: true
+    author: "Hafiz Ibn Kathir; abridged English edition"
+    license: "VERIFY on QUL resource page before release"
+    source_url: "https://qul.tarteel.ai/resources/tafsir/35"
+""", encoding="utf-8")
+
 
 if __name__ == "__main__":
-    make_surahs(); make_arabic_words(); make_metadata(); make_urdu(); make_hindi(); make_config()
+    make_surahs(); make_arabic_words(); make_metadata(); make_urdu(); make_hindi(); make_tafsir(); make_config()
     print(f"fixtures written to {FX}")

@@ -37,6 +37,9 @@ GitHub: https://github.com/mdarif/alquran-data (owner: mdarif / Mohammad Arif).
 6. Optionally packages every translation/transliteration as a standalone
    `.db.gz` + `catalogue.json` for download-on-demand distribution
    (`build_editions.py` → `publish_editions.sh`).
+7. Packages Tafsir resources separately with `build_tafsir.py`, preserving
+   range/group commentary rows so the app can install them into a future
+   `tafsir.db` without bloating the reader path.
 
 ## Repo layout
 
@@ -51,17 +54,20 @@ pipeline/
   ahsanul_kalam/         importer for the Ahsanul Kalam Hindi OCR pilot
   roman_urdu/             importer for the Al Marfa (Abu Rayyan) Roman Urdu edition
   build_editions.py     full publishing DB -> dist/editions (.db.gz per edition + catalogue.json)
+  build_tafsir.py       QUL Tafsir SQLite -> dist/tafsir (.db.gz per tafsir + catalogue.json)
   publish_editions.sh   uploads dist/editions -> Cloudflare R2 (al-quran-editions bucket)
   verify_editions.py    checks the LIVE published editions match their catalogue digests
 config/
   sources.example.yaml   copy to sources.yaml and edit
   sources.yaml            the real, tracked config (force-added; see Gotcha below)
+  tafsir.example.yaml      example config for downloadable Tafsir artifacts
 sources/            downloaded/generated source files (git-ignored)
 assets/             build output: quran.db (git-ignored)
 dist/editions/      build output: per-edition .db.gz + catalogue.json (git-ignored)
 tests/
   make_fixtures.py  generates tiny synthetic sources for a smoke test, incl. a
-                     transliteration-type edition and a disabled (kill-switch) edition
+                    transliteration-type edition and a disabled (kill-switch) edition
+                     plus a grouped Tafsir fixture
 ```
 
 ## Setup
@@ -178,11 +184,28 @@ this — there are four traps that fail *quietly* (wrong `--remote` flag,
 build output). All four are enforced by `verify_editions.py` and the smoke
 test, but read the reasoning before changing the publish script.
 
+### Building downloadable Tafsir
+
+Tafsir is intentionally separate from translation editions. QUL Tafsir can attach
+one commentary block to a range of ayahs, and the text can be much larger than a
+translation, so it should be downloaded explicitly and rendered on demand in the
+app.
+
+```bash
+cp config/tafsir.example.yaml config/tafsir.yaml
+# edit config/tafsir.yaml to point at the local QUL Tafsir SQLite export
+python pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir
+```
+
+See `docs/tafsir-downloads.md` for the artifact contract and the first English
+Ibn Kathir abridged target.
+
 ## Smoke test (no downloads needed)
 
 ```bash
 python tests/make_fixtures.py
 python pipeline/build_db.py --config tests/fixtures/sources.yaml
+python pipeline/build_tafsir.py --config tests/fixtures/tafsir.yaml --out /tmp/alquran-tafsir-fixture --expected-ayahs 10
 ```
 
 ## Adding a new translation/transliteration edition

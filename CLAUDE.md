@@ -20,6 +20,7 @@ pipeline/prepare_sources.py   raw QUL files  -> arabic-ayah.sqlite + structure.s
 pipeline/build_db.py          --config config/sources.yaml -> assets/quran.db
 pipeline/verify_db.py         --db assets/quran.db  (114 surahs / 6236 ayahs / index coverage)
 pipeline/build_editions.py    --db assets/quran.db --out dist/editions  (per-edition .db.gz + catalogue.json)
+pipeline/build_tafsir.py      --config config/tafsir.yaml --out dist/tafsir (per-tafsir .db.gz + catalogue.json)
 pipeline/publish_editions.sh  upload dist/editions -> R2 bucket al-quran-editions
 pipeline/verify_editions.py   check the LIVE published editions match their digests
 ```
@@ -32,10 +33,12 @@ python pipeline/build_db.py --config config/sources.yaml
 python pipeline/verify_db.py --db assets/quran.db
 python pipeline/build_db.py --config config/sources.yaml --include-downloadable-text --output dist/quran.full.db
 python pipeline/build_editions.py --db dist/quran.full.db --out dist/editions   # only when publishing downloads
+python pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir    # separate Tafsir artifacts
 pipeline/publish_editions.sh                                                # then upload + verify
 ```
 
 Smoke test (no downloads): `python tests/make_fixtures.py && python pipeline/build_db.py --config tests/fixtures/sources.yaml`.
+Tafsir smoke test: `python pipeline/build_tafsir.py --config tests/fixtures/tafsir.yaml --out /tmp/alquran-tafsir-fixture --expected-ayahs 10`.
 
 ## Sources (real QUL pull, in `sources/`, git-ignored)
 
@@ -74,6 +77,19 @@ Four traps, all of which fail quietly:
   an unchanged DB must be byte-identical.
 
 Upload artifacts first, catalogue last — the catalogue is what points at them.
+
+## Tafsir downloads
+
+Tafsir is a separate downloadable surface, not another translation row. Use
+`pipeline/build_tafsir.py` with `config/tafsir.yaml`; it emits
+`dist/tafsir/<slug>-<sha12>.db.gz` plus `dist/tafsir/catalogue.json`.
+The artifact preserves QUL's `group_ayah_key` / range model because one Tafsir
+entry can apply to multiple ayahs. Do not flatten grouped commentary into 6,236
+duplicated text rows and do not bundle it into the native app seed.
+
+First target: English Tafsir Ibn Kathir abridged from
+https://qul.tarteel.ai/resources/tafsir/35. Licensing still needs explicit
+verification before public release.
 
 **Legal notice is not technical deterrence.** `ATTRIBUTION.md`/`LICENSE`
 assert copyright over the original Ahsanul Kalam Hindi reconstruction (and,
