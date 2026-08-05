@@ -56,6 +56,7 @@ pipeline/
   build_editions.py     full publishing DB -> dist/editions (.db.gz per edition + catalogue.json)
   build_tafsir.py       QUL Tafsir SQLite -> dist/tafsir (.db.gz per tafsir + catalogue.json)
   publish_editions.sh   uploads dist/editions -> Cloudflare R2 (al-quran-editions bucket)
+  publish_tafsir.sh     uploads dist/tafsir -> Cloudflare R2 under /tafsir
   verify_editions.py    checks the LIVE published editions match their catalogue digests
 config/
   sources.example.yaml   copy to sources.yaml and edit
@@ -195,6 +196,7 @@ app.
 cp config/tafsir.example.yaml config/tafsir.yaml
 # edit config/tafsir.yaml to point at the local QUL Tafsir SQLite export
 python pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir
+pipeline/publish_tafsir.sh
 ```
 
 See `docs/tafsir-downloads.md` for the artifact contract and the first English

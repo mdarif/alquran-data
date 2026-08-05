@@ -33,6 +33,12 @@ querying its row, then loading `group_ayah_key` if `text` is null.
 Start with English Tafsir Ibn Kathir abridged from QUL:
 https://qul.tarteel.ai/resources/tafsir/35
 
+Expected local source file:
+
+```bash
+sources/tafsir-ibn-kathir-english.sqlite
+```
+
 Use the abridged edition because the product goal is concise, high-confidence
 commentary: weak narrations, long repetitions, and unverified Isra'iliyyat are
 reduced compared with the full source.
@@ -53,3 +59,16 @@ python pipeline/build_tafsir.py \
 
 The fixture includes a `2:2` to `2:3` grouped commentary row to protect the
 range semantics.
+
+## Publish
+
+```bash
+python pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir
+pipeline/publish_tafsir.sh
+```
+
+The live app-facing catalogue is:
+
+```text
+https://editions.alquranreader.com/tafsir/catalogue.json
+```

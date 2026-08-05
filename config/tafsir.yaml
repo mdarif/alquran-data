@@ -1,0 +1,15 @@
+db_version: "0.1.0"
+
+tafsir:
+  - file: sources/tafsir-ibn-kathir-english.sqlite
+    slug: en-ibn-kathir-abridged
+    language_code: en
+    name: "Tafsir Ibn Kathir"
+    native_name: "English"
+    direction: ltr
+    sort_order: 10
+    enabled: true
+    abridged: true
+    author: "Hafiz Ibn Kathir; abridged English edition"
+    license: "VERIFY on QUL resource page before release"
+    source_url: "https://qul.tarteel.ai/resources/tafsir/35"

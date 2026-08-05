@@ -22,6 +22,7 @@ pipeline/verify_db.py         --db assets/quran.db  (114 surahs / 6236 ayahs / i
 pipeline/build_editions.py    --db assets/quran.db --out dist/editions  (per-edition .db.gz + catalogue.json)
 pipeline/build_tafsir.py      --config config/tafsir.yaml --out dist/tafsir (per-tafsir .db.gz + catalogue.json)
 pipeline/publish_editions.sh  upload dist/editions -> R2 bucket al-quran-editions
+pipeline/publish_tafsir.sh    upload dist/tafsir -> R2 bucket al-quran-editions/tafsir
 pipeline/verify_editions.py   check the LIVE published editions match their digests
 ```
 
@@ -34,7 +35,8 @@ python pipeline/verify_db.py --db assets/quran.db
 python pipeline/build_db.py --config config/sources.yaml --include-downloadable-text --output dist/quran.full.db
 python pipeline/build_editions.py --db dist/quran.full.db --out dist/editions   # only when publishing downloads
 python pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir    # separate Tafsir artifacts
-pipeline/publish_editions.sh                                                # then upload + verify
+pipeline/publish_editions.sh                                                   # upload translations + verify
+pipeline/publish_tafsir.sh                                                     # upload Tafsir + verify
 ```
 
 Smoke test (no downloads): `python tests/make_fixtures.py && python pipeline/build_db.py --config tests/fixtures/sources.yaml`.
@@ -83,6 +85,8 @@ Upload artifacts first, catalogue last — the catalogue is what points at them.
 Tafsir is a separate downloadable surface, not another translation row. Use
 `pipeline/build_tafsir.py` with `config/tafsir.yaml`; it emits
 `dist/tafsir/<slug>-<sha12>.db.gz` plus `dist/tafsir/catalogue.json`.
+Publish that directory with `pipeline/publish_tafsir.sh`; it uploads under
+`https://editions.alquranreader.com/tafsir/` and verifies the live catalogue.
 The artifact preserves QUL's `group_ayah_key` / range model because one Tafsir
 entry can apply to multiple ayahs. Do not flatten grouped commentary into 6,236
 duplicated text rows and do not bundle it into the native app seed.
