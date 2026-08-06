@@ -179,6 +179,47 @@ Then Remove + re-download in the tafsir sheet. Good regression spots for Arabic
 rendering: **Al-Baqarah 2:1** — `«عمل الیوم واللیلہ»` and `«واللہ اعلم»` on the
 Urdu tab, the `تَعَلَّمُوا القُرْآنَ` hadith on the English tab.
 
+### 7. Delete the superseded artifacts (optional cleanup)
+
+`publish_tafsir.sh` uploads what the catalogue names and **never prunes**, so
+every republish leaves the previous `<slug>-<sha12>.db.gz` behind as an orphan.
+Deleting them is optional housekeeping, not part of publishing.
+
+Check first — deletion is not reversible from the dashboard:
+
+```bash
+npx --yes wrangler r2 object get "al-quran-editions/tafsir/catalogue.json" \
+  --remote --pipe | python3 -m json.tool | grep '"file"'
+```
+
+**Only delete an object whose filename is absent from that output.** Anything the
+live catalogue still names is what clients download; removing it breaks installs
+immediately.
+
+The two orphans left by the 2026-08-06 ◉-placeholder republish were:
+
+```bash
+npx --yes wrangler r2 object delete \
+  "al-quran-editions/tafsir/en-ibn-kathir-abridged-3fd7d96a64a4.db.gz" --remote
+npx --yes wrangler r2 object delete \
+  "al-quran-editions/tafsir/ur-ibn-kathir-b69bfb26b450.db.gz" --remote
+```
+
+Both were superseded by `en-ibn-kathir-abridged-e31c65b4127d.db.gz` and
+`ur-ibn-kathir-51872451aab9.db.gz`. Substitute the real orphan filenames each
+time — never copy these two literally.
+
+Then re-run step 5 and confirm the app can still install the tafsir. Nothing is
+lost permanently either way: `build_tafsir.py` gzips with `mtime=0`, so builds are
+byte-deterministic, and checking out the old commit and rebuilding from the same
+`sources/` reproduces the exact same digest.
+
+**This is only this simple while tafsir is unreleased** — no client has ever
+fetched those objects. Once the feature ships publicly, a device that is
+mid-download, or holding a stale catalogue, will 404 on a deleted artifact. After
+release, leave the previous generation in place for a release cycle before
+pruning.
+
 ### Gotchas that have actually bitten
 
 | Symptom | Cause |
