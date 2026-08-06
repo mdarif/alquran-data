@@ -16,6 +16,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import re
 import shutil
 import sqlite3
 import sys
@@ -58,6 +59,81 @@ CREATE TABLE tafsir_entries (
 
 CREATE INDEX idx_tafsir_entries_group ON tafsir_entries(group_ayah_key);
 """
+
+QPC_SPAN_RE = re.compile(
+    r'(<span\b[^>]*class=["\'][^"\']*\barabic\b[^"\']*\bqpc-hafs\b[^"\']*["\'][^>]*>)'
+    r'(.*?)'
+    r"(</span>)",
+    re.IGNORECASE | re.DOTALL,
+)
+QURAN_MARK_RE = re.compile(r"[\u064B-\u065F\u0670\u06D6-\u06ED]")
+URDU_SPECIFIC_RE = re.compile(r"[ٹڈڑںےہھگپچژکگیۀۃ]")
+QURAN_SEPARATOR_RE = re.compile(r"([،,؛;:.]+)")
+LEADING_HEADING_RE = re.compile(r"^([^<\n]{3,120}:)(?=<)")
+
+
+def normalize_quran_span_text(text: str) -> str:
+    return (
+        text.replace("ہ", "ه")
+        .replace("ھ", "ه")
+        .replace("ی", "ي")
+        .replace("ک", "ك")
+        .replace("ے", "ي")
+    )
+
+
+def looks_quran_arabic(text: str) -> bool:
+    letters = re.findall(r"[^\W\d_]", text, re.UNICODE)
+    if not letters:
+        return False
+    rtl = re.findall(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]", text)
+    if len(rtl) / len(letters) < 0.45:
+        return False
+    if URDU_SPECIFIC_RE.search(text):
+        return False
+    if QURAN_MARK_RE.search(text):
+        return True
+    arabic_letters = re.findall(r"[\u0621-\u063A\u0641-\u064A]", text)
+    return len(arabic_letters) == len(letters) and len(letters) <= 12
+
+
+def normalize_tafsir_html(text: str | None) -> str | None:
+    if text is None:
+        return None
+
+    text = wrap_leading_urdu_heading(text)
+
+    def replace_span(match: re.Match[str]) -> str:
+        open_tag, body, close_tag = match.groups()
+        normalized = normalize_quran_span_text(body)
+        if not looks_quran_arabic(re.sub(r"<[^>]+>", "", normalized)):
+            return body
+        return split_quran_span_separators(open_tag, normalized, close_tag)
+
+    return QPC_SPAN_RE.sub(replace_span, text)
+
+
+def wrap_leading_urdu_heading(text: str) -> str:
+    def replace_heading(match: re.Match[str]) -> str:
+        heading = match.group(1).strip()
+        if not URDU_SPECIFIC_RE.search(heading):
+            return match.group(0)
+        return f'<h2 lang="ur" class="ur">{heading}</h2>'
+
+    return LEADING_HEADING_RE.sub(replace_heading, text, count=1)
+
+
+def split_quran_span_separators(open_tag: str, body: str, close_tag: str) -> str:
+    parts: list[str] = []
+    offset = 0
+    for match in QURAN_SEPARATOR_RE.finditer(body):
+        if match.start() > offset:
+            parts.append(f"{open_tag}{body[offset:match.start()]}{close_tag}")
+        parts.append(match.group(0))
+        offset = match.end()
+    if offset < len(body):
+        parts.append(f"{open_tag}{body[offset:]}{close_tag}")
+    return "".join(parts) if parts else f"{open_tag}{body}{close_tag}"
 
 
 def log(msg: str) -> None:
@@ -130,6 +206,7 @@ def read_rows(path: Path, table_override: str | None) -> list[dict[str, str | No
             end = str(row[to_ayah]) if to_ayah and row[to_ayah] else group
             keys = str(row[ayah_keys]) if ayah_keys and row[ayah_keys] else key
             body = str(row[text]).strip() if row[text] is not None else None
+            body = normalize_tafsir_html(body)
             rows.append(
                 {
                     "ayah_key": key,
