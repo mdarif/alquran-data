@@ -25,7 +25,11 @@ if [[ ! -f "$DIR/catalogue.json" ]]; then
   exit 1
 fi
 
-mapfile -t artifacts < <(
+# NB: no `mapfile` — it is a bash 4 builtin and macOS ships bash 3.2.
+artifacts=()
+while IFS= read -r artifact; do
+  artifacts+=("$artifact")
+done < <(
   python3 - "$DIR/catalogue.json" "$DIR" <<'PY'
 import json
 import sys
