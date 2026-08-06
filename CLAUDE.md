@@ -91,6 +91,41 @@ First target: English Tafsir Ibn Kathir abridged from
 https://qul.tarteel.ai/resources/tafsir/35. Licensing still needs explicit
 verification before public release.
 
+### The KFGQPC ◉ placeholder trap (read before adding any tafsir)
+
+QUL tafsir HTML marks its Qur'an/hadith quotes with `class="qpc-hafs"`, and the
+app draws those in KFGQPC Uthmanic Hafs (`UthmanicHafs1-Ver18.ttf`). **That font
+maps 170 codepoints onto a single dummy glyph — a dotted ring that reads as a
+solid bullet, ◉.** The set is all Arabic punctuation (`، ؛ ۔ ؟ ٪ ٭`, the
+honorific signs U+0610–0614, the extended digits `۰-۹`) plus *every*
+Urdu/Persian-specific letter (`ی ہ ک ھ ۃ ے ں گ پ چ ڈ ڑ ژ` …).
+
+The trap is that the font **advertises coverage** for them in its cmap, so the
+text engine never falls back to another face the way it does for a genuinely
+absent glyph (`«`, `:`, `.` all fall back and render fine). One `،` left inside a
+`qpc-hafs` span therefore renders as ◉ in the reader — silently, no error.
+
+`build_tafsir.normalize_tafsir_html` handles this globally, and never rewrites an
+Arabic letter to do it:
+
+- **Placeholder letters** (Urdu spelling, e.g. `«عمل الیوم واللیلہ»`) mean the
+  region isn't Qur'anic Arabic. The `qpc-hafs`/`arabic` classes are dropped and
+  it's tagged `lang="ur"`, so Nastaliq draws it exactly as written.
+- **Inline `<span>` punctuation** is moved *outside* the span — character kept
+  verbatim, only the styling boundary moves.
+- **Block-level punctuation** (`<p class="ar qpc-hafs">`, the English hadith
+  quotes) cannot be re-scoped: the app renders a whole Arabic block as one run in
+  one font. So `؟` → `?` (a codepoint the font leaves to fallback, keeping the
+  question) and pause marks are dropped — which is how the Mushaf sets Qur'anic
+  text, and precisely why KFGQPC ships no comma glyph.
+- **Presentation forms** the font cannot draw at all (`ﷲ`, `ﮨ`) are NFKC-folded.
+
+`QPC_PLACEHOLDER_RANGES` is derived from the shipped `.ttf`, and
+`tests/test_build_tafsir.py` re-derives it from the font on every run so the
+table cannot drift. `verify_tafsir.py` fails a `no-qpc-placeholders` check if any
+survive in a published artifact. **If a new tafsir source ships and the reader
+shows ◉, this is why — run the tests, don't patch the app.**
+
 **Legal notice is not technical deterrence.** `ATTRIBUTION.md`/`LICENSE`
 assert copyright over the original Ahsanul Kalam Hindi reconstruction (and,
 once shipped, the Roman Urdu rendering) and forbid scraping/reuse without

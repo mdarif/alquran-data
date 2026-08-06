@@ -19,6 +19,10 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from pipeline.build_tafsir import QPC_REGION_RE, QPC_PLACEHOLDERS, TAG_RE  # noqa: E402
 
 DEFAULT_BASE = "https://editions.alquranreader.com/tafsir/"
 EXPECTED_AYAHS = 6236
@@ -46,6 +50,25 @@ def headers(url: str) -> dict[str, str]:
             k, _, v = line.partition(":")
             hdrs[k.strip().lower()] = v.strip()
     return hdrs
+
+
+def count_qpc_placeholder_rows(conn: sqlite3.Connection) -> int:
+    """Rows where a `qpc-hafs` region still holds a KFGQPC placeholder char.
+
+    Those render as a dotted-ring bullet in the reader instead of the character
+    the source wrote. build_tafsir.normalize_tafsir_html should leave none.
+    """
+    rows = 0
+    for (text,) in conn.execute(
+        "SELECT text FROM tafsir_entries WHERE text IS NOT NULL"
+    ):
+        if any(
+            ord(ch) in QPC_PLACEHOLDERS
+            for match in QPC_REGION_RE.finditer(text)
+            for ch in TAG_RE.sub("", match.group("body"))
+        ):
+            rows += 1
+    return rows
 
 
 def main() -> None:
@@ -79,6 +102,7 @@ def main() -> None:
                 "SELECT COUNT(*) FROM tafsir_entries "
                 "WHERE text IS NOT NULL AND trim(text) != ''"
             ).fetchone()[0]
+            placeholder_rows = count_qpc_placeholder_rows(conn)
             conn.close()
         finally:
             os.unlink(path)
@@ -92,6 +116,7 @@ def main() -> None:
             "ayahs": n == EXPECTED_AYAHS,
             "text-groups": text_groups == resource.get("textGroupCount"),
             "no-content-encoding": "content-encoding" not in hdrs,
+            "no-qpc-placeholders": placeholder_rows == 0,
         }
         bad = [k for k, ok in checks.items() if not ok]
         if bad:

@@ -20,6 +20,7 @@ import re
 import shutil
 import sqlite3
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -60,57 +61,196 @@ CREATE TABLE tafsir_entries (
 CREATE INDEX idx_tafsir_entries_group ON tafsir_entries(group_ayah_key);
 """
 
-QPC_SPAN_RE = re.compile(
-    r'(<span\b[^>]*class=["\'][^"\']*\barabic\b[^"\']*\bqpc-hafs\b[^"\']*["\'][^>]*>)'
-    r'(.*?)'
-    r"(</span>)",
-    re.IGNORECASE | re.DOTALL,
-)
-QURAN_MARK_RE = re.compile(r"[\u064B-\u065F\u0670\u06D6-\u06ED]")
 URDU_SPECIFIC_RE = re.compile(r"[ٹڈڑںےہھگپچژکگیۀۃ]")
-QURAN_SEPARATOR_RE = re.compile(r"([،,؛;:.]+)")
 LEADING_HEADING_RE = re.compile(r"^([^<\n]{3,120}:)(?=<)")
 
+# --- KFGQPC Uthmanic Hafs placeholder characters ------------------------------
+#
+# The app renders anything classed `qpc-hafs` in KFGQPC Uthmanic Hafs
+# (assets/fonts/UthmanicHafs1-Ver18.ttf). That font maps 170 codepoints -- all
+# Arabic punctuation plus every Urdu/Persian-specific letter -- onto ONE dummy
+# glyph: a dotted ring that reads as a solid bullet.
+#
+# The trap is that the font *claims* coverage for them in its cmap, so the text
+# engine never falls back to another face the way it does for a genuinely
+# missing glyph (`«`, `:`, `.` all fall back and render fine). So a `،` or a
+# `ی` left inside a `qpc-hafs` region silently renders as that bullet in the
+# reader instead of as the character the source wrote.
+#
+# The ranges below are derived from the shipped font: every codepoint whose glyph
+# outline is identical to the one U+060C maps to. tests/test_build_tafsir.py
+# re-derives them from the .ttf so this list cannot drift from the real font.
+QPC_PLACEHOLDER_RANGES: tuple[tuple[int, int], ...] = (
+    (0x0601, 0x0620),
+    (0x063B, 0x063F),
+    (0x0658, 0x065D),
+    (0x065F, 0x065F),
+    (0x066A, 0x066D),
+    (0x066F, 0x066F),
+    (0x0672, 0x06D5),
+    (0x06DF, 0x06DF),
+    (0x06E3, 0x06E3),
+    (0x06EB, 0x06EB),
+    (0x06EE, 0x06FF),
+)
+QPC_PLACEHOLDERS = frozenset(
+    cp for start, end in QPC_PLACEHOLDER_RANGES for cp in range(start, end + 1)
+)
+# Letters in the set are Urdu/Persian orthography. Their presence means the
+# region is not Qur'anic Arabic at all and must not be styled as such -- the
+# surrounding Nastaliq/Naskh face renders them correctly as written.
+QPC_PLACEHOLDER_LETTERS = frozenset(
+    cp for cp in QPC_PLACEHOLDERS if unicodedata.category(chr(cp)) == "Lo"
+)
+# Combining marks cannot be moved out of a region (they would land on a dotted
+# circle of their own) and the font has no outline for them, so they are dropped.
+QPC_PLACEHOLDER_COMBINING = frozenset(
+    cp for cp in QPC_PLACEHOLDERS if unicodedata.category(chr(cp)) == "Mn"
+)
+QPC_PLACEHOLDER_PUNCTUATION = (
+    QPC_PLACEHOLDERS - QPC_PLACEHOLDER_LETTERS - QPC_PLACEHOLDER_COMBINING
+)
 
-def normalize_quran_span_text(text: str) -> str:
-    return (
-        text.replace("ہ", "ه")
-        .replace("ھ", "ه")
-        .replace("ی", "ي")
-        .replace("ک", "ك")
-        .replace("ے", "ي")
+# Block-level Arabic (`<p class="ar qpc-hafs">`, the English tafsir's hadith
+# quotes) is rendered as a single run in a single font, so punctuation there
+# cannot be re-scoped out of the QPC face -- only substituted. `؟` maps to a
+# codepoint the font leaves to fallback so the question survives; pause marks are
+# dropped, which is how the Mushaf itself sets Qur'anic text and precisely why
+# KFGQPC ships no comma glyph. No Arabic letter is ever altered.
+QPC_BLOCK_SUBSTITUTIONS = {
+    "،": "",  # ARABIC COMMA
+    "؛": "",  # ARABIC SEMICOLON
+    "۔": "",  # ARABIC FULL STOP
+    "؍": "",  # ARABIC DATE SEPARATOR
+    "؞": "",  # ARABIC TRIPLE DOT PUNCTUATION MARK
+    "؟": "?",  # ARABIC QUESTION MARK
+    "٪": "%",  # ARABIC PERCENT SIGN
+    "٫": ".",  # ARABIC DECIMAL SEPARATOR
+    "٬": ",",  # ARABIC THOUSANDS SEPARATOR
+    "٭": "*",  # ARABIC FIVE POINTED STAR
+    # Extended Arabic-Indic digits -> Arabic-Indic digits, which the font draws.
+    **{chr(0x06F0 + n): chr(0x0660 + n) for n in range(10)},
+}
+
+# Any tag carrying the `qpc-hafs` class, with its attributes and inner markup.
+QPC_REGION_RE = re.compile(
+    r'<(?P<tag>\w+)(?P<attrs>\b[^>]*\bclass="[^"]*\bqpc-hafs\b[^"]*"[^>]*)>'
+    r"(?P<body>.*?)"
+    r"</(?P=tag)>",
+    re.IGNORECASE | re.DOTALL,
+)
+CLASS_ATTR_RE = re.compile(r'\s*class="([^"]*)"', re.IGNORECASE)
+LANG_ATTR_RE = re.compile(r'\s*lang="[^"]*"', re.IGNORECASE)
+TAG_RE = re.compile(r"<[^>]+>")
+# Presentation forms the font has no outline for at all (ﷲ, ﮨ, ...).
+PRESENTATION_FORM_RE = re.compile(r"[ﭐ-﷿ﹰ-﻿]+")
+INLINE_TAGS = frozenset({"span", "a", "b", "i", "em", "strong"})
+
+
+def has_qpc_placeholders(text: str) -> bool:
+    """True if `text` holds a character KFGQPC Hafs draws as its placeholder."""
+    return any(ord(ch) in QPC_PLACEHOLDERS for ch in text)
+
+
+def fold_presentation_forms(text: str) -> str:
+    """Decompose Arabic presentation forms to letters the font can render."""
+    return PRESENTATION_FORM_RE.sub(
+        lambda m: unicodedata.normalize("NFKC", m.group(0)), text
     )
 
 
-def looks_quran_arabic(text: str) -> bool:
-    letters = re.findall(r"[^\W\d_]", text, re.UNICODE)
-    if not letters:
-        return False
-    rtl = re.findall(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]", text)
-    if len(rtl) / len(letters) < 0.45:
-        return False
-    if URDU_SPECIFIC_RE.search(text):
-        return False
-    if QURAN_MARK_RE.search(text):
-        return True
-    arabic_letters = re.findall(r"[\u0621-\u063A\u0641-\u064A]", text)
-    return len(arabic_letters) == len(letters) and len(letters) <= 12
+def drop_qpc_class(attrs: str) -> str:
+    """Re-scope a region away from the Qur'anic face, tagging it as Urdu.
+
+    Placeholder *letters* are Urdu/Persian orthography by definition, so the
+    honest markup is `lang="ur"` -- which is also what the app keys its Nastaliq
+    rendering off. The text itself is left byte-for-byte intact.
+    """
+    kept: list[str] = []
+
+    def rewrite_class(match: re.Match[str]) -> str:
+        kept.extend(
+            name
+            for name in match.group(1).split()
+            if name.lower() not in {"qpc-hafs", "arabic", "ar"}
+        )
+        return ""
+
+    attrs = CLASS_ATTR_RE.sub(rewrite_class, attrs)
+    attrs = LANG_ATTR_RE.sub("", attrs).strip()
+    if "ur" not in kept:
+        kept.append("ur")
+    prefix = f" {attrs}" if attrs else ""
+    return f'{prefix} class="{" ".join(kept)}" lang="ur"'
+
+
+def strip_placeholder_marks(body: str) -> str:
+    return "".join(ch for ch in body if ord(ch) not in QPC_PLACEHOLDER_COMBINING)
+
+
+def split_placeholder_punctuation(tag: str, attrs: str, body: str) -> str:
+    """Move QPC-unrenderable punctuation outside an inline region.
+
+    The character is preserved verbatim; only the styling boundary moves, so the
+    surrounding body font draws it. The app already suppresses the space it
+    otherwise inserts between inline pieces before `،`/`؟`, so the line reads
+    exactly as before.
+    """
+    open_tag, close_tag = f"<{tag}{attrs}>", f"</{tag}>"
+    parts: list[str] = []
+    pending: list[str] = []
+
+    def flush() -> None:
+        if not pending:
+            return
+        chunk = "".join(pending)
+        pending.clear()
+        parts.append(f"{open_tag}{chunk}{close_tag}" if chunk.strip() else chunk)
+
+    for ch in body:
+        if ord(ch) in QPC_PLACEHOLDER_PUNCTUATION:
+            flush()
+            parts.append(ch)
+        else:
+            pending.append(ch)
+    flush()
+    return "".join(parts) if parts else f"{open_tag}{body}{close_tag}"
+
+
+def substitute_placeholder_punctuation(body: str) -> str:
+    return "".join(
+        QPC_BLOCK_SUBSTITUTIONS.get(
+            ch, "" if ord(ch) in QPC_PLACEHOLDER_PUNCTUATION else ch
+        )
+        for ch in body
+    )
+
+
+def normalize_qpc_region(match: re.Match[str]) -> str:
+    tag = match.group("tag")
+    attrs = match.group("attrs")
+    body = fold_presentation_forms(match.group("body"))
+
+    if any(ord(ch) in QPC_PLACEHOLDER_LETTERS for ch in TAG_RE.sub("", body)):
+        # Not Qur'anic Arabic -- re-scope rather than rewrite a single letter.
+        return f"<{tag}{drop_qpc_class(attrs)}>{body}</{tag}>"
+
+    body = strip_placeholder_marks(body)
+    if tag.lower() in INLINE_TAGS:
+        return split_placeholder_punctuation(tag, attrs, body)
+    return f"<{tag}{attrs}>{substitute_placeholder_punctuation(body)}</{tag}>"
 
 
 def normalize_tafsir_html(text: str | None) -> str | None:
+    """Make tafsir HTML safe for the reader's Qur'anic face.
+
+    Guarantees that no character KFGQPC Hafs draws as its placeholder glyph
+    survives inside a `qpc-hafs` region -- see QPC_PLACEHOLDER_RANGES.
+    """
     if text is None:
         return None
-
     text = wrap_leading_urdu_heading(text)
-
-    def replace_span(match: re.Match[str]) -> str:
-        open_tag, body, close_tag = match.groups()
-        normalized = normalize_quran_span_text(body)
-        if not looks_quran_arabic(re.sub(r"<[^>]+>", "", normalized)):
-            return body
-        return split_quran_span_separators(open_tag, normalized, close_tag)
-
-    return QPC_SPAN_RE.sub(replace_span, text)
+    return QPC_REGION_RE.sub(normalize_qpc_region, text)
 
 
 def wrap_leading_urdu_heading(text: str) -> str:
@@ -121,19 +261,6 @@ def wrap_leading_urdu_heading(text: str) -> str:
         return f'<h2 lang="ur" class="ur">{heading}</h2>'
 
     return LEADING_HEADING_RE.sub(replace_heading, text, count=1)
-
-
-def split_quran_span_separators(open_tag: str, body: str, close_tag: str) -> str:
-    parts: list[str] = []
-    offset = 0
-    for match in QURAN_SEPARATOR_RE.finditer(body):
-        if match.start() > offset:
-            parts.append(f"{open_tag}{body[offset:match.start()]}{close_tag}")
-        parts.append(match.group(0))
-        offset = match.end()
-    if offset < len(body):
-        parts.append(f"{open_tag}{body[offset:]}{close_tag}")
-    return "".join(parts) if parts else f"{open_tag}{body}{close_tag}"
 
 
 def log(msg: str) -> None:
