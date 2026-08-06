@@ -4,6 +4,8 @@
 #   python3 pipeline/build_tafsir.py --config config/tafsir.yaml --out dist/tafsir
 #   pipeline/publish_tafsir.sh
 #
+# Runnable from anywhere: paths resolve against the repo root, not $PWD.
+#
 # Bucket: al-quran-editions (APAC) -> https://editions.alquranreader.com/tafsir/
 #
 # Same rules as translation editions:
@@ -12,8 +14,10 @@
 # - upload immutable artifacts first, catalogue.json last
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 BUCKET="${BUCKET:-al-quran-editions}"
-DIR="${1:-dist/tafsir}"
+DIR="${1:-$ROOT/dist/tafsir}"
 PREFIX="${PREFIX:-tafsir}"
 
 if [[ ! -f "$DIR/catalogue.json" ]]; then
