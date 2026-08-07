@@ -11,10 +11,17 @@ instead.
 Current lineup: Urdu (Junagarhi) is bundled in the native app seed. Hindi
 (Farooq Khan/Nadwi), English (Hilali & Khan), English (Sahih International),
 Hindi (Ahsanul Kalam), Hindi (al-Umari), Bengali (Zakaria), Indonesian (King
-Fahd Complex), Swahili (Rowwad Translation Center), and Roman Urdu (Abu Rayyan)
-are shipped as downloadable/installable editions. Licensing basis for each:
-`ATTRIBUTION.md`. Blocked on bad downloads: Albanian, German (Rowwad) — see the
-candidate sections below.
+Fahd Complex), Swahili (Rowwad Translation Center), Roman Urdu (Abu Rayyan),
+Assamese (Rafiqul Islam), Gujarati (Rabella Al-Omari), Kannada (Hamza Butur),
+Malayalam (Haidar & Kunhi Muhammad), Punjabi (Arif Haleem), Telugu (Abdurrahim
+ibn Muhammad), Tamil (Omar Sharif, Abdulhamid Baqavi, Omar Sharif Abridged),
+Marathi (Shafee' Ansari), Kannada (Bashir Misuri, 2nd edition), Nepali
+(Ahlul-Hadith Association), Sinhalese (Rowwad), Spanish (Montada), French
+(Montada), Turkish (Rowwad), Chinese (Makin), German (Rowwad), Persian
+(Rowwad), Japanese (Saeed Sato), Portuguese (Helmi Nasr), Thai (Rowwad), and
+Vietnamese (Rowwad) are shipped as downloadable/installable editions. Licensing basis
+for each: `ATTRIBUTION.md`. Blocked on bad downloads: Albanian, German
+(Rowwad) — see the candidate sections below.
 
 ## The edition model (landed 2026-07-28) — read before adding any translation
 
@@ -377,6 +384,165 @@ previous DB, and `verify_db.py` treats either as a hard FAIL.
 - **Also considered, left unresolved:** Elmir Kuliev (Russian) — respected
   translation, but no source found establishing his creed affiliation either
   way. Not added; needs a real answer before it's proposed again.
+
+## Candidates: Assamese, Gujarati, Kannada, Malayalam, Punjabi, Telugu, Tamil (×3) — direct QuranEnc ingestion
+
+- **Requested 2026-08-07 (owner)**: "get Indian languages first" from
+  QuranEnc.com, as a first pass under the new **direct-QuranEnc ingestion
+  channel** (see `pipeline/quranenc/README` note below) rather than the usual
+  QUL-mirror path.
+- **New ingestion channel**: `pipeline/quranenc/survey_quranenc.py` lists
+  every edition on `quranenc.com/api/v1/translations/list`;
+  `pipeline/quranenc/fetch_quranenc.py <key> <slug>` downloads that edition's
+  own ready-made per-ayah SQLite export directly from QuranEnc (they publish
+  one per edition, already 6236/114 — no QUL mirror needed, no per-surah API
+  pagination) and reshapes it into this repo's standard `*-simple.db` shape.
+  QuranEnc's API 403s Python's default `urllib` user-agent; both scripts send
+  an explicit UA header.
+- **Coverage checked**: Bengali does **not** exist on QuranEnc at all (`bn`
+  returns zero editions) — the shipped `bn-abu-bakr-zakaria` stays QUL-sourced,
+  unrelated. Hindi and Urdu already covered (existing `hi-*`/`ur-*` entries
+  predate this channel). The remaining Indian-subcontinent languages QuranEnc
+  carries, each with exactly one edition except Tamil (three):
+  - **Assamese** — `assamese_rafeeq`, Rafiqul Islam Habibur-Rahman
+  - **Gujarati** — `gujarati_omari`, Rabella Al-Omari
+  - **Kannada** — `kannada_hamza`, Hamza Butur
+  - **Malayalam** — `malayalam_kunhi`, Abdul Hamid Haidar & Kunhi Muhammad
+  - **Punjabi** — `punjabi_arif`, Arif Haleem
+  - **Telugu** — `telugu_muhammad`, Abdurrahim ibn Muhammad
+  - **Tamil** — `tamil_omar` (Omar Sharif, full), `tamil_baqavi` (Abdulhamid
+    Baqavi, full), `tamil_omar_brief` (Omar Sharif, abridged). Owner chose to
+    ship all three as distinct slugs rather than picking one. Note: the
+    Indonesian/Swahili/Albanian/German section above flagged Tamil (Baqavi)
+    as creed-**inconclusive** during the earlier QUL-only sweep (no explicit
+    self-identification found); this pass ships it anyway per the owner's
+    explicit 2026-08-07 "fetch all three" call, treating QuranEnc's own
+    institutional vetting (Rabwah Dawah Association / IslamHouse.com) as
+    sufficient — revisit only if a specific quality/creed issue surfaces.
+- **Added to `config/sources.yaml`**: `as-rafiqul-islam` (sort_order 70),
+  `gu-rabella-al-omari` (71), `kn-hamza-butur` (72), `ml-haidar-kunhi` (73),
+  `pa-arif-haleem` (74), `te-abdurrahim-muhammad` (75), `ta-omar-sharif` (76),
+  `ta-abdulhamid-baqavi` (77), `ta-omar-sharif-brief` (78) — all
+  `bundle: false`, `default_on: false`, `enabled: true`.
+- **Verified**: each of the 9 `fetch_quranenc.py` outputs is exactly
+  6236 ayahs / 114 surahs (the script hard-fails otherwise); full
+  `build_db.py` + `verify_db.py` run against a scratch DB reports `ok` for
+  all 9 new slugs, no gaps or duplicate slugs; spot-checked verse-1:1 text
+  length across all 9 for gross encoding failures (none found) — a closer
+  native-speaker read is still recommended before wide promotion, same as any
+  new edition.
+- **Licensing**: QuranEnc.com terms (unmodified use + attribution + preserve
+  version metadata) — same basis already recorded for the QUL-mirrored
+  al-Umari Hindi edition. See `ATTRIBUTION.md`.
+- **Status: not yet published to R2** — built and verified locally only as of
+  2026-08-07. Run `build_editions.py` + `publish_editions.sh` +
+  `verify_editions.py` to ship.
+- **Other QuranEnc-only languages surveyed but not part of this pass**:
+  English (Rowwad, Saheeh — already covered by existing en editions), Spanish
+  (García, Montada ×2), French (Montada, Rachid Maach), Turkish (Rowwad,
+  Shaban, Shahin) — 74 editions total on QuranEnc as of this survey. Worth a
+  follow-up pass.
+- **API-vs-site discrepancy discovered 2026-08-07**: `translations/list` (and
+  `translations/languages`) is a **curated subset**, not the full catalogue —
+  it's missing Bengali, Marathi, and Nepali entirely, and undercounts editions
+  for languages it does list (e.g. it shows one Kannada/Malayalam/Telugu
+  edition each when the site has two). Confirmed by scraping
+  `quranenc.com/en/home`'s HTML for `data-lang` accordion blocks. The
+  `pipeline/quranenc/fetch_quranenc.py` download step still works for these
+  (`https://quranenc.com/downloads/sqlite/<key>.sqlite` is live regardless of
+  API-list membership — the script now falls back to that pattern when a key
+  isn't found in the API), so nothing blocks ingestion; it just means the
+  survey script's output alone isn't exhaustive — cross-check the site
+  directly for full coverage of a given language.
+- **4 more added following this discovery (owner-approved 2026-08-07)**:
+  - **Marathi** — `mr-shafee-ansari` (sort_order 79), first Marathi edition,
+    Muhammad Shafee' Ansari, key `marathi_ansari` (not in the API list).
+  - **Kannada, 2nd edition** — `kn-bashir-misuri` (80), Shaykh Bashir Misuri,
+    key `kannada_bashir` (not in the API list), alongside `kn-hamza-butur`.
+  - **Nepali** — `ne-ahlul-hadith-association` (81), key `nepali_central`
+    (not in the API list). Not India proper; included per owner's explicit
+    "include both" call when offered the choice.
+  - **Sinhalese** — `si-rowwad` (82), Rowwad Translation Center, key
+    `sinhalese_mahir` (this one **is** in the API list). Not India/Nepal;
+    same owner call as above.
+  - All verified 6236/114 via `fetch_quranenc.py`'s built-in checks; full
+    `build_db.py` + `verify_db.py` rerun confirms `ok` for all 4, 24 editions
+    across 16 languages total, no gaps.
+- **Deliberately excluded from this pass: `*_mokhtasar` editions.** Every
+  language surveyed also has an "Al-Mukhtasar in Interpreting the Noble
+  Qur'an" edition on QuranEnc (e.g. `bengali_mokhtasar`, `tamil_mokhtasar`,
+  `assamese_mokhtasar`) — this is a **translated tafsir summary**, a
+  different content type from a plain Qur'an translation, and tafsir is
+  explicitly backlog scope per `alquran-app/CLAUDE.md`. Worth a dedicated
+  future pass through `pipeline/build_tafsir.py`'s path once tafsir support
+  is prioritized — don't fold these into the translations list.
+- **Bengali note**: `bengali_zakaria` on QuranEnc is the same translator
+  (Abu Bakr Muhammad Zakaria) already shipped as `bn-abu-bakr-zakaria` via
+  the QUL mirror — not fetched again as a duplicate.
+
+## Candidates: major international languages — direct QuranEnc ingestion
+
+**Requested 2026-08-07 (owner)**: "most popular international languages…
+we don't have issues around space or anything" — a third QuranEnc batch,
+after the Indian-language and Nepal/Sri Lanka passes above.
+
+- **Survey**: `survey_quranenc.py --lang es,fr,zh,pt,de,tr,fa,ja,th,vi,ru,ko,it`.
+  Russian, Korean, and Italian have **zero** QuranEnc editions (checked
+  against the full 74-edition/54-language catalogue — not just the survey's
+  language filter). The survey also flagged German (`de`) as "already in
+  sources.yaml", which was a **false positive**: the regex-based check
+  matches `language_code:` even inside commented-out (blocked) entries — see
+  the German note below.
+- **Editions with more than one QuranEnc option**: for these, one flagship
+  was picked (owner decision: "one flagship edition per language" rather than
+  fetching every option, unlike the earlier Tamil ×3 call) using this repo's
+  established institutional-vetting preference (Rowwad / Noor International
+  over individually-attributed translations not creed-checked — see the
+  Indonesian/Swahili/Albanian/German section above for the origin of that
+  preference):
+  - **Spanish** (3 options: García, Montada EU, Montada Latin American) →
+    `es-montada` (Noor International). García skipped as flagship — flagged
+    creed-**inconclusive** in the section above (no explicit
+    self-identification found).
+  - **French** (2: Montada, Rachid Maach) → `fr-montada` (Noor
+    International), same rationale.
+  - **Turkish** (3: Rowwad, Shaaban British, Ali Özek et al.) →
+    `tr-rowwad`.
+  - **Chinese** (2: Muhammad Makin, Muhammad Suleiman) → `zh-makin` — Makin's
+    is the classical, most widely recognized Chinese Qur'an translation
+    (not a Rowwad-lineage pick; no Rowwad Chinese edition exists).
+  - **German** (2: Bubenheim, Rowwad) → `de-rowwad`. **This resolves the
+    German BLOCKED candidate above** (QUL #467 was incomplete, surahs 1-44
+    only): switched to direct QuranEnc ingestion for the same
+    Rowwad-preferred translator instead of re-chasing the QUL mirror. The
+    `config/sources.yaml` entry that was commented-out/blocked is now
+    uncommented and live at the same `de-rowwad` slug/sort_order 63, sourced
+    from QuranEnc instead of QUL.
+- **Single-option languages, all fetched (owner: "fetch all five")**:
+  - **Persian/Farsi** — `fa-rowwad`, key `persian_ih` (titled "Rowwad
+    Translation Center" despite the `ih`/IslamHouse-looking key).
+  - **Japanese** — `ja-saeed-sato`, key `japanese_saeedsato`.
+  - **Portuguese** — `pt-helmi-nasr`, key `portuguese_nasr`.
+  - **Thai** — `th-rowwad`, key `thai_rwwad`.
+  - **Vietnamese** — `vi-rowwad`, key `vietnamese_rwwad`.
+- **Added to `config/sources.yaml`**: `es-montada` (sort_order 90),
+  `fr-montada` (91), `tr-rowwad` (92), `zh-makin` (93), `fa-rowwad` (94),
+  `ja-saeed-sato` (95), `pt-helmi-nasr` (96), `th-rowwad` (97), `vi-rowwad`
+  (98) — all `bundle: false`, `default_on: false`, `enabled: true`.
+  `de-rowwad` reuses its pre-reserved sort_order 63 slot.
+- **Verified**: all 10 fetched via `fetch_quranenc.py` (6236/114 each, script
+  hard-fails otherwise); full `build_db.py` + `verify_db.py` rerun reports
+  `ok` for all 10, 34 editions across 26 languages total, no gaps or
+  duplicate slugs.
+- **Not chased this pass**: the non-flagship options for Spanish (García,
+  Montada Latin American), French (Rachid Maach), Turkish (Shaaban, Özek),
+  Chinese (Suleiman), and German (Bubenheim) remain available on QuranEnc if
+  ever wanted later — see the survey output above for their keys.
+- **English requested separately, added same day**: `en-rowwad` (sort_order
+  99), key `english_rwwad` — a third English option alongside
+  `en-sahih-international` and `en-hilali-khan`.
+- **Status: built and verified locally 2026-08-07, not yet published to R2.**
+  35 editions across 26 languages total after this addition.
 
 ## Candidates: Indonesian, Swahili, Albanian, German — Rowwad/King Fahd lineage
 

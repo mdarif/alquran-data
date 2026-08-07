@@ -282,12 +282,14 @@ translations across QUL's catalogue.
 - **Required credit draft:** "Swahili translation by Rowwad Translation
   Center. Source: Quranic Universal Library."
 - **Use in app:** installable/downloadable, not bundled, not default-on.
-- **Related, not shipped:** Albanian and German editions from the same Rowwad
-  institution were attempted in this pass but are blocked on bad source
-  downloads (Albanian: a 3-language bundle, not single-language; German: only
-  surahs 1-44, incomplete) — see `TRANSLATIONS-ROADMAP.md` and the commented
-  block in `config/sources.yaml` for the re-download steps once QUL serves a
-  correct export.
+- **Related — Albanian still blocked, German now shipped:** Albanian and
+  German editions from the same Rowwad institution were originally attempted
+  via QUL but blocked on bad source downloads (Albanian: a 3-language bundle,
+  not single-language; German: only surahs 1-44, incomplete). **German was
+  resolved 2026-08-07** by switching to direct QuranEnc ingestion instead —
+  see §24 below. Albanian remains blocked; see `TRANSLATIONS-ROADMAP.md` for
+  the re-download steps once QUL serves a correct export (or QuranEnc adds a
+  matching Rowwad Albanian edition — none was found as of this survey).
 
 ## 10. English translation — Dr. Muhsin Khan & Dr. Taqi-ud-Din Hilali ("The Noble Quran") — DOWNLOADABLE, LIVE
 
@@ -317,6 +319,107 @@ Khan" has something concrete to point at.
   Presentational normalizations applied at build time (`strip_translit_diacritics`,
   `collapse_nbsp` — see `config/sources.yaml` and `HANDOFF.md` for the
   reasoning); text content itself is unmodified.
+
+---
+
+## 11-19. Assamese, Gujarati, Kannada, Malayalam, Punjabi, Telugu, Tamil (×3) — direct QuranEnc ingestion — DOWNLOADABLE, BUILT, NOT YET PUBLISHED
+
+**Requested 2026-08-07 (owner)** — "get Indian languages first" as the initial
+batch under a new **direct-QuranEnc ingestion channel**
+(`pipeline/quranenc/survey_quranenc.py` + `fetch_quranenc.py`), which pulls an
+edition's own ready-made SQLite export straight from `quranenc.com` rather
+than via a QUL mirror. See `TRANSLATIONS-ROADMAP.md`'s "direct QuranEnc
+ingestion" candidate section for the full ingestion-channel writeup.
+
+All nine editions below share the same terms and status, so recorded once:
+
+- **Terms:** QuranEnc.com terms — use unmodified, credit QuranEnc.com,
+  preserve embedded/version metadata where applicable. Same basis already
+  applied to §6 (al-Umari Hindi, QUL-mirrored QuranEnc content).
+- **Status:** built and `verify_db.py`-checked locally 2026-08-07 (6236/114,
+  no gaps); **not yet published** to the R2 downloadable-editions bucket.
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+
+| § | Language | Slug | Translator | QuranEnc key | Source URL |
+|---|----------|------|------------|--------------|-------------|
+| 11 | Assamese | `as-rafiqul-islam` | Rafiqul Islam Habibur-Rahman | `assamese_rafeeq` | quranenc.com/en/assamese_rafeeq/ |
+| 12 | Gujarati | `gu-rabella-al-omari` | Rabella Al-Omari | `gujarati_omari` | quranenc.com/en/gujarati_omari/ |
+| 13 | Kannada | `kn-hamza-butur` | Hamza Butur | `kannada_hamza` | quranenc.com/en/kannada_hamza/ |
+| 14 | Malayalam | `ml-haidar-kunhi` | Abdul Hamid Haidar & Kunhi Muhammad | `malayalam_kunhi` | quranenc.com/en/malayalam_kunhi/ |
+| 15 | Punjabi | `pa-arif-haleem` | Arif Haleem | `punjabi_arif` | quranenc.com/en/punjabi_arif/ |
+| 16 | Telugu | `te-abdurrahim-muhammad` | Abdurrahim ibn Muhammad | `telugu_muhammad` | quranenc.com/en/telugu_muhammad/ |
+| 17 | Tamil | `ta-omar-sharif` | Omar Sharif (full) | `tamil_omar` | quranenc.com/en/tamil_omar/ |
+| 18 | Tamil | `ta-abdulhamid-baqavi` | Abdulhamid Baqavi (full) | `tamil_baqavi` | quranenc.com/en/tamil_baqavi/ |
+| 19 | Tamil | `ta-omar-sharif-brief` | Omar Sharif (abridged) | `tamil_omar_brief` | quranenc.com/en/tamil_omar_brief/ |
+
+- **Required credit draft (per edition):** "`<Language>` translation by
+  `<Translator>`. Source: QuranEnc.com."
+- **Creed note (Tamil, §18):** flagged as creed-inconclusive during an
+  earlier QUL-only survey (no explicit self-identification found for
+  Abdulhamid Baqavi); shipped anyway per the owner's explicit 2026-08-07
+  decision to fetch all three Tamil editions, relying on QuranEnc's own
+  institutional vetting (Rabwah Dawah Association / IslamHouse.com). Revisit
+  only if a specific quality/creed concern surfaces.
+
+---
+
+## 20-23. Marathi, Kannada (2nd edition), Nepali, Sinhalese — direct QuranEnc ingestion — DOWNLOADABLE, BUILT, NOT YET PUBLISHED
+
+**Requested 2026-08-07 (owner)**, a follow-up to §11-19 after discovering
+QuranEnc's `translations/list` API is a curated subset that omits some
+editions entirely (confirmed by comparing it against `quranenc.com/en/home`'s
+HTML). Same terms/status/use-in-app as §11-19; recorded once:
+
+- **Terms:** QuranEnc.com terms — use unmodified, credit QuranEnc.com,
+  preserve embedded/version metadata where applicable.
+- **Status:** built and `verify_db.py`-checked locally 2026-08-07 (6236/114,
+  no gaps); **not yet published** to R2.
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+
+| § | Language | Slug | Translator | QuranEnc key | Notes |
+|---|----------|------|------------|--------------|-------|
+| 20 | Marathi | `mr-shafee-ansari` | Muhammad Shafee' Ansari | `marathi_ansari` | First Marathi edition; not in the API list, fetched via the direct sqlite URL. |
+| 21 | Kannada | `kn-bashir-misuri` | Shaykh Bashir Misuri | `kannada_bashir` | Second Kannada edition alongside §13; not in the API list. |
+| 22 | Nepali | `ne-ahlul-hadith-association` | Ahlul-Hadith Association | `nepali_central` | Not India proper; included per owner's explicit 2026-08-07 decision. Not in the API list. |
+| 23 | Sinhalese | `si-rowwad` | Rowwad Translation Center | `sinhalese_mahir` | Not India/Nepal; same owner decision as §22. This one is present in the API list. |
+
+- **Required credit draft (per edition):** "`<Language>` translation by
+  `<Translator>`. Source: QuranEnc.com."
+
+---
+
+## 24-33. Major international languages — direct QuranEnc ingestion — DOWNLOADABLE, BUILT, NOT YET PUBLISHED
+
+**Requested 2026-08-07 (owner)**: "most popular international languages…
+we don't have issues around space." Same terms/status/use-in-app as
+§11-19/§20-23; recorded once:
+
+- **Terms:** QuranEnc.com terms — use unmodified, credit QuranEnc.com,
+  preserve embedded/version metadata where applicable.
+- **Status:** built and `verify_db.py`-checked locally 2026-08-07 (6236/114,
+  no gaps); **not yet published** to R2.
+- **Use in app:** installable/downloadable, not bundled, not default-on.
+
+| § | Language | Slug | Translator/Publisher | QuranEnc key | Notes |
+|---|----------|------|----------------------|--------------|-------|
+| 24 | German | `de-rowwad` | Rowwad Translation Center | `german_rwwad` | Resolves the earlier QUL-blocked German candidate (§ above) — same translator, direct-from-source instead of an incomplete QUL mirror. |
+| 25 | Spanish | `es-montada` | Noor International Center | `spanish_montada_eu` | Flagship of 3 Spanish options; Isa García skipped (creed-inconclusive per earlier survey). |
+| 26 | French | `fr-montada` | Noor International Center | `french_montada` | Flagship of 2 French options. |
+| 27 | Turkish | `tr-rowwad` | Rowwad Translation Center | `turkish_rwwad` | Flagship of 3 Turkish options. |
+| 28 | Chinese | `zh-makin` | Muhammad Makin | `chinese_makin` | Flagship of 2 Chinese options; classical/most recognized Chinese translation. |
+| 29 | Persian/Farsi | `fa-rowwad` | Rowwad Translation Center | `persian_ih` | Only Persian option on QuranEnc. |
+| 30 | Japanese | `ja-saeed-sato` | Saeed Sato | `japanese_saeedsato` | Only Japanese option. |
+| 31 | Portuguese | `pt-helmi-nasr` | Helmi Nasr | `portuguese_nasr` | Only Portuguese option. |
+| 32 | Thai | `th-rowwad` | Rowwad Translation Center | `thai_rwwad` | Only Thai option. |
+| 33 | Vietnamese | `vi-rowwad` | Rowwad Translation Center | `vietnamese_rwwad` | Only Vietnamese option. |
+| 34 | English | `en-rowwad` | Rowwad Translation Center | `english_rwwad` | Third English option, requested separately, alongside §5 (Sahih International) and §10 (Hilali & Khan). |
+
+- **Required credit draft (per edition):** "`<Language>` translation by
+  `<Translator/Publisher>`. Source: QuranEnc.com."
+- **Not chased this pass:** the non-flagship options for Spanish (García,
+  Montada Latin American), French (Rachid Maach), Turkish (Shaaban, Özek),
+  and Chinese (Suleiman) remain available if wanted later. Russian, Korean,
+  and Italian have **no** QuranEnc edition at all as of this survey.
 
 ---
 

@@ -380,29 +380,29 @@ sources:
     #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
     #   source_url: "https://qul.tarteel.ai/resources/translation/298"
 
-    # --- German: Rowwad Translation Center ------------------------------------
+    # --- German: Rowwad Translation Center --------------------------------
     # Requested 2026-07-30 (owner). Same Rowwad institutional lineage as
-    # Swahili/Albanian above. German's other QUL translators (Bubenheim &
-    # Nadeem #191, Abu Reda #197) were not creed-checked; Rowwad is preferred
-    # as the verified-institutional option.
-    # BLOCKED 2026-07-30: the QUL #467 download obtained so far
-    # (german-translation-rowwad-translation-center-simple.db) covers only
-    # surahs 1-44 (4473 of 6236 ayahs) — incomplete on QUL's side, not usable.
-    # Re-check qul.tarteel.ai/resources/translation/467 for a complete export,
-    # save as sources/de-rowwad-simple.db, then uncomment this block and rebuild.
-    # - file: sources/de-rowwad-simple.db
-    #   slug: de-rowwad
-    #   language_code: de
-    #   name: "Rowwad Translation Center"
-    #   native_name: "Deutsch"
-    #   direction: ltr
-    #   sort_order: 63
-    #   default_on: false
-    #   bundle: false
-    #   enabled: true
-    #   author: "Rowwad Translation Center"
-    #   license: "VERIFY on QUL resource page before release. Attribution required; see ATTRIBUTION.md"
-    #   source_url: "https://qul.tarteel.ai/resources/translation/467"
+    # Swahili/Albanian above. German's other translator, Bubenheim (also on
+    # QuranEnc as german_bubenheim), was not creed-checked; Rowwad remains
+    # preferred as the verified-institutional option.
+    # UNBLOCKED 2026-08-07: the QUL #467 download was incomplete (surahs 1-44
+    # only, 4473/6236 ayahs). Resolved by switching to direct QuranEnc
+    # ingestion (pipeline/quranenc/fetch_quranenc.py german_rwwad de-rowwad)
+    # instead of the QUL mirror — QuranEnc's own export is the complete
+    # 6236/114, verified via build_db.py + verify_db.py.
+    - file: sources/de-rowwad-simple.db
+      slug: de-rowwad
+      language_code: de
+      name: "Rowwad Translation Center"
+      native_name: "Deutsch"
+      direction: ltr
+      sort_order: 63
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/german_rwwad/"
 
     # --- Hindi: Maulana Azizul Haque al-Umari ------------------------------
     # QUL resource 166. Non-default/installable option; keep after Ahsanul Kalam
@@ -420,3 +420,380 @@ sources:
       author: "Azizul Haque al-Umari"
       license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
       source_url: "https://qul.tarteel.ai/resources/translation/166"
+
+    # --- Assamese: Rafiqul Islam Habibur-Rahman (QuranEnc.com) --------------
+    # First Assamese edition. Sourced directly from QuranEnc's own SQLite
+    # export (pipeline/quranenc/fetch_quranenc.py), not a QUL mirror — see
+    # TRANSLATIONS-ROADMAP.md for the QuranEnc ingestion channel notes.
+    - file: sources/as-rafiqul-islam-simple.db
+      slug: as-rafiqul-islam
+      language_code: as
+      name: "Rafiqul Islam Habibur-Rahman"
+      native_name: "অসমীয়া"
+      direction: ltr
+      sort_order: 70
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rafiqul Islam Habibur-Rahman"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/assamese_rafeeq/"
+
+    # --- Gujarati: Rabella Al-Omari (QuranEnc.com) --------------------------
+    - file: sources/gu-rabella-al-omari-simple.db
+      slug: gu-rabella-al-omari
+      language_code: gu
+      name: "Rabella Al-Omari"
+      native_name: "ગુજરાતી"
+      direction: ltr
+      sort_order: 71
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rabella Al-Omari"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/gujarati_omari/"
+
+    # --- Kannada: Hamza Butur (QuranEnc.com) --------------------------------
+    - file: sources/kn-hamza-butur-simple.db
+      slug: kn-hamza-butur
+      language_code: kn
+      name: "Hamza Butur"
+      native_name: "ಕನ್ನಡ"
+      direction: ltr
+      sort_order: 72
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Hamza Butur"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/kannada_hamza/"
+
+    # --- Malayalam: Abdul Hamid Haidar & Kunhi Muhammad (QuranEnc.com) ------
+    - file: sources/ml-haidar-kunhi-simple.db
+      slug: ml-haidar-kunhi
+      language_code: ml
+      name: "Abdul Hamid Haidar and Kunhi Muhammad"
+      native_name: "മലയാളം"
+      direction: ltr
+      sort_order: 73
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Abdul Hamid Haidar/Kunhi Muhammad"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/malayalam_kunhi/"
+
+    # --- Punjabi: Arif Haleem (QuranEnc.com) --------------------------------
+    - file: sources/pa-arif-haleem-simple.db
+      slug: pa-arif-haleem
+      language_code: pa
+      name: "Arif Haleem"
+      native_name: "ਪੰਜਾਬੀ"
+      direction: ltr
+      sort_order: 74
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Arif Haleem"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/punjabi_arif/"
+
+    # --- Telugu: Abdurrahim ibn Muhammad (QuranEnc.com) ---------------------
+    - file: sources/te-abdurrahim-muhammad-simple.db
+      slug: te-abdurrahim-muhammad
+      language_code: te
+      name: "Abdurrahim ibn Muhammad"
+      native_name: "తెలుగు"
+      direction: ltr
+      sort_order: 75
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Abdurrahim ibn Muhammad"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/telugu_muhammad/"
+
+    # --- Tamil: Omar Sharif (QuranEnc.com) ----------------------------------
+    # Full/unabridged edition; keep before the abridged Omar Sharif variant and
+    # before Baqavi in the Tamil list (owner's fetch-all-three decision,
+    # 2026-08-07 — see TRANSLATIONS-ROADMAP.md).
+    - file: sources/ta-omar-sharif-simple.db
+      slug: ta-omar-sharif
+      language_code: ta
+      name: "Omar Sharif"
+      native_name: "தமிழ்"
+      direction: ltr
+      sort_order: 76
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Omar Sharif"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/tamil_omar/"
+
+    # --- Tamil: Abdulhamid Baqavi (QuranEnc.com) ----------------------------
+    - file: sources/ta-abdulhamid-baqavi-simple.db
+      slug: ta-abdulhamid-baqavi
+      language_code: ta
+      name: "Abdulhamid Baqavi"
+      native_name: "தமிழ்"
+      direction: ltr
+      sort_order: 77
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Abdulhamid Baqavi"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/tamil_baqavi/"
+
+    # --- Tamil: Omar Sharif (Abridged) (QuranEnc.com) -----------------------
+    # QuranEnc's own abridged variant of the Omar Sharif translation above —
+    # kept distinct (own slug) rather than replacing the full edition.
+    - file: sources/ta-omar-sharif-brief-simple.db
+      slug: ta-omar-sharif-brief
+      language_code: ta
+      name: "Omar Sharif (Abridged)"
+      native_name: "தமிழ் (சுருக்கம்)"
+      direction: ltr
+      sort_order: 78
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Omar Sharif"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/tamil_omar_brief/"
+
+    # --- Marathi: Muhammad Shafee' Ansari (QuranEnc.com) --------------------
+    # Not listed in QuranEnc's translations/list API (curated subset) but
+    # confirmed live on the site and downloadable via the standard sqlite
+    # URL pattern — see pipeline/quranenc/fetch_quranenc.py's fallback.
+    - file: sources/mr-shafee-ansari-simple.db
+      slug: mr-shafee-ansari
+      language_code: mr
+      name: "Muhammad Shafee' Ansari"
+      native_name: "मराठी"
+      direction: ltr
+      sort_order: 79
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Muhammad Shafee' Ansari"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/marathi_ansari/"
+
+    # --- Kannada: Shaykh Bashir Misuri (QuranEnc.com) -----------------------
+    # Second Kannada edition alongside kn-hamza-butur above. Also not in the
+    # API's curated list; same direct-download fallback as Marathi.
+    - file: sources/kn-bashir-misuri-simple.db
+      slug: kn-bashir-misuri
+      language_code: kn
+      name: "Shaykh Bashir Misuri"
+      native_name: "ಕನ್ನಡ"
+      direction: ltr
+      sort_order: 80
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Shaykh Bashir Misuri"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/kannada_bashir/"
+
+    # --- Nepali: Ahlul-Hadith Association (QuranEnc.com) --------------------
+    # Not India proper, but included alongside this batch per owner decision
+    # 2026-08-07. Not in the API's curated list; direct-download fallback.
+    - file: sources/ne-ahlul-hadith-association-simple.db
+      slug: ne-ahlul-hadith-association
+      language_code: ne
+      name: "Ahlul-Hadith Association"
+      native_name: "नेपाली"
+      direction: ltr
+      sort_order: 81
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Ahlul-Hadith Association"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/nepali_central/"
+
+    # --- Sinhalese: Rowwad Translation Center (QuranEnc.com) ----------------
+    # Not India/Nepal, but included alongside this batch per owner decision
+    # 2026-08-07. Present in the API's curated list (unlike the three above).
+    - file: sources/si-rowwad-simple.db
+      slug: si-rowwad
+      language_code: si
+      name: "Rowwad Translation Center"
+      native_name: "සිංහල"
+      direction: ltr
+      sort_order: 82
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/sinhalese_mahir/"
+
+    # --- Spanish: Noor International Center (Montada, EU) -------------------
+    # Flagship pick among 3 QuranEnc Spanish editions (also: Isa García,
+    # Montada Latin American). García skipped as flagship — flagged
+    # creed-inconclusive in the Indonesian/Swahili/Albanian/German section
+    # above; Noor International (Montada) matches the institutional-vetting
+    # preference already applied elsewhere (Sahih International, Rowwad).
+    - file: sources/es-montada-simple.db
+      slug: es-montada
+      language_code: es
+      name: "Noor International Center (Montada)"
+      native_name: "Español"
+      direction: ltr
+      sort_order: 90
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Noor International Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/spanish_montada_eu/"
+
+    # --- French: Noor International Center (Montada) ------------------------
+    # Flagship pick among 2 QuranEnc French editions (also: Rachid Maach),
+    # same institutional-preference rationale as Spanish above.
+    - file: sources/fr-montada-simple.db
+      slug: fr-montada
+      language_code: fr
+      name: "Noor International Center (Montada)"
+      native_name: "Français"
+      direction: ltr
+      sort_order: 91
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Noor International Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/french_montada/"
+
+    # --- Turkish: Rowwad Translation Center ----------------------------------
+    # Flagship pick among 3 QuranEnc Turkish editions (also: Shaaban British,
+    # Ali Özek and others) — Rowwad matches this repo's established
+    # institutional-vetting preference.
+    - file: sources/tr-rowwad-simple.db
+      slug: tr-rowwad
+      language_code: tr
+      name: "Rowwad Translation Center"
+      native_name: "Türkçe"
+      direction: ltr
+      sort_order: 92
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/turkish_rwwad/"
+
+    # --- Chinese: Muhammad Makin -----------------------------------------
+    # Flagship pick among 2 QuranEnc Chinese editions (also: Muhammad
+    # Suleiman) — Makin's is the classical, most widely recognized Chinese
+    # Qur'an translation.
+    - file: sources/zh-makin-simple.db
+      slug: zh-makin
+      language_code: zh
+      name: "Muhammad Makin"
+      native_name: "中文"
+      direction: ltr
+      sort_order: 93
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Muhammad Makin"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/chinese_makin/"
+
+    # --- Persian (Farsi): Rowwad Translation Center --------------------------
+    - file: sources/fa-rowwad-simple.db
+      slug: fa-rowwad
+      language_code: fa
+      name: "Rowwad Translation Center"
+      native_name: "فارسی"
+      direction: rtl
+      sort_order: 94
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/persian_ih/"
+
+    # --- Japanese: Saeed Sato -------------------------------------------
+    - file: sources/ja-saeed-sato-simple.db
+      slug: ja-saeed-sato
+      language_code: ja
+      name: "Saeed Sato"
+      native_name: "日本語"
+      direction: ltr
+      sort_order: 95
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Saeed Sato"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/japanese_saeedsato/"
+
+    # --- Portuguese: Helmi Nasr -------------------------------------------
+    - file: sources/pt-helmi-nasr-simple.db
+      slug: pt-helmi-nasr
+      language_code: pt
+      name: "Helmi Nasr"
+      native_name: "Português"
+      direction: ltr
+      sort_order: 96
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Helmi Nasr"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/portuguese_nasr/"
+
+    # --- Thai: Rowwad Translation Center -----------------------------------
+    - file: sources/th-rowwad-simple.db
+      slug: th-rowwad
+      language_code: th
+      name: "Rowwad Translation Center"
+      native_name: "ไทย"
+      direction: ltr
+      sort_order: 97
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/thai_rwwad/"
+
+    # --- Vietnamese: Rowwad Translation Center ------------------------------
+    - file: sources/vi-rowwad-simple.db
+      slug: vi-rowwad
+      language_code: vi
+      name: "Rowwad Translation Center"
+      native_name: "Tiếng Việt"
+      direction: ltr
+      sort_order: 98
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/vietnamese_rwwad/"
+
+    # --- English: Rowwad Translation Center (QuranEnc.com) -------------------
+    # Requested 2026-08-07 (owner), alongside the international batch — a
+    # third English option next to en-sahih-international and en-hilali-khan.
+    - file: sources/en-rowwad-simple.db
+      slug: en-rowwad
+      language_code: en
+      name: "Rowwad Translation Center"
+      native_name: "English"
+      direction: ltr
+      sort_order: 99
+      default_on: false
+      bundle: false
+      enabled: true
+      author: "Rowwad Translation Center"
+      license: "QuranEnc.com terms — unmodified + attribution + version no. See ATTRIBUTION.md"
+      source_url: "https://quranenc.com/en/english_rwwad/"
